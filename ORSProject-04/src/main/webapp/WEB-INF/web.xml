@@ -4,4 +4,13 @@
 
 <web-app>
   <display-name>Archetype Created Web Application</display-name>
+  <servlet>
+    <servlet-name>ErrorCtl</servlet-name>
+    <servlet-class>in.co.rays.proj4.controller.ErrorCtl</servlet-class>
+</servlet>
+
+<servlet-mapping>
+    <servlet-name>ErrorCtl</servlet-name>
+    <url-pattern>/ErrorCtl</url-pattern>
+</servlet-mapping>
 </web-app>
