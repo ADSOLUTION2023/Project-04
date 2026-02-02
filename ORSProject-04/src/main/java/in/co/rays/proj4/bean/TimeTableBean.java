@@ -8,7 +8,7 @@ import java.util.Date;
  * @author Amit Chandsarkar
  *
  */
-public class TimetableBean extends BaseBean {
+public class TimeTableBean extends BaseBean {
 
 	private String semester;
 	private String description;

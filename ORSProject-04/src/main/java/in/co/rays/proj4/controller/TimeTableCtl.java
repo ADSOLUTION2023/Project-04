@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import in.co.rays.proj4.bean.BaseBean;
-import in.co.rays.proj4.bean.TimetableBean;
+import in.co.rays.proj4.bean.TimeTableBean;
 import in.co.rays.proj4.exception.ApplicationException;
 import in.co.rays.proj4.exception.DuplicateRecordException;
 import in.co.rays.proj4.model.CourseModel;
@@ -29,7 +29,7 @@ import in.co.rays.proj4.util.ServletUtility;
  * @author Amit Chandsarkar
  */
 @WebServlet(name = "TimetableCtl", urlPatterns = { "/ctl/TimetableCtl" })
-public class TimetableCtl extends BaseCtl {
+public class TimeTableCtl extends BaseCtl {
 
     /**
      * Preloads Course and Subject lists for the dropdown fields used in the form.
@@ -106,15 +106,15 @@ public class TimetableCtl extends BaseCtl {
     }
 
     /**
-     * Populates the TimetableBean from the form request parameters.
+     * Populates the TimeTableBean from the form request parameters.
      *
      * @param request the HTTP request containing form data
-     * @return populated TimetableBean
+     * @return populated TimeTableBean
      */
     @Override
     protected BaseBean populateBean(HttpServletRequest request) {
 
-        TimetableBean bean = new TimetableBean();
+        TimeTableBean bean = new TimeTableBean();
 
         bean.setId(DataUtility.getLong(request.getParameter("id")));
         bean.setSemester(DataUtility.getString(request.getParameter("semester")));
@@ -145,7 +145,7 @@ public class TimetableCtl extends BaseCtl {
 
         if (id > 0) {
             try {
-                TimetableBean bean = model.findByPk(id);
+                TimeTableBean bean = model.findByPk(id);
                 ServletUtility.setBean(bean, request);
             } catch (ApplicationException e) {
                 e.printStackTrace();
@@ -174,11 +174,11 @@ public class TimetableCtl extends BaseCtl {
 
         if (OP_SAVE.equalsIgnoreCase(op)) {
 
-            TimetableBean bean = (TimetableBean) populateBean(request);
+            TimeTableBean bean = (TimeTableBean) populateBean(request);
 
-            TimetableBean bean1;
-            TimetableBean bean2;
-            TimetableBean bean3;
+            TimeTableBean bean1;
+            TimeTableBean bean2;
+            TimeTableBean bean3;
 
             try {
                 bean1 = model.checkByCourseName(bean.getCourseId(), bean.getExamDate());
@@ -191,7 +191,7 @@ public class TimetableCtl extends BaseCtl {
                     ServletUtility.setBean(bean, request);
                     ServletUtility.setSuccessMessage("Timetable added successfully", request);
                 } else {
-                    bean = (TimetableBean) populateBean(request);
+                    bean = (TimeTableBean) populateBean(request);
                     ServletUtility.setBean(bean, request);
                     ServletUtility.setErrorMessage("Timetable already exist!", request);
                 }
@@ -206,9 +206,9 @@ public class TimetableCtl extends BaseCtl {
 
         } else if (OP_UPDATE.equalsIgnoreCase(op)) {
 
-            TimetableBean bean = (TimetableBean) populateBean(request);
+            TimeTableBean bean = (TimeTableBean) populateBean(request);
 
-            TimetableBean bean4;
+            TimeTableBean bean4;
 
             try {
 
@@ -220,7 +220,7 @@ public class TimetableCtl extends BaseCtl {
                     ServletUtility.setBean(bean, request);
                     ServletUtility.setSuccessMessage("Timetable updated successfully", request);
                 } else {
-                    bean = (TimetableBean) populateBean(request);
+                    bean = (TimeTableBean) populateBean(request);
                     ServletUtility.setBean(bean, request);
                     ServletUtility.setErrorMessage("Timetable already exist!", request);
                 }

@@ -94,10 +94,10 @@ public interface ORSView {
 	public String SUBJECT_LIST_CTL = APP_CONTEXT + "/ctl/SubjectListCtl";
 
 	/** Timetable pages */
-	public String TIMETABLE_VIEW = PAGE_FOLDER + "/TimetableView.jsp";
-	public String TIMETABLE_CTL = APP_CONTEXT + "/ctl/TimetableCtl";
-	public String TIMETABLE_LIST_VIEW = PAGE_FOLDER + "/TimetableListView.jsp";
-	public String TIMETABLE_LIST_CTL = APP_CONTEXT + "/ctl/TimetableListCtl";
+	public String TIMETABLE_VIEW = PAGE_FOLDER + "/TimeTableView.jsp";
+	public String TIMETABLE_CTL = APP_CONTEXT + "/ctl/TimeTableCtl";
+	public String TIMETABLE_LIST_VIEW = PAGE_FOLDER + "/TimeTableListView.jsp";
+	public String TIMETABLE_LIST_CTL = APP_CONTEXT + "/ctl/TimeTableListCtl";
 
 	/** Faculty management pages */
 	public String FACULTY_VIEW = PAGE_FOLDER + "/FacultyView.jsp";

@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import in.co.rays.proj4.bean.BaseBean;
-import in.co.rays.proj4.bean.TimetableBean;
+import in.co.rays.proj4.bean.TimeTableBean;
 import in.co.rays.proj4.exception.ApplicationException;
 import in.co.rays.proj4.model.CourseModel;
 import in.co.rays.proj4.model.SubjectModel;
@@ -30,7 +30,7 @@ import in.co.rays.proj4.util.ServletUtility;
  * @version 1.0
  */
 @WebServlet(name = "TimetableListCtl", urlPatterns = { "/ctl/TimetableListCtl" })
-public class TimetableListCtl extends BaseCtl {
+public class TimeTableListCtl extends BaseCtl {
 
     /**
      * Preloads reference data such as Subject List and Course List to be
@@ -56,14 +56,14 @@ public class TimetableListCtl extends BaseCtl {
     }
 
     /**
-     * Populates TimetableBean with form input values.
+     * Populates TimeTableBean with form input values.
      * 
      * @param request the incoming client request
-     * @return populated TimetableBean
+     * @return populated TimeTableBean
      */
     @Override
     protected BaseBean populateBean(HttpServletRequest request) {
-        TimetableBean bean = new TimetableBean();
+        TimeTableBean bean = new TimeTableBean();
 
         bean.setCourseId(DataUtility.getLong(request.getParameter("courseId")));
         bean.setSubjectId(DataUtility.getLong(request.getParameter("subjectId")));
@@ -86,12 +86,12 @@ public class TimetableListCtl extends BaseCtl {
         int pageNo = 1;
         int pageSize = DataUtility.getInt(PropertyReader.getValue("page.size"));
 
-        TimetableBean bean = (TimetableBean) populateBean(request);
+        TimeTableBean bean = (TimeTableBean) populateBean(request);
         TimetableModel model = new TimetableModel();
 
         try {
-            List<TimetableBean> list = model.search(bean, pageNo, pageSize);
-            List<TimetableBean> next = model.search(bean, pageNo + 1, pageSize);
+            List<TimeTableBean> list = model.search(bean, pageNo, pageSize);
+            List<TimeTableBean> next = model.search(bean, pageNo + 1, pageSize);
 
             if (list == null || list.isEmpty()) {
                 ServletUtility.setErrorMessage("No record found", request);
@@ -131,7 +131,7 @@ public class TimetableListCtl extends BaseCtl {
         pageNo = (pageNo == 0) ? 1 : pageNo;
         pageSize = (pageSize == 0) ? DataUtility.getInt(PropertyReader.getValue("page.size")) : pageSize;
 
-        TimetableBean bean = (TimetableBean) populateBean(request);
+        TimeTableBean bean = (TimeTableBean) populateBean(request);
         TimetableModel model = new TimetableModel();
 
         String op = DataUtility.getString(request.getParameter("operation"));
@@ -155,7 +155,7 @@ public class TimetableListCtl extends BaseCtl {
             } else if (OP_DELETE.equalsIgnoreCase(op)) {
                 pageNo = 1;
                 if (ids != null && ids.length > 0) {
-                    TimetableBean deleteBean = new TimetableBean();
+                    TimeTableBean deleteBean = new TimeTableBean();
                     for (String id : ids) {
                         deleteBean.setId(DataUtility.getInt(id));
                         model.delete(deleteBean);
