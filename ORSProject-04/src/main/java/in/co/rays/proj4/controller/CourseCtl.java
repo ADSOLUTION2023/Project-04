@@ -18,23 +18,32 @@ import in.co.rays.proj4.util.PropertyReader;
 import in.co.rays.proj4.util.ServletUtility;
 
 /**
- * CourseCtl Servlet Controller.
+ * Controller for managing Course operations like add, update, view and navigation.
  * <p>
- * Handles operations related to adding, updating, and validating Course data.
+ * This servlet validates course form input, populates {@link CourseBean} from
+ * request parameters, and delegates persistence operations to
+ * {@link in.co.rays.proj4.model.CourseModel}. It supports operations such as
+ * Save, Update, Cancel and Reset.
  * </p>
- * 
- * @author Amit Chandsarkar
+ *
+ * @author Chaitanya Bhatt
  * @version 1.0
+ * @see in.co.rays.proj4.model.CourseModel
+ * @see in.co.rays.proj4.bean.CourseBean
  */
-
 @WebServlet(name = "CourseCtl", urlPatterns = { "/ctl/CourseCtl" })
 public class CourseCtl extends BaseCtl {
 
     /**
-     * Validates input fields for Course form.
+     * Validates the course form fields.
+     * <ul>
+     *   <li>Name is required and must be a valid name.</li>
+     *   <li>Duration is required.</li>
+     *   <li>Description is required.</li>
+     * </ul>
      *
-     * @param request the HTTP request object
-     * @return true if all fields are valid, false otherwise
+     * @param request the {@link HttpServletRequest} containing form parameters
+     * @return {@code true} if validation passes; {@code false} otherwise
      */
     @Override
     protected boolean validate(HttpServletRequest request) {
@@ -63,10 +72,11 @@ public class CourseCtl extends BaseCtl {
     }
 
     /**
-     * Populates the CourseBean from request parameters.
+     * Populates a {@link CourseBean} from request parameters and fills audit
+     * information by calling {@link #populateDTO(BaseBean, HttpServletRequest)}.
      *
-     * @param request the HTTP request object
-     * @return populated CourseBean
+     * @param request the {@link HttpServletRequest} carrying form data
+     * @return a populated {@link BaseBean} (actually a {@link CourseBean})
      */
     @Override
     protected BaseBean populateBean(HttpServletRequest request) {
@@ -84,12 +94,14 @@ public class CourseCtl extends BaseCtl {
     }
 
     /**
-     * Handles GET requests for displaying Course form.
+     * Handles HTTP GET requests. If an 'id' parameter is provided (> 0), loads
+     * the corresponding course record and places it on the request for editing/view.
      *
-     * @param request  the HTTP request
-     * @param response the HTTP response
+     * @param request  the {@link HttpServletRequest}
+     * @param response the {@link HttpServletResponse}
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException      if an I/O error occurs
      */
-    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
@@ -111,36 +123,43 @@ public class CourseCtl extends BaseCtl {
     }
 
     /**
-     * Handles POST requests for Course operations like Save, Update, Reset, Cancel.
+     * Handles HTTP POST requests for Save, Update, Cancel and Reset operations.
+     * <ul>
+     *   <li>OP_SAVE: Adds a new course (handles {@link DuplicateRecordException}).</li>
+     *   <li>OP_UPDATE: Updates existing course.</li>
+     *   <li>OP_CANCEL: Redirects to course list controller.</li>
+     *   <li>OP_RESET: Redirects back to course form.</li>
+     * </ul>
      *
-     * @param request  the HTTP request
-     * @param response the HTTP response
+     * @param request  the {@link HttpServletRequest}
+     * @param response the {@link HttpServletResponse}
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException      if an I/O error occurs
      */
-    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         String op = DataUtility.getString(request.getParameter("operation"));
+
         CourseModel model = new CourseModel();
+
         long id = DataUtility.getLong(request.getParameter("id"));
 
         if (OP_SAVE.equalsIgnoreCase(op)) {
-
             CourseBean bean = (CourseBean) populateBean(request);
             try {
                 long pk = model.add(bean);
                 ServletUtility.setBean(bean, request);
-                ServletUtility.setSuccessMessage("User added successfully", request);
+                ServletUtility.setSuccessMessage("Course added successfully", request);
             } catch (DuplicateRecordException e) {
                 ServletUtility.setBean(bean, request);
                 ServletUtility.setErrorMessage("Course already exists", request);
             } catch (ApplicationException e) {
                 e.printStackTrace();
+                ServletUtility.handleException(e, request, response);
                 return;
             }
-
         } else if (OP_UPDATE.equalsIgnoreCase(op)) {
-
             CourseBean bean = (CourseBean) populateBean(request);
             try {
                 if (id > 0) {
@@ -148,38 +167,31 @@ public class CourseCtl extends BaseCtl {
                 }
                 ServletUtility.setBean(bean, request);
                 ServletUtility.setSuccessMessage("Course updated successfully", request);
-
             } catch (DuplicateRecordException e) {
                 ServletUtility.setBean(bean, request);
-                ServletUtility.setErrorMessage("Course Already Exist", request);
+                ServletUtility.setErrorMessage("Course already exists", request);
             } catch (ApplicationException e) {
                 e.printStackTrace();
                 ServletUtility.handleException(e, request, response);
                 return;
             }
-
         } else if (OP_CANCEL.equalsIgnoreCase(op)) {
-
             ServletUtility.redirect(ORSView.COURSE_LIST_CTL, request, response);
             return;
-
         } else if (OP_RESET.equalsIgnoreCase(op)) {
-
             ServletUtility.redirect(ORSView.COURSE_CTL, request, response);
             return;
         }
-
         ServletUtility.forward(getView(), request, response);
     }
 
     /**
-     * Returns the view page for Course form.
+     * Returns the JSP view path for the course form.
      *
-     * @return string path to the Course view JSP
+     * @return view page path as {@link String}
      */
     @Override
     protected String getView() {
         return ORSView.COURSE_VIEW;
     }
-
 }

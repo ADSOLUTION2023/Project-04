@@ -1,3 +1,4 @@
+
 <%@page import="in.co.rays.proj4.controller.ORSView"%>
 <%@page import="java.util.LinkedHashMap"%>
 <%@page import="java.util.ArrayList"%>
@@ -24,8 +25,8 @@
 			scope="request"></jsp:useBean>
 
 		<%
-			List<TimetableCtl> courseList = (List<TimetableCtl>)request.getAttribute("courseList");
-			List<TimetableBean> subjectList = (List<TimetableBean>)request.getAttribute("subjectList");
+			List<TimetableBean> courseList = (List<TimetableBean>) request.getAttribute("courseList");
+			List<TimetableBean> subjectList = (List<TimetableBean>) request.getAttribute("subjectList");
 		%>
 
 		<div align="center">
@@ -146,4 +147,3 @@
 	<%@ include file="Footer.jsp"%>
 </body>
 </html>
- 

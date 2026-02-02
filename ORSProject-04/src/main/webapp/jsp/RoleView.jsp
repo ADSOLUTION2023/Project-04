@@ -1,4 +1,3 @@
- 
 
 <%@page import="in.co.rays.proj4.controller.ORSView"%>
 <%@page import="in.co.rays.proj4.controller.RoleCtl"%>
@@ -98,4 +97,3 @@
 	<%@ include file="Footer.jsp"%>
 </body>
 </html>
- 

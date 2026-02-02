@@ -1,4 +1,3 @@
- 
 package in.co.rays.proj4.controller;
 
 import java.io.IOException;
@@ -19,21 +18,27 @@ import in.co.rays.proj4.util.PropertyReader;
 import in.co.rays.proj4.util.ServletUtility;
 
 /**
- * Controller class for managing Subject list operations such as search,
- * pagination, preload, delete, and navigation.
+ * SubjectListCtl handles listing, searching, pagination and bulk actions for
+ * Subject entities. It preloads subject and course lists for the view,
+ * populates {@link SubjectBean} from request parameters, delegates search/delete
+ * operations to {@link SubjectModel}, and prepares pagination metadata for the view.
+ * <p>
+ * Supported operations include Search, Next, Previous, New, Delete, Reset and Back.
+ * </p>
  * 
- * This servlet interacts with {@link SubjectModel} and {@link SubjectBean} to
- * display and manage the list of subjects.
- * 
- * @author Amit Chandsarkar
+ * @author Chaitanya Bhatt
+ * @version 1.0
+ * @see in.co.rays.proj4.model.SubjectModel
+ * @see in.co.rays.proj4.bean.SubjectBean
  */
 @WebServlet(name = "SubjectListCtl", urlPatterns = { "/ctl/SubjectListCtl" })
 public class SubjectListCtl extends BaseCtl {
 
     /**
-     * Preloads the Subject and Course lists for dropdown filters.
-     * 
-     * @param request the HttpServletRequest object
+     * Preloads subject and course lists and sets them as request attributes
+     * ("subjectList", "courseList") for dropdowns or auxiliary displays in the view.
+     *
+     * @param request the {@link HttpServletRequest}
      */
     @Override
     protected void preload(HttpServletRequest request) {
@@ -54,16 +59,18 @@ public class SubjectListCtl extends BaseCtl {
     }
 
     /**
-     * Populates a SubjectBean using request parameters for searching.
-     * 
-     * @param request the HttpServletRequest object
-     * @return populated SubjectBean
+     * Populates a {@link SubjectBean} from request parameters for use in search
+     * or other operations.
+     *
+     * @param request the {@link HttpServletRequest} containing parameters
+     * @return populated {@link BaseBean} (actually a {@link SubjectBean})
      */
     @Override
     protected BaseBean populateBean(HttpServletRequest request) {
+
         SubjectBean bean = new SubjectBean();
 
-        bean.setSubjectName(DataUtility.getString(request.getParameter("name")));
+        bean.setName(DataUtility.getString(request.getParameter("name")));
         bean.setCourseName(DataUtility.getString(request.getParameter("courseName")));
         bean.setDescription(DataUtility.getString(request.getParameter("description")));
         bean.setCourseId(DataUtility.getLong(request.getParameter("courseId")));
@@ -73,14 +80,17 @@ public class SubjectListCtl extends BaseCtl {
     }
 
     /**
-     * Handles HTTP GET requests for displaying the initial list.
-     * 
-     * @param request  the HttpServletRequest object
-     * @param response the HttpServletResponse object
+     * Handles HTTP GET requests. Performs an initial search and forwards the
+     * result list to the view. If no records are found, an error message is set.
+     *
+     * @param request  the {@link HttpServletRequest}
+     * @param response the {@link HttpServletResponse}
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException      if an I/O error occurs
      */
-    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
         int pageNo = 1;
         int pageSize = DataUtility.getInt(PropertyReader.getValue("page.size"));
 
@@ -111,16 +121,19 @@ public class SubjectListCtl extends BaseCtl {
     }
 
     /**
-     * Handles HTTP POST requests for search, delete, pagination,
-     * adding new records, reset, and navigation.
-     * 
-     * @param request  the HttpServletRequest object
-     * @param response the HttpServletResponse object
+     * Handles HTTP POST requests for search, pagination, new, delete, reset and back
+     * operations. After performing the requested operation it forwards the updated
+     * list and pagination metadata to the view.
+     *
+     * @param request  the {@link HttpServletRequest}
+     * @param response the {@link HttpServletResponse}
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException      if an I/O error occurs
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         List list = null;
         List next = null;
 
@@ -196,14 +209,12 @@ public class SubjectListCtl extends BaseCtl {
     }
 
     /**
-     * Returns the JSP view for Subject list.
-     * 
-     * @return path of Subject list view
+     * Returns the JSP view path for the subject list.
+     *
+     * @return view page path as {@link String}
      */
     @Override
     protected String getView() {
-
         return ORSView.SUBJECT_LIST_VIEW;
     }
-
 }

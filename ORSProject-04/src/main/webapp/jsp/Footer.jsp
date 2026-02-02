@@ -1,33 +1,18 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-	pageEncoding="ISO-8859-1"%>
-<!DOCTYPE html>
 <html>
 <head>
-<meta charset="ISO-8859-1">
-<title>Insert title here</title>
-</head>
 <style type="text/css">
-#footer {
-	position: fixed;
-	left: 0;
+div.sticky {
+	position: -webkit-sticky;
+	position: sticky;
 	width: 100%;
-	bottom: 0;
-	background-color: white;
-	color: black;
 	text-align: center;
+	bottom: 0;
+	top: 100%;
 }
 </style>
-
 </head>
-<body>
-
-	<div id="footer">
-		<CENTER>
-			<hr>
-			<H3>&copy; Copyrights @Rays Techonlogies, 2025</H3>
-		</CENTER>
-	</div>
-<body>
-	
-</body>
+<div class="sticky">
+	<HR>
+	<strong>Copyrights &copy; Rays Technologies</strong>
+</div>
 </html>

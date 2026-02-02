@@ -9,62 +9,70 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import in.co.rays.proj4.bean.BaseBean;
-import in.co.rays.proj4.bean.MarkSheetBean;
+import in.co.rays.proj4.bean.MarksheetBean;
 import in.co.rays.proj4.exception.ApplicationException;
-import in.co.rays.proj4.model.MarkSheetModel;
+import in.co.rays.proj4.model.MarksheetModel;
 import in.co.rays.proj4.util.DataUtility;
 import in.co.rays.proj4.util.PropertyReader;
 import in.co.rays.proj4.util.ServletUtility;
 
 /**
-* MarksheetListCtl Servlet.
-* <p>
-* This controller handles displaying, searching, and deleting marksheet records.
-* It supports pagination, search, reset, and navigation operations.
-* </p>
-* 
-* Author: Amit Chandsarkar
-* @version 1.0
-*/
-
-@WebServlet(name = "MarkSheetListCtl", urlPatterns = { "/ctl/MarkSheetListCtl" })
-public class MarkSheetListCtl extends BaseCtl {
+ * MarksheetListCtl handles listing, searching, pagination and bulk actions for
+ * Marksheet entities. It populates {@link MarksheetBean} from request parameters,
+ * delegates search/delete operations to {@link MarksheetModel}, and prepares
+ * data and pagination metadata for the view.
+ * <p>
+ * Supported operations include Search, Next, Previous, New, Delete, Reset and Back.
+ * </p>
+ *
+ * @author Chaitanya Bhatt
+ * @version 1.0
+ * @see in.co.rays.proj4.model.MarksheetModel
+ * @see in.co.rays.proj4.bean.MarksheetBean
+ */
+@WebServlet(name = "MarksheetListCtl", urlPatterns = { "/ctl/MarksheetListCtl" })
+public class MarksheetListCtl extends BaseCtl {
 
     /**
-     * Populates MarksheetBean from request parameters for search/filtering.
+     * Populates a {@link MarksheetBean} from request parameters for use in search
+     * or other operations.
      *
-     * @param request HttpServletRequest
-     * @return BaseBean containing search criteria
+     * @param request the {@link HttpServletRequest} containing parameters
+     * @return populated {@link BaseBean} (actually a {@link MarksheetBean})
      */
     @Override
     protected BaseBean populateBean(HttpServletRequest request) {
-        MarkSheetBean bean = new MarkSheetBean();
+
+        MarksheetBean bean = new MarksheetBean();
+
         bean.setRollNo(DataUtility.getString(request.getParameter("rollNo")));
         bean.setName(DataUtility.getString(request.getParameter("name")));
+
         return bean;
     }
 
     /**
-     * Handles HTTP GET requests.
-     * Loads the first page of marksheet list based on search criteria.
+     * Handles HTTP GET requests. Performs an initial search and forwards the
+     * result list to the view. If no records are found, an error message is set.
      *
-     * @param request HttpServletRequest
-     * @param response HttpServletResponse
-     * @throws ServletException
-     * @throws IOException
+     * @param request  the {@link HttpServletRequest}
+     * @param response the {@link HttpServletResponse}
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException      if an I/O error occurs
      */
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         int pageNo = 1;
         int pageSize = DataUtility.getInt(PropertyReader.getValue("page.size"));
 
-        MarkSheetBean bean = (MarkSheetBean) populateBean(request);
-        MarkSheetModel model = new MarkSheetModel();
+        MarksheetBean bean = (MarksheetBean) populateBean(request);
+        MarksheetModel model = new MarksheetModel();
 
         try {
-            List<MarkSheetBean> list = model.search(bean, pageNo, pageSize);
-            List<MarkSheetBean> next = model.search(bean, pageNo + 1, pageSize);
+            List<MarksheetBean> list = model.search(bean, pageNo, pageSize);
+            List<MarksheetBean> next = model.search(bean, pageNo + 1, pageSize);
 
             if (list == null || list.isEmpty()) {
                 ServletUtility.setErrorMessage("No record found", request);
@@ -81,17 +89,19 @@ public class MarkSheetListCtl extends BaseCtl {
         } catch (ApplicationException e) {
             e.printStackTrace();
             ServletUtility.handleException(e, request, response);
+            return;
         }
     }
 
     /**
-     * Handles HTTP POST requests.
-     * Supports operations like search, next, previous, new, delete, reset, and back.
+     * Handles HTTP POST requests for search, pagination, new, delete, reset and back
+     * operations. After performing the requested operation it forwards the updated
+     * list and pagination metadata to the view.
      *
-     * @param request HttpServletRequest
-     * @param response HttpServletResponse
-     * @throws ServletException
-     * @throws IOException
+     * @param request  the {@link HttpServletRequest}
+     * @param response the {@link HttpServletResponse}
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException      if an I/O error occurs
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -106,8 +116,8 @@ public class MarkSheetListCtl extends BaseCtl {
         pageNo = (pageNo == 0) ? 1 : pageNo;
         pageSize = (pageSize == 0) ? DataUtility.getInt(PropertyReader.getValue("page.size")) : pageSize;
 
-        MarkSheetBean bean = (MarkSheetBean) populateBean(request);
-        MarkSheetModel model = new MarkSheetModel();
+        MarksheetBean bean = (MarksheetBean) populateBean(request);
+        MarksheetModel model = new MarksheetModel();
 
         String op = DataUtility.getString(request.getParameter("operation"));
         String[] ids = request.getParameterValues("ids");
@@ -131,7 +141,7 @@ public class MarkSheetListCtl extends BaseCtl {
             } else if (OP_DELETE.equalsIgnoreCase(op)) {
                 pageNo = 1;
                 if (ids != null && ids.length > 0) {
-                    MarkSheetBean deletebean = new MarkSheetBean();
+                    MarksheetBean deletebean = new MarksheetBean();
                     for (String id : ids) {
                         deletebean.setId(DataUtility.getInt(id));
                         model.delete(deletebean);
@@ -141,7 +151,11 @@ public class MarkSheetListCtl extends BaseCtl {
                     ServletUtility.setErrorMessage("Select at least one record", request);
                 }
 
-            } else if (OP_RESET.equalsIgnoreCase(op) || OP_BACK.equalsIgnoreCase(op)) {
+            } else if (OP_RESET.equalsIgnoreCase(op)) {
+                ServletUtility.redirect(ORSView.MARKSHEET_LIST_CTL, request, response);
+                return;
+
+            } else if (OP_BACK.equalsIgnoreCase(op)) {
                 ServletUtility.redirect(ORSView.MARKSHEET_LIST_CTL, request, response);
                 return;
             }
@@ -163,13 +177,14 @@ public class MarkSheetListCtl extends BaseCtl {
         } catch (ApplicationException e) {
             e.printStackTrace();
             ServletUtility.handleException(e, request, response);
+            return;
         }
     }
 
     /**
-     * Returns the view for marksheet list.
+     * Returns the JSP view path for the marksheet list.
      *
-     * @return String view page
+     * @return view page path as {@link String}
      */
     @Override
     protected String getView() {

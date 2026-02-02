@@ -1,4 +1,4 @@
- package in.co.rays.proj4.model;
+package in.co.rays.proj4.model;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -9,7 +9,7 @@ import java.util.List;
 import in.co.rays.proj4.bean.CourseBean;
 import in.co.rays.proj4.bean.SubjectBean;
 import in.co.rays.proj4.exception.ApplicationException;
-import in.co.rays.proj4.exception.DataBaseException;
+import in.co.rays.proj4.exception.DatabaseException;
 import in.co.rays.proj4.exception.DuplicateRecordException;
 import in.co.rays.proj4.util.JDBCDataSource;
 
@@ -23,18 +23,17 @@ import in.co.rays.proj4.util.JDBCDataSource;
  * conditions.
  * </p>
  *
- * @author Amit Chandsarkar
+ * @author Chaitanya Bhatt
  * @version 1.0
  */
 public class SubjectModel {
-
 	/**
 	 * Returns next primary key value for st_subject table.
 	 *
 	 * @return next primary key (Integer)
 	 * @throws DatabaseException if a database access error occurs
 	 */
-	public Integer nextPk() throws DataBaseException {
+	public Integer nextPk() throws DatabaseException {
 		Connection conn = null;
 		int pk = 0;
 		try {
@@ -47,7 +46,7 @@ public class SubjectModel {
 			rs.close();
 			pstmt.close();
 		} catch (Exception e) {
-			throw new DataBaseException("Exception : Exception in getting PK");
+			throw new DatabaseException("Exception : Exception in getting PK");
 		} finally {
 			JDBCDataSource.closeConnection(conn);
 		}
@@ -70,7 +69,7 @@ public class SubjectModel {
 		CourseBean courseBean = courseModel.findByPk(bean.getCourseId());
 		bean.setCourseName(courseBean.getName());
 
-		SubjectBean duplicateSubject = findByName(bean.getSubjectName());
+		SubjectBean duplicateSubject = findByName(bean.getName());
 		if (duplicateSubject != null) {
 			throw new DuplicateRecordException("Subject Name already exists");
 		}
@@ -81,7 +80,7 @@ public class SubjectModel {
 			conn.setAutoCommit(false); // Begin transaction
 			PreparedStatement pstmt = conn.prepareStatement("insert into st_subject values(?, ?, ?, ?, ?, ?, ?, ?, ?)");
 			pstmt.setInt(1, pk);
-			pstmt.setString(2, bean.getSubjectName());
+			pstmt.setString(2, bean.getName());
 			pstmt.setLong(3, bean.getCourseId());
 			pstmt.setString(4, bean.getCourseName());
 			pstmt.setString(5, bean.getDescription());
@@ -123,7 +122,7 @@ public class SubjectModel {
 			conn.setAutoCommit(false); // Begin transaction
 			PreparedStatement pstmt = conn.prepareStatement(
 					"update st_subject set name = ?, course_id = ?, course_name = ?, description = ?, created_by = ?, modified_by = ?, created_datetime = ?, modified_datetime = ? where id = ?");
-			pstmt.setString(1, bean.getSubjectName());
+			pstmt.setString(1, bean.getName());
 			pstmt.setLong(2, bean.getCourseId());
 			pstmt.setString(3, bean.getCourseName());
 			pstmt.setString(4, bean.getDescription());
@@ -194,7 +193,7 @@ public class SubjectModel {
 			while (rs.next()) {
 				bean = new SubjectBean();
 				bean.setId(rs.getLong(1));
-				bean.setSubjectName(rs.getString(2));
+				bean.setName(rs.getString(2));
 				bean.setCourseId(rs.getLong(3));
 				bean.setCourseName(rs.getString(4));
 				bean.setDescription(rs.getString(5));
@@ -231,15 +230,15 @@ public class SubjectModel {
 			ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {
 				bean = new SubjectBean();
-				pstmt.setLong(1, bean.getId());
-				pstmt.setString(2, bean.getSubjectName());
-				pstmt.setLong(3, bean.getCourseId());
-				pstmt.setString(4, bean.getCourseName());
-				pstmt.setString(5, bean.getDescription());
-				pstmt.setString(6, bean.getCreatedBy());
-				pstmt.setString(7, bean.getModifiedBy());
-				pstmt.setTimestamp(8, bean.getCreatedDatetime());
-				pstmt.setTimestamp(9, bean.getModifiedDatetime());
+				bean.setId(rs.getLong(1));
+				bean.setName(rs.getString(2));
+				bean.setCourseId(rs.getLong(3));
+				bean.setCourseName(rs.getString(4));
+				bean.setDescription(rs.getString(5));
+				bean.setCreatedBy(rs.getString(6));
+				bean.setModifiedBy(rs.getString(7));
+				bean.setCreatedDatetime(rs.getTimestamp(8));
+				bean.setModifiedDatetime(rs.getTimestamp(9));
 			}
 			rs.close();
 			pstmt.close();
@@ -277,17 +276,17 @@ public class SubjectModel {
 			if (bean.getId() > 0) {
 				sql.append(" and id = " + bean.getId());
 			}
-			if (bean.getSubjectName() != null && bean.getSubjectName().length() > 0) {
-				sql.append(" and name like '" + bean.getSubjectName() + "%'");
+			if (bean.getName() != null && bean.getName().length() > 0) {
+				sql.append(" and name like '%" + bean.getName() + "%'");
 			}
 			if (bean.getCourseId() > 0) {
 				sql.append(" and course_id = " + bean.getCourseId());
 			}
 			if (bean.getCourseName() != null && bean.getCourseName().length() > 0) {
-				sql.append(" and course_name like '" + bean.getCourseName() + "%'");
+				sql.append(" and course_name like '%" + bean.getCourseName() + "%'");
 			}
 			if (bean.getDescription() != null && bean.getDescription().length() > 0) {
-				sql.append(" and description like '" + bean.getDescription() + "%'");
+				sql.append(" and description like '%" + bean.getDescription() + "%'");
 			}
 
 		}
@@ -306,7 +305,7 @@ public class SubjectModel {
 			while (rs.next()) {
 				bean = new SubjectBean();
 				bean.setId(rs.getLong(1));
-				bean.setSubjectName(rs.getString(2));
+				bean.setName(rs.getString(2));
 				bean.setCourseId(rs.getLong(3));
 				bean.setCourseName(rs.getString(4));
 				bean.setDescription(rs.getString(5));
@@ -325,5 +324,4 @@ public class SubjectModel {
 		}
 		return list;
 	}
-	
 }

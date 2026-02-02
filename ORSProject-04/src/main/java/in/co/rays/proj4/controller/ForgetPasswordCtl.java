@@ -18,24 +18,29 @@ import in.co.rays.proj4.util.PropertyReader;
 import in.co.rays.proj4.util.ServletUtility;
 
 /**
-* ForgetPasswordCtl Servlet Controller.
-* <p>
-* Handles the "Forgot Password" functionality.
-* Validates user email and triggers sending of password to the registered email.
-* </p>
-* 
-* @author Amit Chandsarkar
-* @version 1.0
-*/
-
+ * ForgetPasswordCtl handles "forgot password" requests.
+ * <p>
+ * It validates the user's email (login), populates a {@link UserBean} from the
+ * request, and delegates the password-recovery operation to {@link UserModel}.
+ * On successful processing, a success message is set; if the email is not
+ * registered, an error message is shown.
+ * </p>
+ *
+ * @author Chaitanya Bhatt
+ * @version 1.0
+ */
 @WebServlet(name = "ForgetPasswordCtl", urlPatterns = { "/ForgetPasswordCtl" })
 public class ForgetPasswordCtl extends BaseCtl {
 
     /**
-     * Validates the login input from the user.
-     * 
-     * @param request HTTP request
-     * @return true if input is valid, false otherwise
+     * Validates the forget-password form.
+     * <ul>
+     *   <li>login (email) is required</li>
+     *   <li>login must be a valid email format</li>
+     * </ul>
+     *
+     * @param request the {@link HttpServletRequest} containing form parameters
+     * @return {@code true} if validation passes; {@code false} otherwise
      */
     @Override
     protected boolean validate(HttpServletRequest request) {
@@ -54,49 +59,53 @@ public class ForgetPasswordCtl extends BaseCtl {
     }
 
     /**
-     * Populates a UserBean from request parameters.
-     * 
-     * @param request HTTP request
-     * @return populated UserBean
+     * Populates a {@link UserBean} with the login (email) parameter from the
+     * request. This bean is then used to invoke the forget-password operation.
+     *
+     * @param request the {@link HttpServletRequest} containing parameters
+     * @return populated {@link BaseBean} (actually a {@link UserBean})
      */
     @Override
     protected BaseBean populateBean(HttpServletRequest request) {
 
         UserBean bean = new UserBean();
+
         bean.setLogin(DataUtility.getString(request.getParameter("login")));
+
         return bean;
     }
 
     /**
-     * Handles GET requests to forward to the Forget Password view.
-     * 
-     * @param request  HTTP request
-     * @param response HTTP response
-     * @throws ServletException
-     * @throws IOException
+     * Handles HTTP GET requests by forwarding to the forget-password view.
+     *
+     * @param request  the {@link HttpServletRequest}
+     * @param response the {@link HttpServletResponse}
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException      if an I/O error occurs
      */
-    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         ServletUtility.forward(getView(), request, response);
     }
 
     /**
-     * Handles POST requests for the Forget Password operation.
-     * Validates input and triggers password recovery via email.
-     * 
-     * @param request  HTTP request
-     * @param response HTTP response
-     * @throws ServletException
-     * @throws IOException
+     * Handles HTTP POST requests. When the operation is {@link BaseCtl#OP_GO},
+     * it attempts to send the forgotten password to the user's registered email
+     * by calling {@link UserModel#forgetPassword(String)}. Appropriate success
+     * or error messages are set on the request based on the outcome.
+     *
+     * @param request  the {@link HttpServletRequest}
+     * @param response the {@link HttpServletResponse}
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException      if an I/O error occurs
      */
-    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         String op = DataUtility.getString(request.getParameter("operation"));
 
         UserBean bean = (UserBean) populateBean(request);
+
         UserModel model = new UserModel();
 
         if (OP_GO.equalsIgnoreCase(op)) {
@@ -106,21 +115,19 @@ public class ForgetPasswordCtl extends BaseCtl {
                     ServletUtility.setSuccessMessage("Password has been sent to your email id", request);
                 }
             } catch (RecordNotFoundException e) {
-            	ServletUtility.setErrorMessage("Email ID does not exists..!!", request);
-                //ServletUtility.setErrorMessage(e.getMessage(), request);
+                ServletUtility.setErrorMessage(e.getMessage(), request);
             } catch (ApplicationException e) {
                 e.printStackTrace();
                 ServletUtility.setErrorMessage("Please check your internet connection..!!", request);
-                
             }
             ServletUtility.forward(getView(), request, response);
         }
     }
 
     /**
-     * Returns the view for the Forget Password page.
-     * 
-     * @return path of FORGET_PASSWORD_VIEW JSP
+     * Returns the JSP view path for the forget-password page.
+     *
+     * @return view page path as {@link String}
      */
     @Override
     protected String getView() {

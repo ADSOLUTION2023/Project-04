@@ -6,151 +6,166 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
-import in.co.rays.proj4.bean.MarkSheetBean;
+import in.co.rays.proj4.bean.MarksheetBean;
 import in.co.rays.proj4.exception.ApplicationException;
+import in.co.rays.proj4.exception.DatabaseException;
 import in.co.rays.proj4.exception.DuplicateRecordException;
-import in.co.rays.proj4.model.MarkSheetModel;
+import in.co.rays.proj4.model.MarksheetModel;
 
 public class TestMarksheetModel {
-	
-public static MarkSheetModel model = new MarkSheetModel();
+	static MarksheetModel model = new MarksheetModel();
+	static MarksheetBean bean = null;
 
-		public static void main(String[] args) {
+	public static void main(String[] args) {
+//		testNextPk();
+//		testAdd();
+//		testDelete();
+//		testUpdate();
+//		testFindByPk();
+//		testFindByRollNo();
+//		testSearch();
+//		testList();
+//		testNextPk();
+	}
 
-			//testAdd();
-			 testUpdate();
-			//testDelete();
-			//testfindByPk();
-			//testFindByLogin();
-			//testSearch();
-		}
-		
-public static void testAdd() {
-			
-			MarkSheetBean bean = new MarkSheetBean();
-			
-			
-			try {
-				bean.setRollNo("1");
-				bean.setStudentId(1);
-				bean.setPhysics(64);
-				bean.setChemistry(75);
-				bean.setMaths(75);
-				bean.setCreatedBy("admin");
-				bean.setModifiedBy("admin");
-				bean.setCreatedDatetime(new Timestamp(new Date().getTime()));
-				bean.setModifiedDatetime(new Timestamp(new Date().getTime()));
-				long pk = model.add(bean);
-				System.out.println("Test add Successfull");
-
-			} catch (ApplicationException | DuplicateRecordException e) {
-				e.printStackTrace();
+	public static void testList() {
+		List list = new ArrayList();
+		try {
+			list = model.list();
+			if (list.size() < 0) {
+				System.out.println("Test Serach fail");
 			}
+			Iterator it = list.iterator();
+			while (it.hasNext()) {
+				bean = (MarksheetBean) it.next();
+				System.out.print("Id : " + bean.getId() + "\t");
+				System.out.print("Roll No. : " + bean.getRollNo()+ "\t");
+				System.out.print("Name : " + bean.getName()+ "\t");
+				System.out.print("Maths : " + bean.getMaths()+ "\t");
+				System.out.print("Physics : " +bean.getPhysics()+ "\t");
+				System.out.println("Chemistry : " + bean.getChemistry());
+			}
+		} catch (ApplicationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-public static void testUpdate() {
-	try {
-		MarkSheetBean bean = model.findByPk(1L);
-		bean.setRollNo("34");
-		bean.setStudentId(1);
-		bean.setPhysics(64);
-		bean.setChemistry(75);
-		bean.setMaths(75);
+	}
+
+	public static void testSearch() {
+		bean = new MarksheetBean();
+		bean.setName("Bhatt");
+		List list = new ArrayList();
+		try {
+			list = model.search(bean, 0, 0);
+			if (list.size() < 0) {
+				System.out.println("Test Serach fail");
+			}
+			Iterator it = list.iterator();
+			while (it.hasNext()) {
+				bean = (MarksheetBean) it.next();
+				System.out.print("Id : " + bean.getId() + "\t");
+				System.out.print("Roll No. : " + bean.getRollNo()+ "\t");
+				System.out.print("Name : " + bean.getName()+ "\t");
+				System.out.print("Maths : " + bean.getMaths()+ "\t");
+				System.out.print("Physics : " +bean.getPhysics()+ "\t");
+				System.out.println("Chemistry : " + bean.getChemistry());
+			}
+		} catch (ApplicationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	public static void testFindByRollNo() {
+		
+		try {
+			bean = model.findByRollNo("200303105216");
+			System.out.print("Id : " + bean.getId() + "\t");
+			System.out.print("Roll No. : " + bean.getRollNo()+ "\t");
+			System.out.print("Name : " + bean.getName()+ "\t");
+			System.out.print("Maths : " + bean.getMaths()+ "\t");
+			System.out.print("Physics : " +bean.getPhysics()+ "\t");
+			System.out.println("Chemistry : " + bean.getChemistry());
+		} catch (ApplicationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	public static void testFindByPk() {
+		try {
+			bean = model.findByPk(2);
+			System.out.print("Id : " + bean.getId() + "\t");
+			System.out.print("Roll No. : " + bean.getRollNo()+ "\t");
+			System.out.print("Name : " + bean.getName()+ "\t");
+			System.out.print("Maths : " + bean.getMaths()+ "\t");
+			System.out.print("Physics : " +bean.getPhysics()+ "\t");
+			System.out.println("Chemistry : " + bean.getChemistry());
+		} catch (ApplicationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
+	}
+
+	public static void testUpdate() {
+		bean = new MarksheetBean();
+		bean.setId(2);
+		bean.setRollNo("200303105211");
+		bean.setStudentId(3);
+		bean.setPhysics(80);
+		bean.setChemistry(89);
+		bean.setMaths(70);
 		bean.setCreatedBy("admin");
 		bean.setModifiedBy("admin");
 		bean.setCreatedDatetime(new Timestamp(new Date().getTime()));
 		bean.setModifiedDatetime(new Timestamp(new Date().getTime()));
-		long pk = model.add(bean);
-		System.out.println("Test Update Succesfull");
+		try {
+			model.update(bean);
+			System.out.println("Marksheet updated successfully");
 		} catch (ApplicationException | DuplicateRecordException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-	
-public static void testDelete() {
-	try {
-		MarkSheetBean bean = new MarkSheetBean();
-		long pk = 2L;
-		bean.setId(pk);
-		model.delete(bean);
-		MarkSheetBean deletedbean = model.findByPk(pk);
-		System.out.println("Test Delete Sucessfull");
-		if (deletedbean != null) {
-			System.out.println("Test Delete fail");
-		}
-	} catch (ApplicationException e) {
-		e.printStackTrace();
-	}
-}
 
-public static void testfindByPk() {
-	try {
-		MarkSheetBean bean = model.findByPk(2L);
-		if (bean == null) {
-			System.out.println("Test Find By PK fail");
+	public static void testDelete() {
+		bean = new MarksheetBean();
+		bean.setId(2);
+		try {
+			model.delete(bean);
+			System.out.println("Marksheet deleted successfully");
+		} catch (ApplicationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		System.out.println(bean.getRollNo());
-		System.out.println(bean.getStudentId());
-		System.out.println(bean.getName());
-		System.out.println(bean.getPhysics());
-		System.out.println(bean.getChemistry());
-		System.out.println(bean.getMaths());
-		System.out.println(bean.getCreatedBy());
-		System.out.println(bean.getModifiedBy());
-		System.out.println(bean.getCreatedDatetime());
-		System.out.println(bean.getModifiedDatetime());
-	
-	} catch (ApplicationException e) {
-		e.printStackTrace();
 	}
-}
 
-public static void testFindByRollNo() {
-	try {
-		MarkSheetBean bean = model.findByRollNo("09234");
-		if (bean == null) {
-			System.out.println("Test Find By Name fail");
+	public static void testAdd() {
+		bean = new MarksheetBean();
+		bean.setRollNo("200303105211");
+		bean.setStudentId(1);
+		bean.setPhysics(80);
+		bean.setChemistry(89);
+		bean.setMaths(70);
+		bean.setCreatedBy("admin");
+		bean.setModifiedBy("admin");
+		bean.setCreatedDatetime(new Timestamp(new Date().getTime()));
+		bean.setModifiedDatetime(new Timestamp(new Date().getTime()));
+		try {
+			model.add(bean);
+			System.out.println("Marksheet added successfully");
+		} catch (ApplicationException | DuplicateRecordException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		System.out.println(bean.getId());
-		System.out.println(bean.getStudentId());
-		System.out.println(bean.getName());
-		System.out.println(bean.getPhysics());
-		System.out.println(bean.getChemistry());
-		System.out.println(bean.getMaths());
-		System.out.println(bean.getCreatedBy());
-		System.out.println(bean.getModifiedBy());
-		System.out.println(bean.getCreatedDatetime());
-		System.out.println(bean.getModifiedDatetime());
-	} catch (ApplicationException e) {
-		e.printStackTrace();
 	}
-}
-public static void testSearch() {
-	try {
-		MarkSheetBean bean = new MarkSheetBean();
-		List list = new ArrayList();
-		bean.setName("Amit");
-		list = model.search(bean, 0, 0);
-		if (list.size() < 0) {
-			System.out.println("Test Search fail");
-		}
-		Iterator it = list.iterator();
-		while (it.hasNext()) {
-			bean = (MarkSheetBean)it.next();
-			System.out.println(bean.getId());
-			System.out.println(bean.getRollNo());
-			System.out.println(bean.getStudentId());
-			System.out.println(bean.getName());
-			System.out.println(bean.getPhysics());
-			System.out.println(bean.getChemistry());
-			System.out.println(bean.getMaths());
-			System.out.println(bean.getCreatedBy());
-			System.out.println(bean.getModifiedBy());
-			System.out.println(bean.getCreatedDatetime());
-			System.out.println(bean.getModifiedDatetime());
-		}
-	} catch (ApplicationException e) {
-		e.printStackTrace();
-	}
-}
-}
 
+	public static void testNextPk() {
+		try {
+			System.out.println(model.nextPk());
+		} catch (DatabaseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+}

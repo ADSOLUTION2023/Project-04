@@ -1,4 +1,4 @@
- package in.co.rays.proj4.controller;
+package in.co.rays.proj4.controller;
 
 import java.io.IOException;
 import java.util.List;
@@ -17,28 +17,32 @@ import in.co.rays.proj4.util.PropertyReader;
 import in.co.rays.proj4.util.ServletUtility;
 
 /**
- * RoleListCtl is a controller servlet that handles displaying the list of Roles.
- * It supports operations such as search, pagination (next/previous),
- * delete, reset, new entry, and back to list.
+ * RoleListCtl handles listing, searching, pagination and bulk actions for Role
+ * entities. It preloads role list data for the view, populates {@link RoleBean}
+ * from request parameters, delegates search/delete operations to
+ * {@link RoleModel}, and prepares pagination metadata for the view.
+ * <p>
+ * Supported operations include Search, Next, Previous, New, Delete, Reset and Back.
+ * </p>
  * 
- * URL pattern: /ctl/RoleListCtl
- * 
- * Extends BaseCtl to inherit common controller behavior.
- * 
- * @author Amit Chandsarkar
+ * @author Chaitanya Bhatt
  * @version 1.0
+ * @see in.co.rays.proj4.model.RoleModel
+ * @see in.co.rays.proj4.bean.RoleBean
  */
 @WebServlet(name = "RoleListCtl", urlPatterns = { "/ctl/RoleListCtl" })
 public class RoleListCtl extends BaseCtl {
 
     /**
-     * Preloads the list of Roles for drop-downs or selection lists.
-     * 
-     * @param request HttpServletRequest
+     * Preloads the list of roles and sets it as request attribute "roleList".
+     * This is used to populate dropdowns or auxiliary lists in the view.
+     *
+     * @param request the {@link HttpServletRequest}
      */
     @Override
     protected void preload(HttpServletRequest request) {
         RoleModel roleModel = new RoleModel();
+
         try {
             List roleList = roleModel.list();
             request.setAttribute("roleList", roleList);
@@ -48,26 +52,35 @@ public class RoleListCtl extends BaseCtl {
     }
 
     /**
-     * Populates RoleBean from HttpServletRequest parameters.
-     * 
-     * @param request HttpServletRequest
-     * @return populated BaseBean (RoleBean)
+     * Populates a {@link RoleBean} from request parameters for search or other operations.
+     *
+     * @param request the {@link HttpServletRequest} containing parameters
+     * @return populated {@link BaseBean} (actually a {@link RoleBean})
      */
     @Override
     protected BaseBean populateBean(HttpServletRequest request) {
+
         RoleBean bean = new RoleBean();
+
         bean.setName(DataUtility.getString(request.getParameter("name")));
         bean.setId(DataUtility.getLong(request.getParameter("roleId")));
+
         return bean;
     }
 
     /**
-     * Handles GET request to display the initial list of Roles.
-     * Supports pagination by page number and page size.
+     * Handles HTTP GET requests. Performs an initial search and forwards the result
+     * list to the view. If no records are found, an error message is set.
+     *
+     * @param request  the {@link HttpServletRequest}
+     * @param response the {@link HttpServletResponse}
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException      if an I/O error occurs
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
         int pageNo = 1;
         int pageSize = DataUtility.getInt(PropertyReader.getValue("page.size"));
 
@@ -97,8 +110,14 @@ public class RoleListCtl extends BaseCtl {
     }
 
     /**
-     * Handles POST request for Role list operations such as search, delete,
-     * pagination, reset, new, and back.
+     * Handles HTTP POST requests for search, pagination, new, delete, reset and back
+     * operations. After performing the requested operation it forwards the updated
+     * list and pagination metadata to the view.
+     *
+     * @param request  the {@link HttpServletRequest}
+     * @param response the {@link HttpServletResponse}
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException      if an I/O error occurs
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -120,7 +139,9 @@ public class RoleListCtl extends BaseCtl {
         String[] ids = request.getParameterValues("ids");
 
         try {
+
             if (OP_SEARCH.equalsIgnoreCase(op) || "Next".equalsIgnoreCase(op) || "Previous".equalsIgnoreCase(op)) {
+
                 if (OP_SEARCH.equalsIgnoreCase(op)) {
                     pageNo = 1;
                 } else if (OP_NEXT.equalsIgnoreCase(op)) {
@@ -128,8 +149,9 @@ public class RoleListCtl extends BaseCtl {
                 } else if (OP_PREVIOUS.equalsIgnoreCase(op) && pageNo > 1) {
                     pageNo--;
                 }
+
             } else if (OP_NEW.equalsIgnoreCase(op)) {
-                ServletUtility.redirect(ORSView.ROLE_CTL, request, response);
+                ServletUtility.redirect(ORSView.USER_CTL, request, response);
                 return;
 
             } else if (OP_DELETE.equalsIgnoreCase(op)) {
@@ -144,11 +166,13 @@ public class RoleListCtl extends BaseCtl {
                 } else {
                     ServletUtility.setErrorMessage("Select at least one record", request);
                 }
+
             } else if (OP_RESET.equalsIgnoreCase(op)) {
-                ServletUtility.redirect(ORSView.ROLE_LIST_CTL, request, response);
+                ServletUtility.redirect(ORSView.USER_LIST_CTL, request, response);
                 return;
+
             } else if (OP_BACK.equalsIgnoreCase(op)) {
-                ServletUtility.redirect(ORSView.ROLE_LIST_CTL, request, response);
+                ServletUtility.redirect(ORSView.USER_LIST_CTL, request, response);
                 return;
             }
 
@@ -171,17 +195,15 @@ public class RoleListCtl extends BaseCtl {
             ServletUtility.handleException(e, request, response);
             return;
         }
-
     }
 
     /**
-     * Returns the view page for Role list.
-     * 
-     * @return String representing RoleList view path
+     * Returns the JSP view path for the role list.
+     *
+     * @return view page path as {@link String}
      */
     @Override
     protected String getView() {
         return ORSView.ROLE_LIST_VIEW;
     }
-
 }

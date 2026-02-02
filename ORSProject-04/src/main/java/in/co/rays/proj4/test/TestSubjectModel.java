@@ -8,115 +8,141 @@ import java.util.List;
 
 import in.co.rays.proj4.bean.SubjectBean;
 import in.co.rays.proj4.exception.ApplicationException;
+import in.co.rays.proj4.exception.DatabaseException;
 import in.co.rays.proj4.exception.DuplicateRecordException;
 import in.co.rays.proj4.model.SubjectModel;
 
 public class TestSubjectModel {
-
-public static SubjectModel model = new SubjectModel();
-
+	static SubjectModel model = new SubjectModel();
+	static SubjectBean bean;
 	public static void main(String[] args) {
-
-		testAdd();
-		//testUpdate();
-		//testDelete(); 
-		//testfindByPk();
-		//testFindByName();
-		//testSearch(); 
+//		testNextPk();
+//		testAdd();
+//		testDelete();
+//		testUpdate();
+//		testFindByPk();
+//		testFindByName();
+//		testSearch();
+//		testList();
+//		testNextPk();
 	}
-
-	public static void testAdd() {
+	public static void testList() {
+		List list = new ArrayList();
 		try {
-			SubjectBean bean = new SubjectBean();
-			bean.setSubjectName("hjjk");
-			bean.setCourseId(001);
-			bean.setDescription("admin");
-			bean.setCreatedBy("admin");
-			bean.setModifiedBy("admin");
-			bean.setCreatedDatetime(new Timestamp(new Date().getTime()));
-			bean.setModifiedDatetime(new Timestamp(new Date().getTime()));
-			long pk = model.add(bean);
-			System.out.println("Test add");
-
-		} catch (ApplicationException | DuplicateRecordException e) {
+			list = model.list();
+			if (list.size() < 0) {
+				System.out.println("Test Serach fail");
+			}
+			Iterator it = list.iterator();
+			while (it.hasNext()) {
+				bean = (SubjectBean) it.next();
+				System.out.print("Id : " + bean.getId() + "\t");
+				System.out.print("Name : " + bean.getName() + "\t");
+				System.out.print("Course Name : " + bean.getCourseName() + "\t");
+				System.out.println("Discraption : " + bean.getDescription());
+			}
+		} catch (ApplicationException e) {
+			// TODO Auto-generated catch block
+		}
+	}
+	public static void testSearch() {
+		bean = new SubjectBean();
+		bean.setName("HTML");
+		List list = new ArrayList();
+		try {
+			list = model.search(bean, 0, 0);
+			if (list.size() < 0) {
+				System.out.println("Test Serach fail");
+			}
+			Iterator it = list.iterator();
+			while (it.hasNext()) {
+				bean = (SubjectBean) it.next();
+				System.out.print("Id : " + bean.getId() + "\t");
+				System.out.print("Name : " + bean.getName() + "\t");
+				System.out.print("Course Name : " + bean.getCourseName() + "\t");
+				System.out.println("Discraption : " + bean.getDescription());
+			}
+		} catch (ApplicationException e) {
+			// TODO Auto-generated catch block
+		}
+	}
+	public static void testFindByName() {
+		try {
+			bean = model.findByName("CSS");
+			System.out.print("Id : " + bean.getId() + "\t");
+			System.out.print("Name : " + bean.getName() + "\t");
+			System.out.print("Course Name : " + bean.getCourseName() + "\t");
+			System.out.println("Discraption : " + bean.getDescription());
+		} catch (ApplicationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	public static void testFindByPk() {
+		try {
+			bean = model.findByPk(1);
+			System.out.print("Id : " + bean.getId() + "\t");
+			System.out.print("Name : " + bean.getName() + "\t");
+			System.out.print("Course Name : " + bean.getCourseName() + "\t");
+			System.out.println("Discraption : " + bean.getDescription());
+		} catch (ApplicationException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	public static void testUpdate() {
+		bean = new SubjectBean();
+		bean.setId(2);
+		bean.setName("CSS");
+		bean.setCourseId(1);
+		bean.setDescription("CSS, Telwint CSS");
+		bean.setCreatedBy("admin");
+		bean.setModifiedBy("admin");
+		bean.setCreatedDatetime(new Timestamp(new Date().getTime()));
+		bean.setModifiedDatetime(new Timestamp(new Date().getTime()));
 		try {
-			SubjectBean bean = model.findByPk(1L);
-			bean.setSubjectName("Amit");
-			bean.setDescription("Amit");
 			model.update(bean);
-			System.out.println("Test Update");
-			
+			System.out.println("Subject updated successfully");
 		} catch (ApplicationException | DuplicateRecordException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-	
-public static void testDelete() {
-	try {
-		SubjectBean bean = new SubjectBean();
-		long pk = 1L;
-		bean.setId(pk);
-		model.delete(bean);
-		SubjectBean deletedbean = model.findByPk(pk);
-		if (deletedbean != null) {
-			System.out.println("Test Delete fail");
+	public static void testDelete() {
+		bean = new SubjectBean();
+		bean.setId(3);
+		try {
+			model.delete(bean);
+			System.out.println("Subject deleted successfully");
+
+		} catch (ApplicationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-	} catch (ApplicationException e) {
-		e.printStackTrace();
+	}
+	public static void testAdd() {
+		bean = new SubjectBean();
+		bean.setName("JS");
+		bean.setCourseId(1);
+		bean.setDescription("HTML5, HTML advance");
+		bean.setCreatedBy("admin");
+		bean.setModifiedBy("admin");
+		bean.setCreatedDatetime(new Timestamp(new Date().getTime()));
+		bean.setModifiedDatetime(new Timestamp(new Date().getTime()));
+		try {
+			model.add(bean);
+			System.out.println("Subject added successfully");
+		} catch (ApplicationException | DuplicateRecordException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	public static void testNextPk() {
+		try {
+			System.out.println(model.nextPk());
+		} catch (DatabaseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }
-
-
-public static void testfindByPk() {
-	try {
-		SubjectBean bean = model.findByPk(1L);
-		if (bean == null) {
-			System.out.println("Test Find By PK fail");
-		}
-		System.out.println(bean.getId());
-		System.out.println(bean.getSubjectName());
-		System.out.println(bean.getDescription());
-	} catch (ApplicationException e) {
-		e.printStackTrace();
-	}
-}
-
-public static void testFindByName() {
-	try {
-		SubjectBean bean = model.findByName("Amit");
-		if (bean == null) {
-			System.out.println("Test Find By Name fail");
-		}
-		System.out.println(bean.getId());
-		System.out.println(bean.getSubjectName());
-		System.out.println(bean.getDescription());
-	} catch (ApplicationException e) {
-		e.printStackTrace();
-	}
-}
-public static void testSearch() {
-	try {
-		SubjectBean bean = new SubjectBean();
-		List list = new ArrayList();
-		bean.setSubjectName("student");
-		list = model.search(bean, 0, 0);
-		if (list.size() < 0) {
-			System.out.println("Test Serach fail");
-		}
-		Iterator it = list.iterator();
-		while (it.hasNext()) {
-			bean = (SubjectBean) it.next();
-			System.out.println(bean.getId());
-			System.out.println(bean.getSubjectName());
-			System.out.println(bean.getDescription());
-		}
-	} catch (ApplicationException e) {
-		e.printStackTrace();
-	}
-}
-}
-

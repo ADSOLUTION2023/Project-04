@@ -55,21 +55,22 @@
 
 			<table style="width: 100%">
 				<tr>
-					<td align="center">
-					
-					<label><b>First Name :</b></label> 
-					<input type="text" name="firstName" placeholder="Enter First Name" value="<%=ServletUtility.getParameter("firstName", request)%>">&emsp;
+					<td align="center"><label><b>First Name :</b></label> <input
+						type="text" name="firstName" placeholder="Enter First Name"
+						value="<%=ServletUtility.getParameter("firstName", request)%>">&emsp;
 
-			   <%--<label><b>DOB :</b></label> 
-			   <input type="text" name="dob" id="udate" placeholder="Enter Date" value="<%=ServletUtility.getParameter("dob", request)%>">&emsp;   --%>
+						<label><b>Login Id:</b></label> <input type="text" name="login"
+						placeholder="Enter Email ID"
+						value="<%=ServletUtility.getParameter("login", request)%>">&emsp;
 						
-                   <label><b>Login Id:</b></label> 
-                   <input type="text" name="login" placeholder="Enter Email ID" value="<%=ServletUtility.getParameter("login", request)%>">&emsp;
+						<label><b>DOB:</b></label> <input type="date"  name="dob"
+						placeholder="Enter the DOB"
+						value="<%=ServletUtility.getParameter("dob", request)%>">&emsp;
 
-						<label><b>Role : </b></label> 
-						<%=HTMLUtility.getList("roleId", String.valueOf(bean.getRoleId()), roleList)%>&emsp;
+						<label><b>Role : </b></label> <%=HTMLUtility.getList("roleId", String.valueOf(bean.getRoleId()), roleList)%>&emsp;
 
-						<input type="submit" name="operation" value="<%=UserListCtl.OP_SEARCH%>"> &nbsp; <input
+						<input type="submit" name="operation"
+						value="<%=UserListCtl.OP_SEARCH%>"> &nbsp; <input
 						type="submit" name="operation" value="<%=UserListCtl.OP_RESET%>">
 					</td>
 				</tr>
@@ -157,5 +158,6 @@
 			%>
 		</form>
 	</div>
+	<%@ include file="Footer.jsp"%>
 </body>
 </html>

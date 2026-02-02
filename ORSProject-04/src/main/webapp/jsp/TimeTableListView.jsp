@@ -1,4 +1,4 @@
- <%@page import="in.co.rays.proj4.controller.ORSView"%>
+<%@page import="in.co.rays.proj4.controller.ORSView"%>
 <%@page import="java.util.LinkedHashMap"%>
 <%@page import="in.co.rays.proj4.util.HTMLUtility"%>
 <%@page import="java.text.SimpleDateFormat"%>
@@ -17,7 +17,7 @@
 <body>
 	<%@include file="Header.jsp"%>
 	<div align="center">
-		<h1 align="center" style="margin-bottom: -15; color: navy;">TimeTable
+		<h1 align="center" style="margin-bottom: -15; color: navy;">Timetable
 			List</h1>
 
 		<div style="height: 15px; margin-bottom: 12px">
@@ -54,10 +54,11 @@
 					<td align="right"><label><b>Course Name :</b></label> <%=HTMLUtility.getList("courseId", String.valueOf(bean.getCourseId()), courseList)%>&emsp;
 						<label><b>Subject Name :</b></label> <%=HTMLUtility.getList("subjectId", String.valueOf(bean.getSubjectId()), subjectList)%>&emsp;
 						<label><b>Exam Date :</b></label></td>
-					<td align="left"><input type="text" id="udate" name="examDate" placeholder="Select Date of Birth"
+					<td align="left"><input type="text" id="udate" name="examDate"
+						placeholder="Select Date of Birth"
 						value="<%=DataUtility.getDateString(bean.getExamDate())%>">
-				</label>&emsp; <input type="submit" name="operation"
-					value="<%=TimetableListCtl.OP_SEARCH%>">&nbsp; <input
+						</label>&emsp; <input type="submit" name="operation"
+						value="<%=TimetableListCtl.OP_SEARCH%>">&nbsp; <input
 						type="submit" name="operation"
 						value="<%=TimetableListCtl.OP_RESET%>"></td>
 				</tr>
@@ -96,7 +97,7 @@
 					<td style="text-align: center; text-transform: capitalize;"><%=bean.getExamTime()%></td>
 					<td style="text-align: center; text-transform: capitalize;"><%=bean.getDescription()%></td>
 					<td style="text-align: center;"><a
-						href="TimeTableCtl?id=<%=bean.getId()%>">Edit</a></td>
+						href="<%=ORSView.TIMETABLE_CTL%>?id=<%=bean.getId()%>">Edit</a></td>
 				</tr>
 				<%
 					}
@@ -107,7 +108,7 @@
 
 					<td style="width: 25%"><input type="submit" name="operation"
 						value="<%=TimetableListCtl.OP_PREVIOUS%>"
-						<%=pageNo == 1 ? "" : "disabled" %>></td>
+						<%=pageNo == 1 ? "" : "disabled"%>></td>
 					<td align="center" style="width: 25%"><input type="submit"
 						name="operation" value="<%=TimetableListCtl.OP_NEW%>"></td>
 					<td align="center" style="width: 25%"><input type="submit"
@@ -135,5 +136,6 @@
 
 		</form>
 	</div>
+	<%@ include file="Footer.jsp"%>
 </body>
 </html>

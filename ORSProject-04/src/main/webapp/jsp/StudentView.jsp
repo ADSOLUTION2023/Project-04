@@ -1,35 +1,32 @@
-<%@page import="in.co.rays.proj4.controller.StudentCtl"%>
-<%@page import="in.co.rays.proj4.bean.CollegeBean"%>
+<%@page import="in.co.rays.proj4.controller.ORSView"%>
+<%@page import="in.co.rays.proj4.controller.UserCtl"%>
+<%@page import="in.co.rays.proj4.bean.StudentBean"%>
+<%@page import="java.util.List"%>
 <%@page import="java.util.HashMap"%>
 <%@page import="in.co.rays.proj4.util.HTMLUtility"%>
+<%@page import="in.co.rays.proj4.controller.StudentCtl"%>
 <%@page import="in.co.rays.proj4.util.DataUtility"%>
 <%@page import="in.co.rays.proj4.util.ServletUtility"%>
-<%@page import="java.util.List"%>
-<%@page import="in.co.rays.proj4.controller.ORSView"%>
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-	pageEncoding="ISO-8859-1"%>
-<!DOCTYPE html>
 <html>
 <head>
-<meta charset="ISO-8859-1">
 <title>Add Student</title>
 <link rel="icon" type="image/png"
 	href="<%=ORSView.APP_CONTEXT%>/img/logo.png" sizes="16x16" />
 </head>
 <body>
-	<form action="<%=ORSView.STUDENT_CTL%>" method="post">
-
+	<form action="<%=ORSView.STUDENT_CTL%>" method="POST">
 		<%@ include file="Header.jsp"%>
 
 		<jsp:useBean id="bean" class="in.co.rays.proj4.bean.StudentBean"
-			scope="request" />
+			scope="request"></jsp:useBean>
+
 		<%
-			List<CollegeBean> collegeList = (List<CollegeBean>) request.getAttribute("collegeList");
+			@SuppressWarnings("unchecked")
+			List<StudentBean> l = (List<StudentBean>) request.getAttribute("collegeList");
 		%>
 
 		<div align="center">
 			<h1 align="center" style="margin-bottom: -15; color: navy">
-
 				<%
 					if (bean != null && bean.getId() > 0) {
 				%>Update<%
@@ -42,16 +39,14 @@
 
 			<div style="height: 15px; margin-bottom: 12px">
 				<H3 align="center">
-					<font color="red"> <%=ServletUtility.getErrorMessage(request)%>
-					</font>
-				</H3>
-
-				<H3 align="center">
 					<font color="green"> <%=ServletUtility.getSuccessMessage(request)%>
 					</font>
 				</H3>
+				<H3 align="center">
+					<font color="red"> <%=ServletUtility.getErrorMessage(request)%>
+					</font>
+				</H3>
 			</div>
-
 			<input type="hidden" name="id" value="<%=bean.getId()%>"> <input
 				type="hidden" name="createdBy" value="<%=bean.getCreatedBy()%>">
 			<input type="hidden" name="modifiedBy"
@@ -77,11 +72,17 @@
 					<td style="position: fixed;"><font color="red"> <%=ServletUtility.getErrorMessage("lastName", request)%></font></td>
 				</tr>
 				<tr>
-					<th align="left">Date of Birth<span style="width: 98%"
-						style="color: red">*</span></th>
-					<td><input type="date" name="dob" placeholder="Enter DOB"
-						value="<%=DataUtility.getDateString(bean.getDob())%>"
-						style="width: 98%"></td>
+					<th align="left">Email Id<span style="color: red">*</span></th>
+					<td><input type="text" name="email"
+						placeholder="Enter Email ID"
+						value="<%=DataUtility.getStringData(bean.getEmail())%>"></td>
+					<td style="position: fixed;"><font color="red"> <%=ServletUtility.getErrorMessage("email", request)%></font></td>
+				</tr>
+				<tr>
+					<th align="left">Date of Birth<span style="color: red">*</span></th>
+					<td><input type="text" id="udate" name="dob"
+						placeholder="Select Date of Birth"
+						value="<%=DataUtility.getDateString(bean.getDob())%>"></td>
 					<td style="position: fixed;"><font color="red"> <%=ServletUtility.getErrorMessage("dob", request)%></font></td>
 				</tr>
 				<tr>
@@ -91,7 +92,6 @@
 							HashMap<String, String> map = new HashMap<String, String>();
 							map.put("Male", "Male");
 							map.put("Female", "Female");
-
 							String htmlList = HTMLUtility.getList("gender", bean.getGender(), map);
 						%> <%=htmlList%>
 					</td>
@@ -99,7 +99,7 @@
 				</tr>
 				<tr>
 					<th align="left">College<span style="color: red">*</span></th>
-					<td><%=HTMLUtility.getList("collegeId", String.valueOf(bean.getCollegeId()), collegeList)%></td>
+					<td><%=HTMLUtility.getList("collegeId", String.valueOf(bean.getCollegeId()), l)%></td>
 					<td style="position: fixed;"><font color="red"> <%=ServletUtility.getErrorMessage("collegeId", request)%></font></td>
 				</tr>
 				<tr>

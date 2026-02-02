@@ -17,22 +17,27 @@ import in.co.rays.proj4.util.PropertyReader;
 import in.co.rays.proj4.util.ServletUtility;
 
 /**
-* CourseListCtl Servlet Controller.
-* <p>
-* Handles listing, searching, pagination, and deletion of Course records.
-* </p>
-* 
-* @author Amit Chandsarkar
-* @version 1.0
-*/
-
+ * Controller that handles listing, searching, pagination and bulk actions for
+ * Course entities. It preloads data required by the view, populates {@link CourseBean}
+ * from request parameters, and delegates business operations to {@link CourseModel}.
+ * <p>
+ * Supported operations include Search, Next, Previous, New, Delete, Reset and Back.
+ * </p>
+ *
+ * @author Chaitanya Bhatt
+ * @version 1.0
+ * @see in.co.rays.proj4.model.CourseModel
+ * @see in.co.rays.proj4.bean.CourseBean
+ */
 @WebServlet(name = "CourseListCtl", urlPatterns = { "/ctl/CourseListCtl" })
 public class CourseListCtl extends BaseCtl {
 
     /**
-     * Loads course list data before rendering the page.
+     * Preloads the list of courses and sets it as request attribute "courseList".
+     * This method is invoked before forwarding to the view so that dropdowns or
+     * auxiliary lists can be rendered.
      *
-     * @param request the HTTP request object
+     * @param request the {@link HttpServletRequest}
      */
     @Override
     protected void preload(HttpServletRequest request) {
@@ -48,14 +53,14 @@ public class CourseListCtl extends BaseCtl {
     }
 
     /**
-     * Populates the CourseBean from request parameters for search/filtering.
+     * Populates a {@link CourseBean} from request parameters for use in search
+     * or other operations.
      *
-     * @param request the HTTP request object
-     * @return populated CourseBean
+     * @param request the {@link HttpServletRequest} containing parameters
+     * @return populated {@link BaseBean} (actually a {@link CourseBean})
      */
     @Override
     protected BaseBean populateBean(HttpServletRequest request) {
-
         CourseBean bean = new CourseBean();
 
         bean.setName(DataUtility.getString(request.getParameter("name")));
@@ -66,10 +71,13 @@ public class CourseListCtl extends BaseCtl {
     }
 
     /**
-     * Handles GET requests for displaying the Course list with pagination.
+     * Handles HTTP GET requests. Performs an initial search and forwards the
+     * result list to the view. If no records are found, an error message is set.
      *
-     * @param request  the HTTP request
-     * @param response the HTTP response
+     * @param request  the {@link HttpServletRequest}
+     * @param response the {@link HttpServletResponse}
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException      if an I/O error occurs
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -105,10 +113,14 @@ public class CourseListCtl extends BaseCtl {
     }
 
     /**
-     * Handles POST requests for search, pagination, new, delete, reset, and back operations.
+     * Handles HTTP POST requests for search, pagination, new, delete, reset and back
+     * operations. After performing the requested operation it forwards the updated
+     * list and pagination metadata to the view.
      *
-     * @param request  the HTTP request
-     * @param response the HTTP response
+     * @param request  the {@link HttpServletRequest}
+     * @param response the {@link HttpServletResponse}
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException      if an I/O error occurs
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -121,9 +133,7 @@ public class CourseListCtl extends BaseCtl {
         int pageSize = DataUtility.getInt(request.getParameter("pageSize"));
 
         pageNo = (pageNo == 0) ? 1 : pageNo;
-        pageSize = (pageSize == 0)
-                ? DataUtility.getInt(PropertyReader.getValue("page.size"))
-                : pageSize;
+        pageSize = (pageSize == 0) ? DataUtility.getInt(PropertyReader.getValue("page.size")) : pageSize;
 
         CourseBean bean = (CourseBean) populateBean(request);
         CourseModel model = new CourseModel();
@@ -132,14 +142,14 @@ public class CourseListCtl extends BaseCtl {
         String[] ids = request.getParameterValues("ids");
 
         try {
-            // Search and Pagination Logic
+
             if (OP_SEARCH.equalsIgnoreCase(op) || "Next".equalsIgnoreCase(op) || "Previous".equalsIgnoreCase(op)) {
 
                 if (OP_SEARCH.equalsIgnoreCase(op)) {
                     pageNo = 1;
-                } else if ("Next".equalsIgnoreCase(op)) {
+                } else if (OP_NEXT.equalsIgnoreCase(op)) {
                     pageNo++;
-                } else if ("Previous".equalsIgnoreCase(op)) {
+                } else if (OP_PREVIOUS.equalsIgnoreCase(op) && pageNo > 1) {
                     pageNo--;
                 }
 
@@ -154,27 +164,26 @@ public class CourseListCtl extends BaseCtl {
                     for (String id : ids) {
                         deletebean.setId(DataUtility.getInt(id));
                         model.delete(deletebean);
-                        ServletUtility.setSuccessMessage("Data is deleted successfully", request);
+                        ServletUtility.setSuccessMessage("Course deleted successfully", request);
                     }
                 } else {
                     ServletUtility.setErrorMessage("Select at least one record", request);
                 }
 
             } else if (OP_RESET.equalsIgnoreCase(op)) {
-                ServletUtility.redirect(ORSView.COURSE_LIST_CTL, request, response);
+                ServletUtility.redirect(ORSView.COLLEGE_LIST_CTL, request, response);
                 return;
 
             } else if (OP_BACK.equalsIgnoreCase(op)) {
-                ServletUtility.redirect(ORSView.COURSE_LIST_CTL, request, response);
+                ServletUtility.redirect(ORSView.COLLEGE_LIST_CTL, request, response);
                 return;
             }
 
-            // Fetch updated list
             list = model.search(bean, pageNo, pageSize);
             next = model.search(bean, pageNo + 1, pageSize);
 
             if (list == null || list.size() == 0) {
-                ServletUtility.setErrorMessage("No record found", request);
+                ServletUtility.setErrorMessage("No record found ", request);
             }
 
             ServletUtility.setList(list, request);
@@ -193,13 +202,12 @@ public class CourseListCtl extends BaseCtl {
     }
 
     /**
-     * Returns the view page for Course list.
+     * Returns the JSP view path for the course list.
      *
-     * @return string path to the Course list JSP
+     * @return view page path as {@link String}
      */
     @Override
     protected String getView() {
         return ORSView.COURSE_LIST_VIEW;
     }
-
 }

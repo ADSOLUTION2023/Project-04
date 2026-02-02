@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Spring]]></title><description><![CDATA[Level up your Java code and explore what Spring can do for you.]]></description><link>https://spring.io</link><generator>GatsbyJS</generator><lastBuildDate>Mon, 02 Feb 2026 08:27:06 GMT</lastBuildDate><item><title><![CDATA[Spring Shell 4.0.1 is out!]]></title><link>https://spring.io/blog/2026/01/31/spring-shell-4-0-1-is-out</link><guid isPermaLink="true">https://spring.io/blog/2026/01/31/spring-shell-4-0-1-is-out</guid><dc:creator><![CDATA[fmbenhassine]]></dc:creator><pubDate>Sat, 31 Jan 2026 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;On behalf of the team and all contributors, I am pleased to announce that Spring Shell &lt;code&gt;4.0.1&lt;/code&gt; is now available from Maven Central!&lt;/p&gt;
+&lt;h2 id=&quot;whats-new-in-spring-shell-401&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#whats-new-in-spring-shell-401&quot; aria-label=&quot;whats new in spring shell 401 permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;What&apos;s New in Spring Shell 4.0.1&lt;/h2&gt;
+&lt;p&gt;Spring Shell 4.0.1 is a patch release that addresses several issues reported by the community since the release of Spring Shell 4.0.0. This release includes important bug fixes and improvements to enhance the overall stability and performance of the framework.&lt;/p&gt;
+&lt;p&gt;You can find the complete list of changes in the &lt;a href=&quot;https://github.com/spring-projects/spring-shell/releases/tag/v4.0.1&quot;&gt;4.0.1 release notes&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id=&quot;feedback&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#feedback&quot; aria-label=&quot;feedback permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Feedback&lt;/h2&gt;
+&lt;p&gt;Many thanks to all contributors who made this release possible! We encourage you to try Spring Shell 4.0.1 out and provide your feedback on &lt;a href=&quot;https://github.com/spring-projects/spring-shell/issues&quot;&gt;GitHub Issues&lt;/a&gt; and &lt;a href=&quot;https://github.com/spring-projects/spring-shell/discussions&quot;&gt;GitHub Discussions&lt;/a&gt;.&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;a href=&quot;https://spring.io/projects/spring-shell&quot;&gt;Spring Shell Home&lt;/a&gt;|&lt;a href=&quot;https://github.com/spring-projects/spring-shell&quot;&gt;Source on GitHub&lt;/a&gt;|&lt;a href=&quot;https://docs.spring.io/spring-shell/reference/index.html&quot;&gt;Reference documentation&lt;/a&gt;&lt;/p&gt;</content:encoded></item><item><title><![CDATA[Spring gRPC 1.0.2 Available Now]]></title><link>https://spring.io/blog/2026/01/30/spring-grpc-1</link><guid isPermaLink="true">https://spring.io/blog/2026/01/30/spring-grpc-1</guid><dc:creator><![CDATA[onobc]]></dc:creator><pubDate>Fri, 30 Jan 2026 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;On behalf of the team and everyone who has contributed, I&apos;m happy to announce that Spring gRPC &lt;code&gt;1.0.2&lt;/code&gt; maintenance release is available from Maven Central.&lt;/p&gt;
+&lt;p&gt;Please see the &lt;a href=&quot;https://github.com/spring-projects/spring-grpc/releases/tag/v1.0.2&quot;&gt;release notes&lt;/a&gt; for more details.&lt;/p&gt;
+&lt;p&gt;We want to take this opportunity to again thank all our users and contributors.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://spring.io/projects/spring-grpc/&quot;&gt;Project Page&lt;/a&gt; | &lt;a href=&quot;https://github.com/spring-projects/spring-grpc&quot;&gt;GitHub&lt;/a&gt;&lt;/p&gt;</content:encoded></item><item><title><![CDATA[A Bootiful Podcast: Start Your Year with Java Right with Java Developer Advocate Billy Korando]]></title><link>https://spring.io/blog/2026/01/29/a-bootiful-podcast-billy-korando</link><guid isPermaLink="true">https://spring.io/blog/2026/01/29/a-bootiful-podcast-billy-korando</guid><dc:creator><![CDATA[joshlong]]></dc:creator><pubDate>Thu, 29 Jan 2026 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;Hi, Spring (and Java) fans! In this episode I am beyond delighted to talk Java developer advocate and longtime friend of the show Billy Korando about the latest-and-greatest in the Java ecosystem.&lt;/p&gt;
+&lt;iframe title=&quot;Start Your Year with Java Right with Java Developer Advocate Billy Korando&quot; allowtransparency=&quot;true&quot; height=&quot;300&quot; width=&quot;100%&quot; style=&quot;border: none; min-width: min(100%, 430px);height:300px;&quot; scrolling=&quot;no&quot; data-name=&quot;pb-iframe-player&quot; src=&quot;https://www.podbean.com/player-v2/?from=embed&amp;i=kj4af-1a30538-pb&amp;square=1&amp;share=1&amp;download=1&amp;fonts=Arial&amp;skin=1&amp;font-color=&amp;rtl=0&amp;logo_link=&amp;btn-skin=7&amp;size=300&quot; loading=&quot;lazy&quot; allowfullscreen=&quot;&quot;&gt;&lt;/iframe&gt;</content:encoded></item><item><title><![CDATA[Spring AI Agentic Patterns (Part 5): Building Interoperable Agents with the Agent2Agent (A2A) Protocol]]></title><link>https://spring.io/blog/2026/01/29/spring-ai-agentic-patterns-a2a-integration</link><guid isPermaLink="true">https://spring.io/blog/2026/01/29/spring-ai-agentic-patterns-a2a-integration</guid><dc:creator><![CDATA[ilayaperumalg]]></dc:creator><pubDate>Thu, 29 Jan 2026 00:00:00 GMT</pubDate><content:encoded>&lt;img style=&quot;display: block; margin: auto;&quot; align=&quot;right&quot; src=&quot;https://raw.githubusercontent.com/spring-io/spring-io-static/refs/heads/main/blog/igopinathan/20260129/spring-ai-a2a-logo.png&quot; width=&quot;200&quot;&gt;
+&lt;p&gt;The &lt;strong&gt;Agent2Agent (A2A) Protocol&lt;/strong&gt; is an open standard for seamless AI agent communication. It enables agents to discover capabilities, exchange messages, and coordinate workflows across platforms—regardless of their implementation.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;&lt;a href=&quot;https://github.com/spring-ai-community/spring-ai-a2a&quot;&gt;Spring AI A2A&lt;/a&gt;&lt;/strong&gt; integrates the A2A Java SDK with Spring AI through Spring Boot autoconfiguration. It seamlessly connects the A2A protocol with Spring AI&apos;s &lt;code&gt;ChatClient&lt;/code&gt; and tools, enabling you to expose your agents as A2A servers.&lt;/p&gt;
+&lt;p&gt;This post is part of the &lt;strong&gt;Spring AI Agentic Patterns&lt;/strong&gt; series. While previous posts covered making individual agents more capable (&lt;a href=&quot;https://spring.io/blog/2026/01/13/spring-ai-generic-agent-skills/&quot;&gt;Agent Skills&lt;/a&gt;, &lt;a href=&quot;https://spring.io/blog/2026/01/16/spring-ai-ask-user-question-tool/&quot;&gt;AskUserQuestionTool&lt;/a&gt;, &lt;a href=&quot;https://spring.io/blog/2026/01/20/spring-ai-agentic-patterns-3-todowrite/&quot;&gt;TodoWriteTool&lt;/a&gt;, &lt;a href=&quot;https://spring.io/blog/2026/01/27/spring-ai-agentic-patterns-4-task-subagents/&quot;&gt;Sub-agent orchestration&lt;/a&gt;), this post shows how the A2A Protocol enables agents to collaborate across system boundaries through practical examples.&lt;/p&gt;
+&lt;h2 id=&quot;agent2agent-a2a-protocol&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#agent2agent-a2a-protocol&quot; aria-label=&quot;agent2agent a2a protocol permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Agent2Agent (A2A) Protocol&lt;/h2&gt;
+&lt;p&gt;The &lt;a href=&quot;https://a2a-protocol.org/&quot;&gt;A2A Protocol&lt;/a&gt; is an open standard for AI agent communication, providing a vendor-neutral foundation that enables agents to discover capabilities, exchange messages, and coordinate workflows. Built on HTTP, SSE, and JSON-RPC standards.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Agent Discovery&lt;/strong&gt; is the foundation of A2A communication. Agents discover each other&apos;s capabilities through the &lt;strong&gt;AgentCard&lt;/strong&gt;—a standardized JSON document exposed at &lt;code&gt;/.well-known/agent-card.json&lt;/code&gt; that describes an agent&apos;s identity, capabilities, and skills. This follows a three-step pattern: &lt;strong&gt;Discovery&lt;/strong&gt; ? &lt;strong&gt;Initiation&lt;/strong&gt; ? &lt;strong&gt;Completion&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;The protocol defines two roles: &lt;strong&gt;A2A Server&lt;/strong&gt; agents expose endpoints for discovery and message handling, while &lt;strong&gt;A2A Client&lt;/strong&gt; agents initiate communication by discovering remote agents and sending messages.&lt;/p&gt;
+&lt;p&gt;The &lt;strong&gt;&lt;a href=&quot;https://github.com/a2aproject/a2a-java&quot;&gt;A2A Java SDK&lt;/a&gt;&lt;/strong&gt; provides a Java implementation with server-side components for processing requests and managing tasks, and client-side components for calling remote agents. It supports multiple transports (HTTP, SSE, JSON-RPC) and handles low-level protocol details.&lt;/p&gt;
+&lt;h2 id=&quot;spring-ai-a2a-integration&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#spring-ai-a2a-integration&quot; aria-label=&quot;spring ai a2a integration permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Spring AI A2A Integration&lt;/h2&gt;
+&lt;p&gt;While the A2A Java SDK provides the protocol implementation, integrating it with Spring AI requires additional plumbing. This is where the &lt;strong&gt;Spring AI A2A&lt;/strong&gt; project comes in.&lt;/p&gt;
+&lt;p&gt;The &lt;code&gt;spring-ai-a2a&lt;/code&gt; project currently focuses on the &lt;strong&gt;server-side integration&lt;/strong&gt;, enabling you to expose your Spring AI agents as A2A-compliant servers.&lt;/p&gt;
+&lt;img style=&quot;display: block; margin: auto;&quot; src=&quot;https://raw.githubusercontent.com/spring-io/spring-io-static/refs/heads/main/blog/igopinathan/20260129/spring-ai-a2a-integration.png&quot; width=&quot;700&quot;&gt;
+&lt;p&gt;This covers:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Spring Boot Auto-configuration&lt;/strong&gt;: Autoconfigured A2A endpoints&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Spring AI Integration&lt;/strong&gt;: Direct integration with Spring AI&apos;s &lt;code&gt;ChatClient&lt;/code&gt; and &lt;code&gt;tools&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;JSON-RPC Transport via REST Controllers&lt;/strong&gt;: Currently implements JSON-RPC transport for agent communication. Controllers provide endpoints for agent cards and message handling.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;AgentExecutor Implementation&lt;/strong&gt;: &lt;code&gt;DefaultAgentExecutor&lt;/code&gt; that bridges A2A SDK and Spring AI&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Here&apos;s what the integration handles for you:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-java&quot;&gt;// The framework automatically exposes these A2A endpoints (relative to your context path):
+POST   /                                  // Handle JSON-RPC sendMessage requests
+GET    /.well-known/agent-card.json      // Agent card (standard A2A location)
+GET    /card                              // Agent card (alternative endpoint)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&quot;how-it-works&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#how-it-works&quot; aria-label=&quot;how it works permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;How It Works&lt;/h2&gt;
+&lt;img style=&quot;display: block; margin: auto;&quot; src=&quot;https://raw.githubusercontent.com/spring-io/spring-io-static/refs/heads/main/blog/igopinathan/20260129/spring-ai-a2a-flow.png&quot; width=&quot;700&quot;&gt;
+&lt;p&gt;&lt;strong&gt;Step-by-step:&lt;/strong&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;Agent Discovery&lt;/strong&gt; : Before communication begins, the client fetches the server&apos;s &lt;code&gt;AgentCard&lt;/code&gt; from &lt;code&gt;/.well-known/agent-card.json&lt;/code&gt; to discover capabilities, skills, and protocol details&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Request Reception&lt;/strong&gt;: &lt;code&gt;MessageController&lt;/code&gt; receives the A2A JSON-RPC &lt;code&gt;sendMessage&lt;/code&gt; request at the root endpoint&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Execution&lt;/strong&gt;: Routes to your &lt;code&gt;AgentExecutor&lt;/code&gt; bean (Spring AI A2A provides the default implementation: &lt;code&gt;DefaultAgentExecutor&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Handler Invocation&lt;/strong&gt;: The &lt;code&gt;ChatClientExecutorHandler&lt;/code&gt; lambda is invoked with the Spring AI ChatClient and request context&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Spring AI ChatClient Response&lt;/strong&gt;: The Spring AI &lt;code&gt;ChatClient&lt;/code&gt; response is packaged as an A2A JSON-RPC message&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&quot;getting-started&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#getting-started&quot; aria-label=&quot;getting started permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Getting Started&lt;/h2&gt;
+&lt;p&gt;Let&apos;s build interoperable agent systems with Spring AI A2A. We&apos;ll start with prerequisites and setup, then work through practical examples: a single-agent server and a multi-agent orchestration.&lt;/p&gt;
+&lt;h3 id=&quot;prerequisites&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#prerequisites&quot; aria-label=&quot;prerequisites permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Prerequisites&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Java 17 or later&lt;/li&gt;
+&lt;li&gt;Spring Boot 4.0.1&lt;/li&gt;
+&lt;li&gt;Spring AI 2.0.0-M2&lt;/li&gt;
+&lt;li&gt;An LLM provider (OpenAI, Anthropic, etc.)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&quot;dependencies&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#dependencies&quot; aria-label=&quot;dependencies permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Dependencies&lt;/h3&gt;
+&lt;p&gt;Add the Spring AI A2A starter to your project to expose your Spring AI agent as an A2A server:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-xml&quot;&gt;&amp;#x3C;dependency&gt;
+   &amp;#x3C;groupId&gt;org.springaicommunity&amp;#x3C;/groupId&gt;
+   &amp;#x3C;artifactId&gt;spring-ai-a2a-server-autoconfigure&amp;#x3C;/artifactId&gt;
+   &amp;#x3C;version&gt;0.2.0&amp;#x3C;/version&gt;
+&amp;#x3C;/dependency&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;This starter includes the A2A Java SDK (v0.3.3.Final) as a transitive dependency.&lt;/p&gt;
+&lt;p&gt;For applications that need to call remote A2A agents, explicitly add the A2A SDK client:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-xml&quot;&gt;&amp;#x3C;dependency&gt;
+   &amp;#x3C;groupId&gt;io.github.a2asdk&amp;#x3C;/groupId&gt;
+   &amp;#x3C;artifactId&gt;a2a-java-sdk-client&amp;#x3C;/artifactId&gt;
+   &amp;#x3C;version&gt;0.3.3.Final&amp;#x3C;/version&gt;
+&amp;#x3C;/dependency&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&quot;configuration&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#configuration&quot; aria-label=&quot;configuration permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Configuration&lt;/h3&gt;
+&lt;p&gt;Configure your application in &lt;code&gt;application.properties&lt;/code&gt;:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-properties&quot;&gt;# Server configuration
+server.servlet.context-path=/weather
+
+# LLM Configuration (example with Anthropic Claude)
+spring.ai.anthropic.api-key=${ANTHROPIC_API_KEY}
+spring.ai.anthropic.chat.options.model=claude-sonnet-4-5-20250929
+
+# For multi-agent orchestration (Example 2), configure remote agent URLs:
+# remote.agents.urls=http://localhost:10001/foo/,http://localhost:10002/bar/
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&quot;example-1-agent-server&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#example-1-agent-server&quot; aria-label=&quot;example 1 agent server permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Example 1: Agent Server&lt;/h3&gt;
+&lt;p&gt;Expose a Spring AI application with tools as an A2A server:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-java&quot;&gt;@Configuration
+public class WeatherAgentConfiguration {
+
+   @Bean
+   public AgentCard agentCard(@Value(&quot;${server.port:8080}&quot;) int port,
+           @Value(&quot;${server.servlet.context-path:/}&quot;) String contextPath) {
+       // This AgentCard is automatically exposed at /.well-known/agent-card.json
+       // Other agents discover this agent&apos;s capabilities through this endpoint
+       return new AgentCard.Builder()
+           .name(&quot;Weather Agent&quot;)
+           .description(&quot;Provides weather information for cities&quot;)
+           .url(&quot;http://localhost:&quot; + port + contextPath + &quot;/&quot;)
+           .version(&quot;1.0.0&quot;)
+           .capabilities(new AgentCapabilities.Builder().streaming(false).build())
+           .defaultInputModes(List.of(&quot;text&quot;))
+           .defaultOutputModes(List.of(&quot;text&quot;))
+           .skills(List.of(new AgentSkill.Builder()
+               .id(&quot;weather_search&quot;)
+               .name(&quot;Search weather&quot;)
+               .description(&quot;Get temperature for any city&quot;)
+               .tags(List.of(&quot;weather&quot;))
+               .examples(List.of(&quot;What&apos;s the weather in London?&quot;))
+               .build()))
+           .protocolVersion(&quot;0.3.0&quot;)
+           .build();
+   }
+
+   @Bean
+   public AgentExecutor agentExecutor(ChatClient.Builder chatClientBuilder, WeatherTools weatherTools) {
+
+       ChatClient chatClient = chatClientBuilder.clone()
+           .defaultSystem(&quot;You are a weather assistant. Use the temperature tool to answer questions.&quot;)
+           .defaultTools(weatherTools)  // Register Spring AI tools
+           .build();
+
+       return new DefaultAgentExecutor(chatClient, (chat, requestContext) -&gt; {
+           String userMessage = DefaultAgentExecutor.extractTextFromMessage(requestContext.getMessage());
+           return chat.prompt().user(userMessage).call().content();
+       });
+   }
+}
+
+@Service
+class WeatherTools {
+    ...
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Your Spring AI agent is now an A2A-compliant server. Other agents can &lt;strong&gt;discover&lt;/strong&gt; its capabilities through the standard &lt;code&gt;/.well-known/agent-card.json&lt;/code&gt; endpoint and then send weather queries via POST to the root endpoint. The autoconfiguration handles exposing both the AgentCard and message endpoints.&lt;/p&gt;
+&lt;h3 id=&quot;example-2-agent-client&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#example-2-agent-client&quot; aria-label=&quot;example 2 agent client permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Example 2: Agent Client&lt;/h3&gt;
+&lt;p&gt;Here&apos;s a practical example of an agent client: A host agent that orchestrates specialized agents for travel planning (Airbnb accommodations and weather information).&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-java&quot;&gt;@Service
+public class RemoteAgentConnections {
+
+   private final Map&amp;#x3C;String, AgentCard&gt; agentCards = new HashMap&amp;#x3C;&gt;();
+
+   public RemoteAgentConnections(@Value(&quot;${remote.agents.urls}&quot;) List&amp;#x3C;String&gt; agentUrls) {
+       // Discover remote agents at startup (see Agent Discovery section above)
+       for (String url : agentUrls) {
+           String path = new URI(url).getPath();
+           AgentCard card = A2A.getAgentCard(url, path + &quot;.well-known/agent-card.json&quot;, null);
+           this.agentCards.put(card.name(), card);
+       }
+   }
+
+   @Tool(description = &quot;Sends a task to a remote agent. Use this to delegate work to specialized agents.&quot;)
+   public String sendMessage(
+           @ToolParam(description = &quot;The name of the agent&quot;) String agentName,
+           @ToolParam(description = &quot;The task description to send&quot;) String task) {
+
+       AgentCard agentCard = this.agentCards.get(agentName);
+
+       // Create A2A message
+       Message message = new Message.Builder()
+           .role(Message.Role.USER)
+           .parts(List.of(new TextPart(task, null)))
+           .build();
+
+       // Use A2A Java SDK Client
+       CompletableFuture&amp;#x3C;String&gt; responseFuture = new CompletableFuture&amp;#x3C;&gt;();
+
+       Client client = Client.builder(agentCard)
+           .clientConfig(new ClientConfig.Builder()
+               .setAcceptedOutputModes(List.of(&quot;text&quot;))
+               .build())
+           .withTransport(JSONRPCTransport.class, new JSONRPCTransportConfig())
+           .addConsumers(List.of(consumer -&gt; {
+               if (consumer instanceof TextPart textPart) {
+                   responseFuture.complete(textPart.getText());
+               }
+           }))
+           .build();
+
+       client.sendMessage(message);
+       return responseFuture.get(60, TimeUnit.SECONDS);
+   }
+
+   public String getAgentDescriptions() {
+       return agentCards.values().stream()
+           .map(card -&gt; card.name() + &quot;: &quot; + card.description())
+           .collect(Collectors.joining(&quot;\n&quot;));
+   }
+}
+
+@Configuration
+public class HostAgentConfiguration {
+
+   @Bean
+   public ChatClient routingChatClient(ChatClient.Builder chatClientBuilder,
+           RemoteAgentConnections remoteAgentConnections) {
+
+       String systemPrompt = &quot;&quot;&quot;
+           You coordinate tasks across specialized agents.
+           Available agents:
+           %s
+           Use the sendMessage tool to delegate tasks to the appropriate agent.
+           &quot;&quot;&quot;.formatted(remoteAgentConnections.getAgentDescriptions());
+
+       return chatClientBuilder
+           .defaultSystem(systemPrompt)
+           .defaultTools(remoteAgentConnections)  // Register as Spring AI tool
+           .build();
+   }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;strong&gt;What&apos;s happening here:&lt;/strong&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;The host agent (client) &lt;strong&gt;discovers&lt;/strong&gt; remote agents at startup by fetching their &lt;code&gt;AgentCard&lt;/code&gt; from the standard &lt;code&gt;.well-known/agent-card.json&lt;/code&gt; endpoints&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;RemoteAgentConnections&lt;/code&gt; is registered as a Spring AI &lt;code&gt;@Tool&lt;/code&gt; with the &lt;code&gt;ChatClient&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;When a user asks &quot;Plan a trip to London&quot;, the LLM decides which agents to call via the &lt;code&gt;sendMessage&lt;/code&gt; tool&lt;/li&gt;
+&lt;li&gt;The tool uses the &lt;strong&gt;A2A Java SDK Client&lt;/strong&gt; to communicate with remote agents&lt;/li&gt;
+&lt;li&gt;Results are aggregated and returned to the user&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;This pattern enables LLM-driven routing—the model decides which specialized agents to invoke based on the user&apos;s query.&lt;/p&gt;
+&lt;h2 id=&quot;whats-next&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#whats-next&quot; aria-label=&quot;whats next permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;What&apos;s Next&lt;/h2&gt;
+&lt;p&gt;While the current release focuses on server-side integration, the Spring AI community is exploring opportunities to enhance the A2A client experience for Spring AI applications.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Potential Future Enhancements:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Security&lt;/strong&gt;: Support for A2A authentication and authorization&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Agent Discovery&lt;/strong&gt;: Spring Boot autoconfiguration for discovering and routing to A2A agents&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Client Auto-configuration&lt;/strong&gt;: Autoconfigured A2A client connections with Spring-friendly abstractions&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Multiple Transport Support&lt;/strong&gt;: SSE (Server-Sent Events) for real-time streaming responses, expanding beyond the current JSON-RPC implementation&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Enhanced Observability&lt;/strong&gt;: Spring Boot Actuator integration for monitoring A2A interactions&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;These enhancements would provide additional support for building Spring AI applications that act as A2A agent clients, providing consistent integration patterns for both client and server implementations.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Want to contribute?&lt;/strong&gt; The Spring AI A2A project welcomes community contributions. Check out the &lt;a href=&quot;https://github.com/spring-ai-community/spring-ai-a2a&quot;&gt;GitHub repository&lt;/a&gt; to get involved.&lt;/p&gt;
+&lt;h2 id=&quot;conclusion&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#conclusion&quot; aria-label=&quot;conclusion permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;The A2A Protocol represents a significant step toward interoperable AI agent ecosystems. By standardizing how agents communicate, it removes barriers to building sophisticated multi-agent systems.&lt;/p&gt;
+&lt;p&gt;The Spring AI A2A community project provides the integration needed to participate in this ecosystem. Through Spring Boot autoconfiguration, you can expose your Spring AI agents as A2A servers, integrate with other A2A-compliant agents, and build orchestration patterns that leverage Spring Boot&apos;s conventions.&lt;/p&gt;
+&lt;p&gt;As the A2A ecosystem grows, more agents, tools, and platforms may adopt this standard, expanding options for agent collaboration and composition.&lt;/p&gt;
+&lt;p&gt;To begin integrating A2A Protocol support with your Spring AI agents, refer to the resources below.&lt;/p&gt;
+&lt;h2 id=&quot;resources&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#resources&quot; aria-label=&quot;resources permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Resources&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://a2a-protocol.org/&quot;&gt;A2A Protocol Specification&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/a2aproject/a2a-java&quot;&gt;A2A Java SDK&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/spring-ai-community/spring-ai-a2a&quot;&gt;Spring AI A2A Community Project&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://docs.spring.io/spring-ai/reference/&quot;&gt;Spring AI Documentation&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/spring-ai-community/spring-ai-a2a/tree/main/spring-ai-a2a-examples/airbnb-planner&quot;&gt;Example: Travel Planner Multi-Agent System&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&quot;series-links&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#series-links&quot; aria-label=&quot;series links permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Series Links&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Part 1&lt;/strong&gt;: &lt;a href=&quot;https://spring.io/blog/2026/01/13/spring-ai-generic-agent-skills&quot;&gt;Agent Skills&lt;/a&gt; - Modular, reusable capabilities&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Part 2&lt;/strong&gt;: &lt;a href=&quot;https://spring.io/blog/2026/01/16/spring-ai-ask-user-question-tool&quot;&gt;AskUserQuestionTool&lt;/a&gt; - Interactive workflows&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Part 3&lt;/strong&gt;: &lt;a href=&quot;https://spring.io/blog/2026/01/20/spring-ai-agentic-patterns-3-todowrite/&quot;&gt;TodoWriteTool&lt;/a&gt; - Structured planning&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Part 4&lt;/strong&gt;: &lt;a href=&quot;https://spring.io/blog/2026/01/27/spring-ai-agentic-patterns-4-task-subagents&quot;&gt;Subagent Orchestration&lt;/a&gt; - Hierarchical agent architectures&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Part 5&lt;/strong&gt;: A2A Integration (this post) - Building interoperable agents with the Agent2Agent protocol&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Part (soon)&lt;/strong&gt;: Subagent Extension Framework (coming soon) - Protocol-agnostic agent orchestration&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&quot;related-spring-ai-blogs&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#related-spring-ai-blogs&quot; aria-label=&quot;related spring ai blogs permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Related Spring AI Blogs&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://spring.io/blog/2025/12/11/spring-ai-tool-search-tools-tzolov&quot;&gt;Dynamic Tool Discovery&lt;/a&gt; - Achieve 34-64% token savings&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://spring.io/blog/2025/12/23/spring-ai-tool-argument-augmenter-tzolov&quot;&gt;Tool Argument Augmentation&lt;/a&gt; - Capture LLM reasoning during tool execution&lt;/li&gt;
+&lt;/ul&gt;</content:encoded></item></channel></rss>

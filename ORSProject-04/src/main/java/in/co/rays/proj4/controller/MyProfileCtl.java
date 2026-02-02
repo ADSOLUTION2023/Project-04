@@ -19,31 +19,47 @@ import in.co.rays.proj4.util.PropertyReader;
 import in.co.rays.proj4.util.ServletUtility;
 
 /**
- * MyProfileCtl Servlet.
+ * MyProfileCtl manages viewing and updating the profile of the currently
+ * logged-in user. It validates profile inputs, populates a {@link UserBean}
+ * from request parameters, and delegates update operations to {@link UserModel}.
+ * It also supports navigation to change-password functionality.
  * <p>
- * This controller handles the functionality of viewing and updating
- * the user's profile. It also supports redirecting to the change password page.
+ * Typical operations:
+ * <ul>
+ *   <li>Save — update profile details</li>
+ *   <li>Change Password — redirect to change password controller</li>
+ * </ul>
  * </p>
  * 
- * Author: Amit Chandsarkar
+ * @author Chaitanya Bhatt
  * @version 1.0
+ * @see in.co.rays.proj4.model.UserModel
+ * @see in.co.rays.proj4.bean.UserBean
  */
-
 @WebServlet(name = "MyProfileCtl", urlPatterns = { "/ctl/MyProfileCtl" })
 public class MyProfileCtl extends BaseCtl {
 
+    /** Operation constant to change password. */
     public static final String OP_CHANGE_MY_PASSWORD = "Change Password";
 
     /**
-     * Validates the user profile form data.
+     * Validates profile form parameters.
+     * <ul>
+     *   <li>Skips validation for Change Password operation or when operation is null.</li>
+     *   <li>firstName and lastName are required and must be valid names.</li>
+     *   <li>gender is required.</li>
+     *   <li>mobileNo is required, must be 10 digits and a valid phone number.</li>
+     *   <li>dob is required.</li>
+     * </ul>
      *
-     * @param request HttpServletRequest
-     * @return boolean true if input is valid, false otherwise
+     * @param request the {@link HttpServletRequest} containing form parameters
+     * @return {@code true} if validation succeeds; {@code false} otherwise
      */
     @Override
     protected boolean validate(HttpServletRequest request) {
 
         boolean pass = true;
+
         String op = DataUtility.getString(request.getParameter("operation"));
 
         if (OP_CHANGE_MY_PASSWORD.equalsIgnoreCase(op) || op == null) {
@@ -91,37 +107,45 @@ public class MyProfileCtl extends BaseCtl {
     }
 
     /**
-     * Populates UserBean from HTTP request parameters.
+     * Populates a {@link UserBean} from request parameters and sets audit fields
+     * via {@link #populateDTO(BaseBean, HttpServletRequest)}.
      *
-     * @param request HttpServletRequest
-     * @return BaseBean populated with user profile data
+     * @param request the {@link HttpServletRequest} containing form data
+     * @return populated {@link BaseBean} (actually a {@link UserBean})
      */
     @Override
     protected BaseBean populateBean(HttpServletRequest request) {
+
         UserBean bean = new UserBean();
 
         bean.setId(DataUtility.getLong(request.getParameter("id")));
+
         bean.setLogin(DataUtility.getString(request.getParameter("login")));
+
         bean.setFirstName(DataUtility.getString(request.getParameter("firstName")));
+
         bean.setLastName(DataUtility.getString(request.getParameter("lastName")));
+
         bean.setMobileNo(DataUtility.getString(request.getParameter("mobileNo")));
+
         bean.setGender(DataUtility.getString(request.getParameter("gender")));
+
         bean.setDob(DataUtility.getDate(request.getParameter("dob")));
 
         populateDTO(bean, request);
+
         return bean;
     }
 
     /**
-     * Handles HTTP GET requests.
-     * Loads the current user's profile for display.
+     * Handles HTTP GET requests. Loads the current user's profile from session
+     * and retrieves the up-to-date data from {@link UserModel} for display.
      *
-     * @param request HttpServletRequest
-     * @param response HttpServletResponse
-     * @throws ServletException
-     * @throws IOException
+     * @param request  the {@link HttpServletRequest}
+     * @param response the {@link HttpServletResponse}
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException      if an I/O error occurs
      */
-    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
@@ -145,22 +169,24 @@ public class MyProfileCtl extends BaseCtl {
     }
 
     /**
-     * Handles HTTP POST requests.
-     * Updates the user profile or redirects to the change password page.
+     * Handles HTTP POST requests for updating profile or redirecting to change
+     * password. On successful update the session user is also updated.
      *
-     * @param request HttpServletRequest
-     * @param response HttpServletResponse
-     * @throws ServletException
-     * @throws IOException
+     * @param request  the {@link HttpServletRequest}
+     * @param response the {@link HttpServletResponse}
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException      if an I/O error occurs
      */
-    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         HttpSession session = request.getSession(true);
+
         UserBean user = (UserBean) session.getAttribute("user");
         long id = user.getId();
+
         String op = DataUtility.getString(request.getParameter("operation"));
+
         UserModel model = new UserModel();
 
         if (OP_SAVE.equalsIgnoreCase(op)) {
@@ -192,9 +218,9 @@ public class MyProfileCtl extends BaseCtl {
     }
 
     /**
-     * Returns the view for the user profile page.
+     * Returns the JSP view path for the My Profile page.
      *
-     * @return String view page
+     * @return view page path as {@link String}
      */
     @Override
     protected String getView() {

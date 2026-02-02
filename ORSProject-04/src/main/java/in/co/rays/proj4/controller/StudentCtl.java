@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import in.co.rays.proj4.bean.BaseBean;
-import in.co.rays.proj4.bean.CollegeBean;
 import in.co.rays.proj4.bean.StudentBean;
 import in.co.rays.proj4.exception.ApplicationException;
 import in.co.rays.proj4.exception.DuplicateRecordException;
@@ -21,29 +20,34 @@ import in.co.rays.proj4.util.PropertyReader;
 import in.co.rays.proj4.util.ServletUtility;
 
 /**
- * StudentCtl is a controller servlet to manage Student entity.
- * It handles operations like add, update, reset, and cancel for Student records.
+ * StudentCtl is a controller servlet responsible for handling student related
+ * operations such as add, update, view and navigation. It validates student
+ * form input, preloads college list for dropdowns, populates {@link StudentBean}
+ * from request parameters and delegates persistence operations to
+ * {@link StudentModel}.
+ * <p>
+ * Supported operations include Save, Update, Cancel and Reset.
+ * </p>
  * 
- * URL pattern: /ctl/StudentCtl
- * 
- * Extends BaseCtl to inherit common controller functionalities.
- * 
- * @author Amit Chandsarkar
+ * @author Chaitanya Bhatt
  * @version 1.0
+ * @see in.co.rays.proj4.model.StudentModel
+ * @see in.co.rays.proj4.bean.StudentBean
  */
 @WebServlet(name = "StudentCtl", urlPatterns = { "/ctl/StudentCtl" })
 public class StudentCtl extends BaseCtl {
 
     /**
-     * Preloads list of colleges to be displayed in the dropdown in the Student form.
-     * 
-     * @param request HttpServletRequest
+     * Preloads the list of colleges and sets it as request attribute
+     * "collegeList" so that the student form can render a college dropdown.
+     *
+     * @param request the {@link HttpServletRequest}
      */
     @Override
     protected void preload(HttpServletRequest request) {
         CollegeModel collegeModel = new CollegeModel();
         try {
-            List<CollegeBean> collegeList = collegeModel.list();
+            List collegeList = collegeModel.list();
             request.setAttribute("collegeList", collegeList);
         } catch (ApplicationException e) {
             e.printStackTrace();
@@ -51,14 +55,22 @@ public class StudentCtl extends BaseCtl {
     }
 
     /**
-     * Validates Student form fields like first name, last name, email, DOB, gender,
-     * mobile number, and college selection.
-     * 
-     * @param request HttpServletRequest
-     * @return boolean true if all fields are valid, false otherwise
+     * Validates student form fields.
+     * <ul>
+     *   <li>firstName and lastName are required and must be valid names.</li>
+     *   <li>mobileNo is required, must be 10 digits and a valid phone number.</li>
+     *   <li>gender is required.</li>
+     *   <li>email is required and must be a valid email address.</li>
+     *   <li>collegeId is required.</li>
+     *   <li>dob is required and must be a valid date.</li>
+     * </ul>
+     *
+     * @param request the {@link HttpServletRequest} containing form parameters
+     * @return {@code true} if validation passes; {@code false} otherwise
      */
     @Override
     protected boolean validate(HttpServletRequest request) {
+
         boolean pass = true;
 
         if (DataValidator.isNull(request.getParameter("firstName"))) {
@@ -77,11 +89,31 @@ public class StudentCtl extends BaseCtl {
             pass = false;
         }
 
-        if (DataValidator.isNull(request.getParameter("login"))) {
-            request.setAttribute("login", PropertyReader.getValue("error.require", "Login Id"));
+        if (DataValidator.isNull(request.getParameter("mobileNo"))) {
+            request.setAttribute("mobileNo", PropertyReader.getValue("error.require", "Mobile No"));
             pass = false;
-        } else if (!DataValidator.isEmail(request.getParameter("login"))) {
-            request.setAttribute("login", PropertyReader.getValue("error.email", "Login "));
+        } else if (!DataValidator.isPhoneLength(request.getParameter("mobileNo"))) {
+            request.setAttribute("mobileNo", "Mobile No must have 10 digits");
+            pass = false;
+        } else if (!DataValidator.isPhoneNo(request.getParameter("mobileNo"))) {
+            request.setAttribute("mobileNo", "Invalid Mobile No");
+            pass = false;
+        }
+
+        if (DataValidator.isNull(request.getParameter("gender"))) {
+            request.setAttribute("gender", PropertyReader.getValue("error.require", "Gender"));
+            pass = false;
+        }
+        if (DataValidator.isNull(request.getParameter("email"))) {
+            request.setAttribute("email", PropertyReader.getValue("error.require", "Email "));
+            pass = false;
+        } else if (!DataValidator.isEmail(request.getParameter("email"))) {
+            request.setAttribute("email", PropertyReader.getValue("error.email", "Email "));
+            pass = false;
+        }
+
+        if (DataValidator.isNull(request.getParameter("collegeId"))) {
+            request.setAttribute("collegeId", PropertyReader.getValue("error.require", "College Name"));
             pass = false;
         }
 
@@ -93,47 +125,28 @@ public class StudentCtl extends BaseCtl {
             pass = false;
         }
 
-        if (DataValidator.isNull(request.getParameter("gender"))) {
-            request.setAttribute("gender", PropertyReader.getValue("error.require", "Gender"));
-            pass = false;
-        }
-
-        if (DataValidator.isNull(request.getParameter("collegeId"))) {
-            request.setAttribute("collegeId", PropertyReader.getValue("error.require", "College Id"));
-            pass = false;
-        }
-
-        if (DataValidator.isNull(request.getParameter("mobileNo"))) {
-            request.setAttribute("mobileNo", PropertyReader.getValue("error.require", "MobileNo"));
-            pass = false;
-        } else if (!DataValidator.isPhoneLength(request.getParameter("mobileNo"))) {
-            request.setAttribute("mobileNo", "Mobile No must have 10 digits");
-            pass = false;
-        } else if (!DataValidator.isPhoneNo(request.getParameter("mobileNo"))) {
-            request.setAttribute("mobileNo", "Invalid Mobile No");
-            pass = false;
-        }
-
         return pass;
     }
 
     /**
-     * Populates StudentBean from HttpServletRequest parameters.
-     * 
-     * @param request HttpServletRequest
-     * @return populated BaseBean (StudentBean)
+     * Populates a {@link StudentBean} from request parameters and fills audit
+     * information via {@link #populateDTO(BaseBean, HttpServletRequest)}.
+     *
+     * @param request the {@link HttpServletRequest} containing form data
+     * @return populated {@link BaseBean} (actually a {@link StudentBean})
      */
     @Override
     protected BaseBean populateBean(HttpServletRequest request) {
+
         StudentBean bean = new StudentBean();
 
         bean.setId(DataUtility.getLong(request.getParameter("id")));
         bean.setFirstName(DataUtility.getString(request.getParameter("firstName")));
         bean.setLastName(DataUtility.getString(request.getParameter("lastName")));
-        bean.setEmail(DataUtility.getString(request.getParameter("login")));
-        bean.setGender(DataUtility.getString(request.getParameter("gender")));
         bean.setDob(DataUtility.getDate(request.getParameter("dob")));
+        bean.setGender(DataUtility.getString(request.getParameter("gender")));
         bean.setMobileNo(DataUtility.getString(request.getParameter("mobileNo")));
+        bean.setEmail(DataUtility.getString(request.getParameter("email")));
         bean.setCollegeId(DataUtility.getLong(request.getParameter("collegeId")));
 
         populateDTO(bean, request);
@@ -142,29 +155,55 @@ public class StudentCtl extends BaseCtl {
     }
 
     /**
-     * Handles GET request and forwards to the Student view page.
-     * 
-     * @param request HttpServletRequest
-     * @param response HttpServletResponse
+     * Handles HTTP GET requests. If an 'id' parameter is provided (> 0), loads
+     * the corresponding student record and places it on the request for editing/view.
+     *
+     * @param request  the {@link HttpServletRequest}
+     * @param response the {@link HttpServletResponse}
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException      if an I/O error occurs
      */
-    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
+        long id = DataUtility.getLong(request.getParameter("id"));
+
+        StudentModel model = new StudentModel();
+
+        if (id > 0) {
+            try {
+                StudentBean bean = model.findByPk(id);
+                ServletUtility.setBean(bean, request);
+            } catch (ApplicationException e) {
+                e.printStackTrace();
+                ServletUtility.handleException(e, request, response);
+                return;
+            }
+        }
         ServletUtility.forward(getView(), request, response);
     }
 
     /**
-     * Handles POST request for Student operations like save, update, reset, and cancel.
-     * 
-     * @param request HttpServletRequest
-     * @param response HttpServletResponse
+     * Handles HTTP POST requests for saving and updating student records.
+     * <ul>
+     *   <li>OP_SAVE: Adds a new student (handles {@link DuplicateRecordException}).</li>
+     *   <li>OP_UPDATE: Updates an existing student.</li>
+     *   <li>OP_CANCEL: Redirects to student list controller.</li>
+     *   <li>OP_RESET: Redirects back to student form.</li>
+     * </ul>
+     *
+     * @param request  the {@link HttpServletRequest}
+     * @param response the {@link HttpServletResponse}
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException      if an I/O error occurs
      */
-    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         String op = DataUtility.getString(request.getParameter("operation"));
+
         StudentModel model = new StudentModel();
+
         long id = DataUtility.getLong(request.getParameter("id"));
 
         if (OP_SAVE.equalsIgnoreCase(op)) {
@@ -172,12 +211,13 @@ public class StudentCtl extends BaseCtl {
             try {
                 long pk = model.add(bean);
                 ServletUtility.setBean(bean, request);
-                ServletUtility.setSuccessMessage("User added successfully", request);
+                ServletUtility.setSuccessMessage("Student added successfully", request);
             } catch (DuplicateRecordException e) {
                 ServletUtility.setBean(bean, request);
-                ServletUtility.setErrorMessage("Login Id already exists", request);
+                ServletUtility.setErrorMessage("Email already exists", request);
             } catch (ApplicationException e) {
                 e.printStackTrace();
+                ServletUtility.handleException(e, request, response);
                 return;
             }
         } else if (OP_UPDATE.equalsIgnoreCase(op)) {
@@ -194,22 +234,22 @@ public class StudentCtl extends BaseCtl {
             } catch (ApplicationException e) {
                 e.printStackTrace();
                 ServletUtility.handleException(e, request, response);
+                return;
             }
         } else if (OP_CANCEL.equalsIgnoreCase(op)) {
             ServletUtility.redirect(ORSView.STUDENT_LIST_CTL, request, response);
             return;
         } else if (OP_RESET.equalsIgnoreCase(op)) {
-            ServletUtility.redirect(ORSView.USER_CTL, request, response);
+            ServletUtility.redirect(ORSView.STUDENT_CTL, request, response);
             return;
         }
-
         ServletUtility.forward(getView(), request, response);
     }
 
     /**
-     * Returns the view page for Student form.
-     * 
-     * @return String representing Student view path
+     * Returns the JSP view path for the student form.
+     *
+     * @return view page path as {@link String}
      */
     @Override
     protected String getView() {

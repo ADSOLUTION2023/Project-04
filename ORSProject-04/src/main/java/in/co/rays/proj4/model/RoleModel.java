@@ -1,13 +1,12 @@
 package in.co.rays.proj4.model;
 
 import java.sql.*;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import in.co.rays.proj4.bean.RoleBean;
 import in.co.rays.proj4.exception.ApplicationException;
-import in.co.rays.proj4.exception.DataBaseException;
+import in.co.rays.proj4.exception.DatabaseException;
 import in.co.rays.proj4.exception.DuplicateRecordException;
 import in.co.rays.proj4.util.JDBCDataSource;
 
@@ -19,8 +18,7 @@ import in.co.rays.proj4.util.JDBCDataSource;
  * application-specific exceptions defined in the project.
  * </p>
  *
- *@author Amit Chandsarkar
- *  
+ * @author Chaitanya Bhatt
  * @version 1.0
  */
 public class RoleModel {
@@ -31,7 +29,7 @@ public class RoleModel {
 	 * @return next primary key (Integer)
 	 * @throws DatabaseException if a database access error occurs
 	 */
-	public Integer nextPk() throws DataBaseException {
+	public Integer nextPk() throws DatabaseException {
 		Connection conn = null;
 		int pk = 0;
 
@@ -45,7 +43,7 @@ public class RoleModel {
 			rs.close();
 			pstmt.close();
 		} catch (SQLException e) {
-			throw new DataBaseException("Exception : Exception in getting PK");
+			throw new DatabaseException("Exception : Exception in getting PK");
 		} finally {
 			JDBCDataSource.closeConnection(conn);
 		}
@@ -61,7 +59,7 @@ public class RoleModel {
 	 * @throws ApplicationException      if any SQL exception occurs while adding role
 	 * @throws DuplicateRecordException  if a role with same name already exists
 	 */
-	public long add(RoleBean bean) throws DataBaseException, ApplicationException, DuplicateRecordException {
+	public long add(RoleBean bean) throws DatabaseException, ApplicationException, DuplicateRecordException {
 		Connection conn = null;
 		int pk = 0;
 		
@@ -197,7 +195,6 @@ public class RoleModel {
 				bean.setModifiedDatetime(rs.getTimestamp(7));
 			}
 			pstmt.close();
-			rs.close();
 		} catch (Exception e) {
 			throw new ApplicationException("Exception : Exception in getting User by pk");
 		} finally {

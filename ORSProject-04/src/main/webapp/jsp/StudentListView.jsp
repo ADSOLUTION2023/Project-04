@@ -1,4 +1,3 @@
- 
 
 <%@page import="in.co.rays.proj4.controller.ORSView"%>
 <%@page import="java.text.SimpleDateFormat"%>
@@ -139,4 +138,3 @@
 	<%@ include file="Footer.jsp"%>
 </body>
 </html>
- 

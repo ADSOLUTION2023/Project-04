@@ -20,41 +20,49 @@ import in.co.rays.proj4.util.PropertyReader;
 import in.co.rays.proj4.util.ServletUtility;
 
 /**
- * Controller class for handling Subject operations such as add, update, preload,
- * validation and form submissions.
- * 
- * This servlet interacts with {@link SubjectModel} and {@link SubjectBean} to
- * process Subject-related actions.
- * 
- * @author Amit Chandsarkar
+ * SubjectCtl is a controller servlet that handles CRUD operations for Subject
+ * entities. It preloads the course list for the subject form, validates input
+ * parameters, populates {@link SubjectBean} from request parameters and
+ * delegates persistence operations to {@link SubjectModel}.
+ * <p>
+ * Supported operations include Save, Update, Cancel and Reset.
+ * </p>
+ *
+ * @author Chaitanya Bhatt
+ * @version 1.0
+ * @see in.co.rays.proj4.model.SubjectModel
+ * @see in.co.rays.proj4.bean.SubjectBean
  */
 @WebServlet(name = "SubjectCtl", urlPatterns = { "/ctl/SubjectCtl" })
 public class SubjectCtl extends BaseCtl {
 
     /**
-     * Preloads the list of Courses to be displayed in the Subject form.
-     * 
-     * @param request the HttpServletRequest object
+     * Preloads the list of courses and sets it as request attribute "courseList"
+     * so the subject form can render a course dropdown.
+     *
+     * @param request the {@link HttpServletRequest}
      */
     @Override
     protected void preload(HttpServletRequest request) {
-
-        CourseModel model = new CourseModel();
-
+        CourseModel courseModel = new CourseModel();
         try {
-            List courseList = model.list();
+            List courseList = courseModel.list();
             request.setAttribute("courseList", courseList);
         } catch (ApplicationException e) {
-
             e.printStackTrace();
         }
     }
 
     /**
-     * Validates user inputs from the Subject form.
-     * 
-     * @param request the HttpServletRequest object
-     * @return true if validation passes, false otherwise
+     * Validates the subject form parameters.
+     * <ul>
+     *   <li>name is required.</li>
+     *   <li>courseId is required.</li>
+     *   <li>description is required.</li>
+     * </ul>
+     *
+     * @param request the {@link HttpServletRequest} containing form parameters
+     * @return {@code true} if validation passes; {@code false} otherwise
      */
     @Override
     protected boolean validate(HttpServletRequest request) {
@@ -80,10 +88,11 @@ public class SubjectCtl extends BaseCtl {
     }
 
     /**
-     * Populates a SubjectBean with form data.
-     * 
-     * @param request the HttpServletRequest object
-     * @return populated SubjectBean
+     * Populates a {@link SubjectBean} from request parameters and sets audit
+     * fields using {@link #populateDTO(BaseBean, HttpServletRequest)}.
+     *
+     * @param request the {@link HttpServletRequest} containing form data
+     * @return populated {@link BaseBean} (actually a {@link SubjectBean})
      */
     @Override
     protected BaseBean populateBean(HttpServletRequest request) {
@@ -91,7 +100,7 @@ public class SubjectCtl extends BaseCtl {
         SubjectBean bean = new SubjectBean();
 
         bean.setId(DataUtility.getLong(request.getParameter("id")));
-        bean.setSubjectName(DataUtility.getString(request.getParameter("name")));
+        bean.setName(DataUtility.getString(request.getParameter("name")));
         bean.setCourseId(DataUtility.getLong(request.getParameter("courseId")));
         bean.setDescription(DataUtility.getString(request.getParameter("description")));
 
@@ -101,12 +110,14 @@ public class SubjectCtl extends BaseCtl {
     }
 
     /**
-     * Handles HTTP GET requests for Subject operations (load for update).
-     * 
-     * @param request  the HttpServletRequest object
-     * @param response the HttpServletResponse object
+     * Handles HTTP GET requests. If an 'id' parameter is provided (> 0), loads
+     * the corresponding subject and sets it on the request for editing/view.
+     *
+     * @param request  the {@link HttpServletRequest}
+     * @param response the {@link HttpServletResponse}
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException      if an I/O error occurs
      */
-    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
@@ -116,25 +127,31 @@ public class SubjectCtl extends BaseCtl {
 
         if (id > 0) {
             try {
-
                 SubjectBean bean = model.findByPk(id);
                 ServletUtility.setBean(bean, request);
-            } catch (Exception e) {
+            } catch (ApplicationException e) {
+                e.printStackTrace();
                 ServletUtility.handleException(e, request, response);
                 return;
-
             }
         }
         ServletUtility.forward(getView(), request, response);
     }
 
     /**
-     * Handles HTTP POST requests for save, update, cancel, and reset operations.
-     * 
-     * @param request  the HttpServletRequest object
-     * @param response the HttpServletResponse object
+     * Handles HTTP POST requests for saving and updating subjects.
+     * <ul>
+     *   <li>OP_SAVE: Adds a new subject (handles {@link DuplicateRecordException}).</li>
+     *   <li>OP_UPDATE: Updates an existing subject.</li>
+     *   <li>OP_CANCEL: Redirects to subject list controller.</li>
+     *   <li>OP_RESET: Redirects back to subject form.</li>
+     * </ul>
+     *
+     * @param request  the {@link HttpServletRequest}
+     * @param response the {@link HttpServletResponse}
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException      if an I/O error occurs
      */
-    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
@@ -145,7 +162,6 @@ public class SubjectCtl extends BaseCtl {
         long id = DataUtility.getLong(request.getParameter("id"));
 
         if (OP_SAVE.equalsIgnoreCase(op)) {
-
             SubjectBean bean = (SubjectBean) populateBean(request);
             try {
                 long pk = model.add(bean);
@@ -156,11 +172,11 @@ public class SubjectCtl extends BaseCtl {
                 ServletUtility.setErrorMessage("Subject Name already exists", request);
             } catch (ApplicationException e) {
                 e.printStackTrace();
+                ServletUtility.handleException(e, request, response);
                 return;
             }
         } else if (OP_UPDATE.equalsIgnoreCase(op)) {
             SubjectBean bean = (SubjectBean) populateBean(request);
-
             try {
                 if (id > 0) {
                     model.update(bean);
@@ -169,7 +185,7 @@ public class SubjectCtl extends BaseCtl {
                 ServletUtility.setSuccessMessage("Subject updated successfully", request);
             } catch (DuplicateRecordException e) {
                 ServletUtility.setBean(bean, request);
-                ServletUtility.setErrorMessage("Subject Name Alredy Exist", request);
+                ServletUtility.setErrorMessage("Subject Name already exists", request);
             } catch (ApplicationException e) {
                 e.printStackTrace();
                 ServletUtility.handleException(e, request, response);
@@ -178,9 +194,7 @@ public class SubjectCtl extends BaseCtl {
         } else if (OP_CANCEL.equalsIgnoreCase(op)) {
             ServletUtility.redirect(ORSView.SUBJECT_LIST_CTL, request, response);
             return;
-        }
-
-        else if (OP_RESET.equalsIgnoreCase(op)) {
+        } else if (OP_RESET.equalsIgnoreCase(op)) {
             ServletUtility.redirect(ORSView.SUBJECT_CTL, request, response);
             return;
         }
@@ -188,14 +202,12 @@ public class SubjectCtl extends BaseCtl {
     }
 
     /**
-     * Returns the view page for Subject.
-     * 
-     * @return Subject view JSP path
+     * Returns the JSP view path for the subject form.
+     *
+     * @return view page path as {@link String}
      */
     @Override
     protected String getView() {
-
         return ORSView.SUBJECT_VIEW;
     }
-
 }

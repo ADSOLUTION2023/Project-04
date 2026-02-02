@@ -17,27 +17,32 @@ import in.co.rays.proj4.util.PropertyReader;
 import in.co.rays.proj4.util.ServletUtility;
 
 /**
- * FacultyListCtl Servlet Controller.
+ * Controller that handles listing, searching, pagination and bulk actions for
+ * Faculty entities. It populates {@link FacultyBean} from request parameters,
+ * delegates business operations to {@link FacultyModel}, and prepares data for
+ * the faculty list view.
  * <p>
- * Handles listing, searching, paging, and deleting Faculty records.
- * Provides navigation and manages operations like New, Delete, Reset, and Back.
+ * Supported operations include Search, Next, Previous, New, Delete, Reset and Back.
  * </p>
- * 
- * @author Amit Chandsarkar
+ *
+ * @author Chaitanya Bhatt
  * @version 1.0
+ * @see in.co.rays.proj4.model.FacultyModel
+ * @see in.co.rays.proj4.bean.FacultyBean
  */
-
 @WebServlet(name = "FacultyListCtl", urlPatterns = { "/ctl/FacultyListCtl" })
 public class FacultyListCtl extends BaseCtl {
 
     /**
-     * Populates FacultyBean from request parameters for searching and filtering.
+     * Populates a {@link FacultyBean} from request parameters for use in search
+     * or other operations.
      *
-     * @param request HTTP request object
-     * @return populated FacultyBean
+     * @param request the {@link HttpServletRequest} containing parameters
+     * @return populated {@link BaseBean} (actually a {@link FacultyBean})
      */
     @Override
     protected BaseBean populateBean(HttpServletRequest request) {
+
         FacultyBean bean = new FacultyBean();
 
         bean.setFirstName(DataUtility.getString(request.getParameter("firstName")));
@@ -48,11 +53,13 @@ public class FacultyListCtl extends BaseCtl {
     }
 
     /**
-     * Handles GET requests to display the list of faculty.
-     * Supports initial load and pagination.
+     * Handles HTTP GET requests. Performs an initial search and forwards the
+     * result list to the view. If no records are found, an error message is set.
      *
-     * @param request  HTTP request
-     * @param response HTTP response
+     * @param request  the {@link HttpServletRequest}
+     * @param response the {@link HttpServletResponse}
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException      if an I/O error occurs
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -83,14 +90,20 @@ public class FacultyListCtl extends BaseCtl {
         } catch (ApplicationException e) {
             e.printStackTrace();
             ServletUtility.handleException(e, request, response);
+            return;
         }
+
     }
 
     /**
-     * Handles POST requests for operations like Search, Next, Previous, New, Delete, Reset, and Back.
+     * Handles HTTP POST requests for search, pagination, new, delete, reset and back
+     * operations. After performing the requested operation it forwards the updated
+     * list and pagination metadata to the view.
      *
-     * @param request  HTTP request
-     * @param response HTTP response
+     * @param request  the {@link HttpServletRequest}
+     * @param response the {@link HttpServletResponse}
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException      if an I/O error occurs
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -112,13 +125,14 @@ public class FacultyListCtl extends BaseCtl {
         String[] ids = request.getParameterValues("ids");
 
         try {
+
             if (OP_SEARCH.equalsIgnoreCase(op) || "Next".equalsIgnoreCase(op) || "Previous".equalsIgnoreCase(op)) {
 
                 if (OP_SEARCH.equalsIgnoreCase(op)) {
                     pageNo = 1;
-                } else if ("Next".equalsIgnoreCase(op)) {
+                } else if (OP_NEXT.equalsIgnoreCase(op)) {
                     pageNo++;
-                } else if ("Previous".equalsIgnoreCase(op)) {
+                } else if (OP_PREVIOUS.equalsIgnoreCase(op) && pageNo > 1) {
                     pageNo--;
                 }
 
@@ -133,13 +147,17 @@ public class FacultyListCtl extends BaseCtl {
                     for (String id : ids) {
                         deletebean.setId(DataUtility.getInt(id));
                         model.delete(deletebean);
-                        ServletUtility.setSuccessMessage("Data is deleted successfully", request);
+                        ServletUtility.setSuccessMessage("Faculty is deleted successfully", request);
                     }
                 } else {
                     ServletUtility.setErrorMessage("Select at least one record", request);
                 }
 
-            } else if (OP_RESET.equalsIgnoreCase(op) || OP_BACK.equalsIgnoreCase(op)) {
+            } else if (OP_RESET.equalsIgnoreCase(op)) {
+                ServletUtility.redirect(ORSView.FACULTY_LIST_CTL, request, response);
+                return;
+
+            } else if (OP_BACK.equalsIgnoreCase(op)) {
                 ServletUtility.redirect(ORSView.FACULTY_LIST_CTL, request, response);
                 return;
             }
@@ -148,7 +166,7 @@ public class FacultyListCtl extends BaseCtl {
             next = model.search(bean, pageNo + 1, pageSize);
 
             if (list == null || list.size() == 0) {
-                ServletUtility.setErrorMessage("No record found", request);
+                ServletUtility.setErrorMessage("No record found ", request);
             }
 
             ServletUtility.setList(list, request);
@@ -158,17 +176,17 @@ public class FacultyListCtl extends BaseCtl {
             request.setAttribute("nextListSize", next.size());
 
             ServletUtility.forward(getView(), request, response);
-
         } catch (ApplicationException e) {
             e.printStackTrace();
             ServletUtility.handleException(e, request, response);
+            return;
         }
     }
 
     /**
-     * Returns the view page for displaying the faculty list.
+     * Returns the JSP view path for the faculty list.
      *
-     * @return path of FACULTY_LIST_VIEW JSP
+     * @return view page path as {@link String}
      */
     @Override
     protected String getView() {

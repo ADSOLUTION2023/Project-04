@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import in.co.rays.proj4.bean.BaseBean;
-import in.co.rays.proj4.bean.TimeTableBean;
+import in.co.rays.proj4.bean.TimetableBean;
 import in.co.rays.proj4.exception.ApplicationException;
 import in.co.rays.proj4.model.CourseModel;
 import in.co.rays.proj4.model.SubjectModel;
@@ -19,189 +19,201 @@ import in.co.rays.proj4.util.PropertyReader;
 import in.co.rays.proj4.util.ServletUtility;
 
 /**
- * Controller class to handle operations related to Timetable List including
- * Search, Pagination, Delete, and Navigation.
+ * TimetableListCtl handles listing, searching, pagination and bulk actions for
+ * Timetable entities. It preloads subject and course lists for the view,
+ * populates {@link TimetableBean} from request parameters, delegates search/delete
+ * operations to {@link TimetableModel}, and prepares pagination metadata for the view.
+ * <p>
+ * Supported operations include Search, Next, Previous, New, Delete, Reset and Back.
+ * </p>
  * 
- * This servlet loads subject and course lists, displays timetable records,
- * and provides functionality to search, reset, navigate (next/previous), and
- * delete timetable entries.
- * 
- * @author Amit Chandsarkar
+ * @author Chaitanya Bhatt
  * @version 1.0
+ * @see in.co.rays.proj4.model.TimetableModel
+ * @see in.co.rays.proj4.bean.TimetableBean
  */
 @WebServlet(name = "TimetableListCtl", urlPatterns = { "/ctl/TimetableListCtl" })
-public class TimeTableListCtl extends BaseCtl {
+public class TimetableListCtl extends BaseCtl {
 
-    /**
-     * Preloads reference data such as Subject List and Course List to be
-     * displayed on the Timetable List screen.
-     * 
-     * @param request the HttpServletRequest containing client request data
-     */
-    @Override
-    protected void preload(HttpServletRequest request) {
-        SubjectModel subjectModel = new SubjectModel();
-        CourseModel courseModel = new CourseModel();
+	/**
+	 * Preloads subject and course lists into request attributes for rendering
+	 * dropdowns on the timetable list page.
+	 *
+	 * @param request the {@link HttpServletRequest}
+	 */
+	@Override
+	protected void preload(HttpServletRequest request) {
 
-        try {
-            List subjectList = subjectModel.list();
-            request.setAttribute("subjectList", subjectList);
+		SubjectModel subjectModel = new SubjectModel();
+		CourseModel courseModel = new CourseModel();
 
-            List courseList = courseModel.list();
-            request.setAttribute("courseList", courseList);
+		try {
+			List subjectList = subjectModel.list();
+			request.setAttribute("subjectList", subjectList);
 
-        } catch (ApplicationException e) {
-            e.printStackTrace();
-        }
-    }
+			List courseList = courseModel.list();
+			request.setAttribute("courseList", courseList);
 
-    /**
-     * Populates TimeTableBean with form input values.
-     * 
-     * @param request the incoming client request
-     * @return populated TimeTableBean
-     */
-    @Override
-    protected BaseBean populateBean(HttpServletRequest request) {
-        TimeTableBean bean = new TimeTableBean();
+		} catch (ApplicationException e) {
+			e.printStackTrace();
+		}
+	}
 
-        bean.setCourseId(DataUtility.getLong(request.getParameter("courseId")));
-        bean.setSubjectId(DataUtility.getLong(request.getParameter("subjectId")));
-        bean.setExamDate(DataUtility.getDate(request.getParameter("examDate")));
+	/**
+	 * Populates a {@link TimetableBean} from request parameters for use in search
+	 * or other operations.
+	 *
+	 * @param request the {@link HttpServletRequest} containing parameters
+	 * @return populated {@link BaseBean} (actually a {@link TimetableBean})
+	 */
+	@Override
+	protected BaseBean populateBean(HttpServletRequest request) {
 
-        return bean;
-    }
+		TimetableBean bean = new TimetableBean();
 
-    /**
-     * Handles HTTP GET requests. Fetches and displays the first page of
-     * Timetable records.
-     * 
-     * @param request the HttpServletRequest object
-     * @param response the HttpServletResponse object
-     */
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+		bean.setCourseId(DataUtility.getLong(request.getParameter("courseId")));
+		bean.setSubjectId(DataUtility.getLong(request.getParameter("subjectId")));
+		bean.setExamDate(DataUtility.getDate(request.getParameter("examDate")));
 
-        int pageNo = 1;
-        int pageSize = DataUtility.getInt(PropertyReader.getValue("page.size"));
+		return bean;
+	}
 
-        TimeTableBean bean = (TimeTableBean) populateBean(request);
-        TimetableModel model = new TimetableModel();
+	/**
+	 * Handles HTTP GET requests. Performs an initial search and forwards the
+	 * result list to the view. If no records are found, an error message is set.
+	 *
+	 * @param request  the {@link HttpServletRequest}
+	 * @param response the {@link HttpServletResponse}
+	 * @throws ServletException if a servlet-specific error occurs
+	 * @throws IOException      if an I/O error occurs
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 
-        try {
-            List<TimeTableBean> list = model.search(bean, pageNo, pageSize);
-            List<TimeTableBean> next = model.search(bean, pageNo + 1, pageSize);
+		int pageNo = 1;
+		int pageSize = DataUtility.getInt(PropertyReader.getValue("page.size"));
 
-            if (list == null || list.isEmpty()) {
-                ServletUtility.setErrorMessage("No record found", request);
-            }
+		TimetableBean bean = (TimetableBean) populateBean(request);
+		TimetableModel model = new TimetableModel();
 
-            ServletUtility.setList(list, request);
-            ServletUtility.setPageNo(pageNo, request);
-            ServletUtility.setPageSize(pageSize, request);
-            ServletUtility.setBean(bean, request);
-            request.setAttribute("nextListSize", next.size());
+		try {
+			List<TimetableBean> list = model.search(bean, pageNo, pageSize);
+			List<TimetableBean> next = model.search(bean, pageNo + 1, pageSize);
 
-            ServletUtility.forward(getView(), request, response);
+			if (list == null || list.isEmpty()) {
+				ServletUtility.setErrorMessage("No record found", request);
+			}
 
-        } catch (ApplicationException e) {
-            e.printStackTrace();
-            ServletUtility.handleException(e, request, response);
-        }
-    }
+			ServletUtility.setList(list, request);
+			ServletUtility.setPageNo(pageNo, request);
+			ServletUtility.setPageSize(pageSize, request);
+			ServletUtility.setBean(bean, request);
+			request.setAttribute("nextListSize", next.size());
 
-    /**
-     * Handles HTTP POST requests used for Search, Pagination, Delete, Reset,
-     * and Navigation operations.
-     * 
-     * @param request client request containing form data
-     * @param response server response
-     */
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+			ServletUtility.forward(getView(), request, response);
 
-        List list = null;
-        List next = null;
+		} catch (ApplicationException e) {
+			e.printStackTrace();
+			ServletUtility.handleException(e, request, response);
+			return;
+		}
+	}
 
-        int pageNo = DataUtility.getInt(request.getParameter("pageNo"));
-        int pageSize = DataUtility.getInt(request.getParameter("pageSize"));
+	/**
+	 * Handles HTTP POST requests for search, pagination, new, delete, reset and back
+	 * operations. After performing the requested operation it forwards the updated
+	 * list and pagination metadata to the view.
+	 *
+	 * @param request  the {@link HttpServletRequest}
+	 * @param response the {@link HttpServletResponse}
+	 * @throws ServletException if a servlet-specific error occurs
+	 * @throws IOException      if an I/O error occurs
+	 */
+	@Override
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 
-        pageNo = (pageNo == 0) ? 1 : pageNo;
-        pageSize = (pageSize == 0) ? DataUtility.getInt(PropertyReader.getValue("page.size")) : pageSize;
+		List list = null;
+		List next = null;
 
-        TimeTableBean bean = (TimeTableBean) populateBean(request);
-        TimetableModel model = new TimetableModel();
+		int pageNo = DataUtility.getInt(request.getParameter("pageNo"));
+		int pageSize = DataUtility.getInt(request.getParameter("pageSize"));
 
-        String op = DataUtility.getString(request.getParameter("operation"));
-        String[] ids = request.getParameterValues("ids");
+		pageNo = (pageNo == 0) ? 1 : pageNo;
+		pageSize = (pageSize == 0) ? DataUtility.getInt(PropertyReader.getValue("page.size")) : pageSize;
 
-        try {
-            if (OP_SEARCH.equalsIgnoreCase(op) || "Next".equalsIgnoreCase(op) || "Previous".equalsIgnoreCase(op)) {
+		TimetableBean bean = (TimetableBean) populateBean(request);
+		TimetableModel model = new TimetableModel();
 
-                if (OP_SEARCH.equalsIgnoreCase(op)) {
-                    pageNo = 1;
-                } else if (OP_NEXT.equalsIgnoreCase(op)) {
-                    pageNo++;
-                } else if (OP_PREVIOUS.equalsIgnoreCase(op) && pageNo > 1) {
-                    pageNo--;
-                }
+		String op = DataUtility.getString(request.getParameter("operation"));
+		String[] ids = request.getParameterValues("ids");
 
-            } else if (OP_NEW.equalsIgnoreCase(op)) {
-                ServletUtility.redirect(ORSView.TIMETABLE_CTL, request, response);
-                return;
+		try {
 
-            } else if (OP_DELETE.equalsIgnoreCase(op)) {
-                pageNo = 1;
-                if (ids != null && ids.length > 0) {
-                    TimeTableBean deleteBean = new TimeTableBean();
-                    for (String id : ids) {
-                        deleteBean.setId(DataUtility.getInt(id));
-                        model.delete(deleteBean);
-                        ServletUtility.setSuccessMessage("Data is deleted successfully", request);
-                    }
-                } else {
-                    ServletUtility.setErrorMessage("Select at least one record", request);
-                }
+			if (OP_SEARCH.equalsIgnoreCase(op) || "Next".equalsIgnoreCase(op) || "Previous".equalsIgnoreCase(op)) {
 
-            } else if (OP_RESET.equalsIgnoreCase(op)) {
-                ServletUtility.redirect(ORSView.TIMETABLE_LIST_CTL, request, response);
-                return;
+				if (OP_SEARCH.equalsIgnoreCase(op)) {
+					pageNo = 1;
+				} else if (OP_NEXT.equalsIgnoreCase(op)) {
+					pageNo++;
+				} else if (OP_PREVIOUS.equalsIgnoreCase(op) && pageNo > 1) {
+					pageNo--;
+				}
 
-            } else if (OP_BACK.equalsIgnoreCase(op)) {
-                ServletUtility.redirect(ORSView.TIMETABLE_LIST_CTL, request, response);
-                return;
-            }
+			} else if (OP_NEW.equalsIgnoreCase(op)) {
+				ServletUtility.redirect(ORSView.TIMETABLE_CTL, request, response);
+				return;
 
-            list = model.search(bean, pageNo, pageSize);
-            next = model.search(bean, pageNo + 1, pageSize);
+			} else if (OP_DELETE.equalsIgnoreCase(op)) {
+				pageNo = 1;
+				if (ids != null && ids.length > 0) {
+					TimetableBean deletebean = new TimetableBean();
+					for (String id : ids) {
+						deletebean.setId(DataUtility.getInt(id));
+						model.delete(deletebean);
+						ServletUtility.setSuccessMessage("Data is deleted successfully", request);
+					}
+				} else {
+					ServletUtility.setErrorMessage("Select at least one record", request);
+				}
 
-            if (list == null || list.size() == 0) {
-                ServletUtility.setErrorMessage("No record found ", request);
-            }
+			} else if (OP_RESET.equalsIgnoreCase(op)) {
+				ServletUtility.redirect(ORSView.TIMETABLE_LIST_CTL, request, response);
+				return;
 
-            ServletUtility.setList(list, request);
-            ServletUtility.setPageNo(pageNo, request);
-            ServletUtility.setPageSize(pageSize, request);
-            ServletUtility.setBean(bean, request);
-            request.setAttribute("nextListSize", next.size());
+			} else if (OP_BACK.equalsIgnoreCase(op)) {
+				ServletUtility.redirect(ORSView.TIMETABLE_LIST_CTL, request, response);
+				return;
+			}
 
-            ServletUtility.forward(getView(), request, response);
+			list = model.search(bean, pageNo, pageSize);
+			next = model.search(bean, pageNo + 1, pageSize);
 
-        } catch (ApplicationException e) {
-            e.printStackTrace();
-            ServletUtility.handleException(e, request, response);
-        }
-    }
+			if (list == null || list.size() == 0) {
+				ServletUtility.setErrorMessage("No record found ", request);
+			}
 
-    /**
-     * Returns the view for Timetable List.
-     * 
-     * @return path constant of the JSP view
-     */
-    @Override
-    protected String getView() {
-        return ORSView.TIMETABLE_LIST_VIEW;
-    }
+			ServletUtility.setList(list, request);
+			ServletUtility.setPageNo(pageNo, request);
+			ServletUtility.setPageSize(pageSize, request);
+			ServletUtility.setBean(bean, request);
+			request.setAttribute("nextListSize", next.size());
+
+			ServletUtility.forward(getView(), request, response);
+		} catch (ApplicationException e) {
+			e.printStackTrace();
+			ServletUtility.handleException(e, request, response);
+			return;
+		}
+	}
+
+	/**
+	 * Returns the JSP view path for the timetable list.
+	 *
+	 * @return view page path as {@link String}
+	 */
+	@Override
+	protected String getView() {
+		return ORSView.TIMETABLE_LIST_VIEW;
+	}
 }

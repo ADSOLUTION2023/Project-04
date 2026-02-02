@@ -17,30 +17,22 @@ import in.co.rays.proj4.util.PropertyReader;
 import in.co.rays.proj4.util.ServletUtility;
 
 /**
- * CollegeListCtl is responsible for handling the listing, searching,
- * pagination, and deletion of College records.
- *
+ * Controller that handles listing, searching, pagination and bulk actions for
+ * College entities. It preloads data required by the view, populates {@link CollegeBean}
+ * from request parameters, and delegates business operations to {@link CollegeModel}.
  * <p>
- * This controller supports:
- * 
- * Search (by Name, City, ID)
- * Pagination (Next, Previous)
- * Delete selected records
- * Reset list
- * Navigation to Add New College form
- * 
+ * Supported operations include Search, Next, Previous, New, Delete, Reset and Back.
  * </p>
- *
- * It interacts with {@link CollegeModel} to fetch data from the database and
- * uses {@link ServletUtility} to forward or redirect to views.
- *
- * @author Amit Chandsarkar
+ * 
+ * author Chaitanya Bhatt
  * @version 1.0
+ * @see in.co.rays.proj4.model.CollegeModel
+ * @see in.co.rays.proj4.bean.CollegeBean
  */
 @WebServlet(name = "CollegeListCtl", urlPatterns = { "/ctl/CollegeListCtl" })
 public class CollegeListCtl extends BaseCtl {
 
-	 /**
+    /**
      * Preloads the list of colleges and sets it as request attribute "collegeList".
      * This method is called before forwarding to the view so that dropdowns or
      * auxiliary lists can be rendered.
@@ -49,7 +41,6 @@ public class CollegeListCtl extends BaseCtl {
      */
     @Override
     protected void preload(HttpServletRequest request) {
-
         CollegeModel collegeModel = new CollegeModel();
 
         try {
@@ -152,45 +143,38 @@ public class CollegeListCtl extends BaseCtl {
 
         try {
 
-            if (OP_SEARCH.equalsIgnoreCase(op) || OP_NEXT.equalsIgnoreCase(op) || OP_PREVIOUS.equalsIgnoreCase(op)) {
+            if (OP_SEARCH.equalsIgnoreCase(op) || "Next".equalsIgnoreCase(op) || "Previous".equalsIgnoreCase(op)) {
 
                 if (OP_SEARCH.equalsIgnoreCase(op)) {
                     pageNo = 1;
                 } else if (OP_NEXT.equalsIgnoreCase(op)) {
                     pageNo++;
-                } else if (OP_PREVIOUS.equalsIgnoreCase(op)) {
+                } else if (OP_PREVIOUS.equalsIgnoreCase(op) && pageNo > 1) {
                     pageNo--;
                 }
-            }
 
-            else if (OP_NEW.equalsIgnoreCase(op)) {
+            } else if (OP_NEW.equalsIgnoreCase(op)) {
                 ServletUtility.redirect(ORSView.COLLEGE_CTL, request, response);
                 return;
-            }
 
-            else if (OP_DELETE.equalsIgnoreCase(op)) {
+            } else if (OP_DELETE.equalsIgnoreCase(op)) {
                 pageNo = 1;
-
                 if (ids != null && ids.length > 0) {
-                    CollegeBean deleteBean = new CollegeBean();
-
+                    CollegeBean deletebean = new CollegeBean();
                     for (String id : ids) {
-                        deleteBean.setId(DataUtility.getInt(id));
-                        model.delete(deleteBean);
+                        deletebean.setId(DataUtility.getInt(id));
+                        model.delete(deletebean);
+                        ServletUtility.setSuccessMessage("Data is deleted successfully", request);
                     }
-
-                    ServletUtility.setSuccessMessage("Data deleted successfully", request);
                 } else {
                     ServletUtility.setErrorMessage("Select at least one record", request);
                 }
-            }
 
-            else if (OP_RESET.equalsIgnoreCase(op)) {
+            } else if (OP_RESET.equalsIgnoreCase(op)) {
                 ServletUtility.redirect(ORSView.COLLEGE_LIST_CTL, request, response);
                 return;
-            }
 
-            else if (OP_BACK.equalsIgnoreCase(op)) {
+            } else if (OP_BACK.equalsIgnoreCase(op)) {
                 ServletUtility.redirect(ORSView.COLLEGE_LIST_CTL, request, response);
                 return;
             }
@@ -198,8 +182,8 @@ public class CollegeListCtl extends BaseCtl {
             list = model.search(bean, pageNo, pageSize);
             next = model.search(bean, pageNo + 1, pageSize);
 
-            if (list == null || list.isEmpty()) {
-                ServletUtility.setErrorMessage("No record found", request);
+            if (list == null || list.size() == 0) {
+                ServletUtility.setErrorMessage("No record found ", request);
             }
 
             ServletUtility.setList(list, request);
@@ -209,7 +193,6 @@ public class CollegeListCtl extends BaseCtl {
             request.setAttribute("nextListSize", next.size());
 
             ServletUtility.forward(getView(), request, response);
-
         } catch (ApplicationException e) {
             e.printStackTrace();
             ServletUtility.handleException(e, request, response);
@@ -218,13 +201,12 @@ public class CollegeListCtl extends BaseCtl {
     }
 
     /**
-     * Returns the view for the College List JSP page.
+     * Returns the JSP view path for the college list.
      *
-     * @return the JSP path for College List
+     * @return view page path as {@link String}
      */
     @Override
     protected String getView() {
         return ORSView.COLLEGE_LIST_VIEW;
     }
-
 }

@@ -17,20 +17,29 @@ import in.co.rays.proj4.util.PropertyReader;
 import in.co.rays.proj4.util.ServletUtility;
 
 /**
- * StudentListCtl is a controller servlet that handles the listing of Student records.
+ * StudentListCtl handles listing, searching, pagination and bulk actions for
+ * Student entities. It populates {@link StudentBean} from request parameters,
+ * delegates search/delete operations to {@link StudentModel}, and prepares
+ * data and pagination metadata for the student list view.
+ * <p>
+ * Supported operations include Search, Next, Previous, New, Delete, Reset and Back.
+ * </p>
  * 
- * It supports operations like search, pagination (next/previous), delete, reset, new entry, and back.
- * 
- * URL pattern: /ctl/StudentListCtl
- * 
- * Extends BaseCtl to inherit common controller behavior.
- * 
- * @author Amit Chandsarkar
+ * @author Chaitanya Bhatt
  * @version 1.0
+ * @see in.co.rays.proj4.model.StudentModel
+ * @see in.co.rays.proj4.bean.StudentBean
  */
 @WebServlet(name = "StudentListCtl", urlPatterns = { "/ctl/StudentListCtl" })
 public class StudentListCtl extends BaseCtl {
 
+    /**
+     * Populates a {@link StudentBean} from request parameters for use in search
+     * or other operations.
+     *
+     * @param request the {@link HttpServletRequest} containing parameters
+     * @return populated {@link BaseBean} (actually a {@link StudentBean})
+     */
     @Override
     protected BaseBean populateBean(HttpServletRequest request) {
 
@@ -43,7 +52,15 @@ public class StudentListCtl extends BaseCtl {
         return bean;
     }
 
-    @Override
+    /**
+     * Handles HTTP GET requests. Performs an initial search and forwards the
+     * result list to the view. If no records are found, an error message is set.
+     *
+     * @param request  the {@link HttpServletRequest}
+     * @param response the {@link HttpServletResponse}
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException      if an I/O error occurs
+     */
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
@@ -68,13 +85,23 @@ public class StudentListCtl extends BaseCtl {
             request.setAttribute("nextListSize", next.size());
 
             ServletUtility.forward(getView(), request, response);
-
         } catch (ApplicationException e) {
             e.printStackTrace();
             ServletUtility.handleException(e, request, response);
+            return;
         }
     }
 
+    /**
+     * Handles HTTP POST requests for search, pagination, new, delete, reset and back
+     * operations. After performing the requested operation it forwards the updated
+     * list and pagination metadata to the view.
+     *
+     * @param request  the {@link HttpServletRequest}
+     * @param response the {@link HttpServletResponse}
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException      if an I/O error occurs
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -149,9 +176,15 @@ public class StudentListCtl extends BaseCtl {
         } catch (ApplicationException e) {
             e.printStackTrace();
             ServletUtility.handleException(e, request, response);
+            return;
         }
     }
 
+    /**
+     * Returns the JSP view path for the student list.
+     *
+     * @return view page path as {@link String}
+     */
     @Override
     protected String getView() {
         return ORSView.STUDENT_LIST_VIEW;

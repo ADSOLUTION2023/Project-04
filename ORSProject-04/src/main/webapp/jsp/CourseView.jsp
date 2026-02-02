@@ -1,110 +1,132 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-pageEncoding="ISO-8859-1"%>
 
-<%@page import="in.co.rays.proj4.util.*,in.co.rays.proj4.bean.*,in.co.rays.proj4.controller.*"%>
+<%@page import="in.co.rays.proj4.controller.ORSView"%>
+<%@page import="in.co.rays.proj4.util.HTMLUtility"%>
+<%@page import="java.util.LinkedHashMap"%>
+<%@page import="in.co.rays.proj4.controller.CourseCtl"%>
+<%@page import="in.co.rays.proj4.controller.BaseCtl"%>
+<%@page import="in.co.rays.proj4.util.DataUtility"%>
+<%@page import="in.co.rays.proj4.util.ServletUtility"%>
 
-<!DOCTYPE html>
 <html>
 <head>
-<title>Add Course</title>
+<title>User</title>
+<style type="text/css">
+.panel-default1 {
+	border-color: red;
+}
+</style>
 </head>
-
 <body>
+	<form action="<%=ORSView.COURSE_CTL%>" method="post">
+		<%@ include file="Header.jsp"%>
 
-	<%@ include file="Header.jsp"%>
+		<jsp:useBean id="bean" class="in.co.rays.proj4.bean.CourseBean"
+			scope="request"></jsp:useBean>
 
-	<%
-		CourseBean bean = (CourseBean) request.getAttribute("bean");
-	%>
-	<div align="center">
+		<div align="center">
+			<h1 align="center" style="margin-bottom: -15; color: navy">
+				<%
+					if (bean != null && bean.getId() > 0) {
+				%>
+				Update
+				<%
+					} else {
+				%>
+				Add
+				<%
+					}
+				%>
+				Course
+			</h1>
 
-		<h1 align="center" style="margin-bottom: -15; color: navy">
-			<%
-				if (bean != null && bean.getId() > 0) {
-			%>
-			Update
-			<%
-				} else {
-			%>
-			Add
-			<%
-				}
-			%>
-			Course
-		</h1>
+			<div style="height: 15px; margin-bottom: 12px">
+				<h3 align="center">
+					<font color="green"> <%=ServletUtility.getSuccessMessage(request)%>
+					</font>
+				</h3>
+				<h3 align="center">
+					<font color="red"> <%=ServletUtility.getErrorMessage(request)%>
+					</font>
+				</h3>
+			</div>
 
-		<!-- SUCCESS MESSAGE -->
-		<h4 style="color: green;">
-			<%=ServletUtility.getSuccessMessage(request)%>
-		</h4>
-
-		<!-- ERROR MESSAGE -->
-		<h4 style="color: red;">
-			<%=ServletUtility.getErrorMessage(request)%>
-		</h4>
-
-		<form action="<%=ORSView.COURSE_CTL%>" method="post">
-
-			<input type="hidden" name="id"
-				value="<%=bean != null ? bean.getId() : 0%>"> <input
-				type="hidden" name="createdBy"
-				value="<%=bean != null ? bean.getCreatedBy() : ""%>"> <input
-				type="hidden" name="modifiedBy"
-				value="<%=bean != null ? bean.getModifiedBy() : ""%>"> <input
-				type="hidden" name="createdDatetime"
-				value="<%=bean != null ? DataUtility.getTimestamp(bean.getCreatedDatetime()) : ""%>">
+			<input type="hidden" name="id" value="<%=bean.getId()%>"> <input
+				type="hidden" name="createdBy" value="<%=bean.getCreatedBy()%>">
+			<input type="hidden" name="modifiedBy"
+				value="<%=bean.getModifiedBy()%>"> <input type="hidden"
+				name="createdDatetime"
+				value="<%=DataUtility.getTimestamp(bean.getCreatedDatetime())%>">
 			<input type="hidden" name="modifiedDatetime"
-				value="<%=bean != null ? DataUtility.getTimestamp(bean.getModifiedDatetime()) : ""%>">
+				value="<%=DataUtility.getTimestamp(bean.getModifiedDatetime())%>">
 
-			<table align="center">
-
-				<!-- Course Name -->
+			<table>
 				<tr>
-					<th>Course Name :</th>
-					<td><input type="text" name="name" placeholder="Enter Course Name"
-						value="<%=bean != null ? DataUtility.getStringData(bean.getName()) : ""%>">
-					</td>
-					<td><font color="red"><%=ServletUtility.getErrorMessage("name", request)%></font></td>
-				</tr>
-				<!-- Duration -->
-				<tr>
-					<th>Duration :</th>
-					<td><input type="text" name="duration" placeholder="Enter Duration"
-						value="<%=bean != null ? DataUtility.getStringData(bean.getDuration()) : ""%>">
-					</td>
-					<td><font color="red"><%=ServletUtility.getErrorMessage("duration", request)%></font></td>
-				</tr>
-				<!-- Description -->
-				<tr>
-					<th>Description :</th>
-					<td><input type="text" name="description" placeholder="Enter Description"
-						value="<%=bean != null ? DataUtility.getStringData(bean.getDescription()) : ""%>">
-					</td>
-					<td><font color="red"><%=ServletUtility.getErrorMessage("description", request)%></font></td>
+					<th align="left">Name<span style="color: red">*</span></th>
+					<td align="center"><input type="text" name="name"
+						placeholder="Enter Course Name"
+						value="<%=DataUtility.getStringData(bean.getName())%>"></td>
+					<td style="position: fixed;"><font color="red"> <%=ServletUtility.getErrorMessage("name", request)%>
+					</font></td>
 				</tr>
 
-				<!-- Buttons -->
 				<tr>
-					<td colspan="3" align="center">
+					<th align="left">Duration<span style="color: red">*</span></th>
+					<td>
 						<%
-							if (bean != null && bean.getId() > 0) {
-						%> <input type="submit" name="operation"
-						value="<%=CourseCtl.OP_UPDATE%>"> <input type="submit"
-						name="operation" value="<%=CourseCtl.OP_CANCEL%>"> <%
- 					} else {
-						 %> <input type="submit" name="operation" value="<%=CourseCtl.OP_SAVE%>">
-						<input type="submit" name="operation"
-						value="<%=CourseCtl.OP_RESET%>">
-						 <%
- 						}
-						 %>
+							LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
+							map.put("1 Year", "1 Year");
+							map.put("2 Year", "2 Year");
+							map.put("3 Year", "3 Year");
+							map.put("4 Year", "4 Year");
+							map.put("5 Year", "5 Year");
+							map.put("6 Year", "6 Year");
+							map.put("7 Year", "7 Year");
+
+							String htmlList = HTMLUtility.getList("duration", bean.getDuration(), map);
+						%> <%=htmlList%>
 					</td>
+					<td style="position: fixed;"><font color="red"> <%=ServletUtility.getErrorMessage("duration", request)%>
+					</font></td>
 				</tr>
 
-			</table>
-		</form>
+				<tr>
+					<th align="left">Description<span style="color: red">*</span></th>
+					<td align="center"><textarea
+							style="width: 170px; resize: none;" name="description" rows="3"
+							placeholder="Enter Short description"><%=DataUtility.getStringData(bean.getDescription()).trim()%></textarea>
+					</td>
+					<td style="position: fixed;"><font color="red"> <%=ServletUtility.getErrorMessage("description", request)%>
+					</font></td>
+				</tr>
 
-	</div>
+				<tr>
+					<th></th>
+					<td></td>
+				</tr>
+
+				<tr>
+					<th></th>
+					<%
+						if (bean != null && bean.getId() > 0) {
+					%>
+					<td align="left" colspan="2"><input type="submit"
+						name="operation" value="<%=CourseCtl.OP_UPDATE%>"> <input
+						type="submit" name="operation" value="<%=CourseCtl.OP_CANCEL%>">
+					</td>
+					<%
+						} else {
+					%>
+					<td align="left" colspan="2"><input type="submit"
+						name="operation" value="<%=CourseCtl.OP_SAVE%>"> <input
+						type="submit" name="operation" value="<%=CourseCtl.OP_RESET%>">
+					</td>
+					<%
+						}
+					%>
+				</tr>
+			</table>
+		</div>
+	</form>
 
 	<%@ include file="Footer.jsp"%>
 

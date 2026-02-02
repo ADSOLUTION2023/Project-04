@@ -3,14 +3,13 @@ package in.co.rays.proj4.model;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 import in.co.rays.proj4.bean.CollegeBean;
 import in.co.rays.proj4.bean.StudentBean;
 import in.co.rays.proj4.exception.ApplicationException;
-import in.co.rays.proj4.exception.DataBaseException;
+import in.co.rays.proj4.exception.DatabaseException;
 import in.co.rays.proj4.exception.DuplicateRecordException;
 import in.co.rays.proj4.util.JDBCDataSource;
 
@@ -23,40 +22,38 @@ import in.co.rays.proj4.util.JDBCDataSource;
  * (ApplicationException, DatabaseException, DuplicateRecordException).
  * </p>
  *
- * @author Amit Chandsarkar
+ * @author Chaitanya Bhatt
  * @version 1.0
  */
 public class StudentModel {
-
 	/**
 	 * Returns next primary key value for st_student table.
 	 *
 	 * @return next primary key (Integer)
 	 * @throws DatabaseException if a database access error occurs
 	 */
-	public Integer nextPk() throws DataBaseException {
+	public Integer nextPk() throws DatabaseException {
 
 		Connection conn = null;
 		int pk = 0;
 
 		try {
 			conn = JDBCDataSource.getConnection();
-            PreparedStatement pstmt = conn.prepareStatement("select max(id) from st_student");
-            ResultSet rs = pstmt.executeQuery();
-            while (rs.next()) {
+			PreparedStatement pstmt = conn.prepareStatement("select max(id) from st_student");
+			ResultSet rs = pstmt.executeQuery();
+			while (rs.next()) {
 				pk = rs.getInt(1);
 			}
 			rs.close();
 			pstmt.close();
 		} catch (Exception e) {
-			throw new DataBaseException("Exception : Exception in getting PK");
-					}
-		 finally {
-				JDBCDataSource.closeConnection(conn);
-			}
-			return pk + 1;
+			throw new DatabaseException("Exception : Exception in getting PK");
+		} finally {
+			JDBCDataSource.closeConnection(conn);
 		}
-	
+		return pk + 1;
+	}
+
 	/**
 	 * Adds a new student record into database.
 	 *
@@ -115,7 +112,7 @@ public class StudentModel {
 		}
 		return pk;
 	}
-	
+
 	/**
 	 * Updates an existing student record.
 	 *
@@ -159,7 +156,6 @@ public class StudentModel {
 			conn.commit(); // End transaction
 			pstmt.close();
 		} catch (Exception e) {
-			e.printStackTrace();
 			try {
 				conn.rollback();
 			} catch (Exception ex) {
@@ -171,7 +167,7 @@ public class StudentModel {
 			JDBCDataSource.closeConnection(conn);
 		}
 	}
-	
+
 	/**
 	 * Deletes a student record from database.
 	 *
@@ -290,7 +286,7 @@ public class StudentModel {
 		}
 		return bean;
 	}
-	
+
 	/**
 	 * Returns all students.
 	 *
@@ -319,22 +315,22 @@ public class StudentModel {
 				sql.append(" and id = " + bean.getId());
 			}
 			if (bean.getFirstName() != null && bean.getFirstName().length() > 0) {
-				sql.append(" and first_name like '" + bean.getFirstName() + "%'");
+				sql.append(" and first_name like '%" + bean.getFirstName() + "%'");
 			}
 			if (bean.getLastName() != null && bean.getLastName().length() > 0) {
-				sql.append(" and last_name like '" + bean.getLastName() + "%'");
+				sql.append(" and last_name like '%" + bean.getLastName() + "%'");
 			}
 			if (bean.getDob() != null && bean.getDob().getDate() > 0) {
 				sql.append(" and dob = " + bean.getDob());
 			}
 			if (bean.getGender() != null && bean.getGender().length() > 0) {
-				sql.append(" and gender like '" + bean.getGender() + "%'");
+				sql.append(" and gender like '%" + bean.getGender() + "%'");
 			}
 			if (bean.getMobileNo() != null && bean.getMobileNo().length() > 0) {
-				sql.append(" and mobile_no like '" + bean.getMobileNo() + "%'");
+				sql.append(" and mobile_no like '%" + bean.getMobileNo() + "%'");
 			}
 			if (bean.getEmail() != null && bean.getEmail().length() > 0) {
-				sql.append(" and email like '" + bean.getEmail() + "%'");
+				sql.append(" and email like '%" + bean.getEmail() + "%'");
 			}
 			if (bean.getCollegeName() != null && bean.getCollegeName().length() > 0) {
 				sql.append(" and college_name = " + bean.getCollegeName());
@@ -378,5 +374,4 @@ public class StudentModel {
 		}
 		return list;
 	}
-
-	}
+}

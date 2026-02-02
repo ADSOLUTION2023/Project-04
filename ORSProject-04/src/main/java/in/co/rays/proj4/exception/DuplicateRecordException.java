@@ -19,7 +19,7 @@ public class DuplicateRecordException extends Exception {
      *
      * @param msg the detail message explaining the duplicate condition
      */
-	public DuplicateRecordException(String msg) {
-		super(msg);
-	}
+    public DuplicateRecordException(String msg) {
+        super(msg);
+    }
 }

@@ -12,16 +12,16 @@ package in.co.rays.proj4.exception;
  * This helps maintain a clean exception structure by separating 
  * user errors, database errors, and application errors.
  *
- * @author Amit Chandsarkar
+ * @author 
  */
 public class ApplicationException extends Exception {
-	
-	   /**
+
+    /**
      * Creates an ApplicationException instance with a descriptive message.
      *
      * @param msg the detailed error message
      */
-	public ApplicationException(String msg) {
-		super(msg);
-	}
+    public ApplicationException(String msg) {
+        super(msg);
+    }
 }

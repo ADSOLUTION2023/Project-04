@@ -13,12 +13,12 @@ package in.co.rays.proj4.exception;
  */
 public class RecordNotFoundException extends Exception {
 
-	 /**
+    /**
      * Constructs a RecordNotFoundException with a detailed message.
      *
      * @param msg the message explaining which record was not found
      */
-	public RecordNotFoundException(String msg) {
-		super(msg);
-}
+    public RecordNotFoundException(String msg) {
+        super(msg);
+    }
 }

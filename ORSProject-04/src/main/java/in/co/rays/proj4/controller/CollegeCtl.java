@@ -1,4 +1,4 @@
- package in.co.rays.proj4.controller;
+package in.co.rays.proj4.controller;
 
 import java.io.IOException;
 
@@ -18,44 +18,37 @@ import in.co.rays.proj4.util.PropertyReader;
 import in.co.rays.proj4.util.ServletUtility;
 
 /**
- * CollegeCtl handles operations related to adding, updating, and validating
- * College records. It processes both GET and POST requests, validates inputs,
- * populates CollegeBean, interacts with CollegeModel, and forwards or redirects
- * to the appropriate view pages.
- * 
+ * Controller for managing College operations such as add, update, and view.
  * <p>
- * Supported operations:
- * <ul>
- * <li>Save College</li>
- * <li>Update College</li>
- * <li>Cancel to list page</li>
- * <li>Reset form</li>
- * </ul>
+ * This servlet handles request validation, populating {@link CollegeBean}
+ * instances from request parameters, and delegating persistence operations to
+ * {@link CollegeModel}. It also performs navigation actions like cancel and reset.
  * </p>
  * 
- * @author Amit Chandsarkar
+ * author Chaitanya Bhatt
  * @version 1.0
+ * @see in.co.rays.proj4.model.CollegeModel
+ * @see in.co.rays.proj4.bean.CollegeBean
  */
 @WebServlet(name = "CollegeCtl", urlPatterns = { "/ctl/CollegeCtl" })
 public class CollegeCtl extends BaseCtl {
 
     /**
-     * Validates College input fields. Ensures:
+     * Validates college form fields (name, address, state, city, phoneNo).
      * <ul>
-     * <li>Name is required and alphabetic</li>
-     * <li>Address, State, City are required</li>
-     * <li>Phone number is required, must be 10 digits, and valid</li>
+     *   <li>Name is required and must be a valid name.</li>
+     *   <li>Address, State and City are required.</li>
+     *   <li>Phone number is required, must be 10 digits and a valid phone number.</li>
      * </ul>
      *
-     * @param request HttpServletRequest containing user input data
-     * @return true if validation succeeds, false otherwise
+     * @param request the {@link HttpServletRequest} carrying form parameters
+     * @return {@code true} if validation passes; {@code false} otherwise
      */
     @Override
     protected boolean validate(HttpServletRequest request) {
 
         boolean pass = true;
 
-        // Validate Name
         if (DataValidator.isNull(request.getParameter("name"))) {
             request.setAttribute("name", PropertyReader.getValue("error.require", "Name"));
             pass = false;
@@ -64,25 +57,21 @@ public class CollegeCtl extends BaseCtl {
             pass = false;
         }
 
-        // Validate Address
         if (DataValidator.isNull(request.getParameter("address"))) {
             request.setAttribute("address", PropertyReader.getValue("error.require", "Address"));
             pass = false;
         }
 
-        // Validate State
         if (DataValidator.isNull(request.getParameter("state"))) {
             request.setAttribute("state", PropertyReader.getValue("error.require", "State"));
             pass = false;
         }
 
-        // Validate City
         if (DataValidator.isNull(request.getParameter("city"))) {
             request.setAttribute("city", PropertyReader.getValue("error.require", "City"));
             pass = false;
         }
 
-        // Validate Phone No
         if (DataValidator.isNull(request.getParameter("phoneNo"))) {
             request.setAttribute("phoneNo", PropertyReader.getValue("error.require", "Phone No"));
             pass = false;
@@ -98,10 +87,14 @@ public class CollegeCtl extends BaseCtl {
     }
 
     /**
-     * Populates CollegeBean using request parameters.
-     * 
-     * @param request HttpServletRequest containing form input
-     * @return BaseBean populated with College details
+     * Populates a {@link CollegeBean} from request parameters.
+     * <p>
+     * This method maps request parameters to bean properties and calls
+     * {@link #populateDTO(BaseBean, HttpServletRequest)} to set audit fields.
+     * </p>
+     *
+     * @param request the {@link HttpServletRequest} containing form data
+     * @return populated {@link BaseBean} (actually a {@link CollegeBean})
      */
     @Override
     protected BaseBean populateBean(HttpServletRequest request) {
@@ -121,19 +114,19 @@ public class CollegeCtl extends BaseCtl {
     }
 
     /**
-     * Handles GET request. Loads a College record in edit mode if ID is provided.
-     * Otherwise, opens the blank form.
-     * 
-     * @param request HttpServletRequest
-     * @param response HttpServletResponse
-     * @throws ServletException
-     * @throws IOException
+     * Handles HTTP GET requests. If an id parameter is present (> 0), the
+     * corresponding college record is loaded and set on the request for display.
+     *
+     * @param request  the {@link HttpServletRequest}
+     * @param response the {@link HttpServletResponse}
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException      if an I/O error occurs
      */
-    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         long id = DataUtility.getLong(request.getParameter("id"));
+
         CollegeModel model = new CollegeModel();
 
         if (id > 0) {
@@ -146,94 +139,79 @@ public class CollegeCtl extends BaseCtl {
                 return;
             }
         }
-
         ServletUtility.forward(getView(), request, response);
     }
 
     /**
-     * Handles POST operations:
+     * Handles HTTP POST requests for save, update, cancel and reset operations.
      * <ul>
-     * <li><b>Save</b>: Add new College</li>
-     * <li><b>Update</b>: Update existing College</li>
-     * <li><b>Cancel</b>: Redirect to College List</li>
-     * <li><b>Reset</b>: Reload empty College form</li>
+     *   <li>OP_SAVE: Adds a new college (handles {@link DuplicateRecordException}).</li>
+     *   <li>OP_UPDATE: Updates existing college data.</li>
+     *   <li>OP_CANCEL: Redirects to college list controller.</li>
+     *   <li>OP_RESET: Redirects back to college form.</li>
      * </ul>
      *
-     * @param request  HttpServletRequest containing form data
-     * @param response HttpServletResponse
-     * @throws ServletException
-     * @throws IOException
+     * @param request  the {@link HttpServletRequest}
+     * @param response the {@link HttpServletResponse}
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException      if an I/O error occurs
      */
-    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         String op = DataUtility.getString(request.getParameter("operation"));
+
         CollegeModel model = new CollegeModel();
+
         long id = DataUtility.getLong(request.getParameter("id"));
 
         if (OP_SAVE.equalsIgnoreCase(op)) {
-
             CollegeBean bean = (CollegeBean) populateBean(request);
-
             try {
                 long pk = model.add(bean);
                 ServletUtility.setBean(bean, request);
-                ServletUtility.setSuccessMessage("College added successfully", request);
-
+                ServletUtility.setSuccessMessage("Data is successfully saved", request);
             } catch (DuplicateRecordException e) {
                 ServletUtility.setBean(bean, request);
                 ServletUtility.setErrorMessage("College Name already exists", request);
-
-            } catch (ApplicationException e) {
-                e.printStackTrace();
-                return;
-            }
-        }
-
-        else if (OP_UPDATE.equalsIgnoreCase(op)) {
-
-            CollegeBean bean = (CollegeBean) populateBean(request);
-
-            try {
-                if (id > 0) {
-                    model.update(bean);
-                }
-                ServletUtility.setBean(bean, request);
-                ServletUtility.setSuccessMessage("College updated successfully", request);
-
-            } catch (DuplicateRecordException e) {
-                ServletUtility.setBean(bean, request);
-                ServletUtility.setErrorMessage("College Name already exists", request);
-
             } catch (ApplicationException e) {
                 e.printStackTrace();
                 ServletUtility.handleException(e, request, response);
                 return;
             }
-        }
-
-        else if (OP_CANCEL.equalsIgnoreCase(op)) {
+        } else if (OP_UPDATE.equalsIgnoreCase(op)) {
+            CollegeBean bean = (CollegeBean) populateBean(request);
+            try {
+                if (id > 0) {
+                    model.update(bean);
+                }
+                ServletUtility.setBean(bean, request);
+                ServletUtility.setSuccessMessage("Data is successfully updated", request);
+            } catch (DuplicateRecordException e) {
+                ServletUtility.setBean(bean, request);
+                ServletUtility.setErrorMessage("College Name already exists", request);
+            } catch (ApplicationException e) {
+                e.printStackTrace();
+                ServletUtility.handleException(e, request, response);
+                return;
+            }
+        } else if (OP_CANCEL.equalsIgnoreCase(op)) {
             ServletUtility.redirect(ORSView.COLLEGE_LIST_CTL, request, response);
             return;
-        }
-
-        else if (OP_RESET.equalsIgnoreCase(op)) {
+        } else if (OP_RESET.equalsIgnoreCase(op)) {
             ServletUtility.redirect(ORSView.COLLEGE_CTL, request, response);
             return;
         }
-
         ServletUtility.forward(getView(), request, response);
     }
 
     /**
-     * Returns the JSP page for College form view.
-     * 
-     * @return view page path
+     * Returns the JSP view path for the college form.
+     *
+     * @return view page path as {@link String}
      */
     @Override
     protected String getView() {
         return ORSView.COLLEGE_VIEW;
     }
-
 }
