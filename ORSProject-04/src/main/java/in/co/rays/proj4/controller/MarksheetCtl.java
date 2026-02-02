@@ -20,8 +20,8 @@ import in.co.rays.proj4.util.DataValidator;
 import in.co.rays.proj4.util.PropertyReader;
 import in.co.rays.proj4.util.ServletUtility;
 
-@WebServlet(name = "MarksheetCtl", urlPatterns = { "/MarksheetCtl" })
-public class MarksheetCtl extends BaseCtl{
+@WebServlet(name = "MarkSheetCtl", urlPatterns = { "/ctl/MarkSheetCtl" })
+public class MarkSheetCtl extends BaseCtl{
 	
 	@Override
 	protected void preload(HttpServletRequest request) {

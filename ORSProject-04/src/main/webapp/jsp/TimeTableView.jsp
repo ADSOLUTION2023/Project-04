@@ -3,11 +3,11 @@
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.util.Collections"%>
 <%@page import="in.co.rays.proj4.controller.UserCtl"%>
-<%@page import="in.co.rays.proj4.bean.TimeTableBean"%>
+<%@page import="in.co.rays.proj4.bean.TimetableBean"%>
 <%@page import="java.util.List"%>
 <%@page import="java.util.HashMap"%>
 <%@page import="in.co.rays.proj4.util.HTMLUtility"%>
-<%@page import="in.co.rays.proj4.controller.TimeTableCtl"%>
+<%@page import="in.co.rays.proj4.controller.TimetableCtl"%>
 <%@page import="in.co.rays.proj4.util.DataUtility"%>
 <%@page import="in.co.rays.proj4.util.ServletUtility"%>
 <html>
@@ -20,12 +20,12 @@
 	<form action="<%=ORSView.TIMETABLE_CTL%>" method="POST">
 		<%@ include file="Header.jsp"%>
 
-		<jsp:useBean id="bean" class="in.co.rays.proj4.bean.TimeTableBean"
+		<jsp:useBean id="bean" class="in.co.rays.proj4.bean.TimetableBean"
 			scope="request"></jsp:useBean>
 
 		<%
-			List<TimeTableBean> courseList = (List<TimeTableBean>) request.getAttribute("courseList");
-			List<TimeTableBean> subjectList = (List<TimeTableBean>) request.getAttribute("subjectList");
+			List<TimetableCtl> courseList = (List<TimetableCtl>)request.getAttribute("courseList");
+			List<TimetableBean> subjectList = (List<TimetableBean>)request.getAttribute("subjectList");
 		%>
 
 		<div align="center">
@@ -62,7 +62,7 @@
 			<table>
 				<tr>
 					<th align="left">Course<span style="color: red">*</span></th>
-					<td><%=HTMLUtility.getList("courseId", String.valueOf(bean.getCourseId()),courseList)%></td>
+					<td><%=HTMLUtility.getList("courseId", String.valueOf(bean.getCourseId()), courseList)%></td>
 					<td style="position: fixed;"><font color="red"> <%=ServletUtility.getErrorMessage("courseId", request)%></font></td>
 				</tr>
 				<tr>
@@ -91,8 +91,9 @@
 				</tr>
 				<tr>
 					<th align="left">Exam Date<span style="color: red">*</span></th>
-					<td><input type="date" id="udatee" name="examDate" placeholder="Select Exam Date"
-						value="<%=DataUtility.getDateString(bean.getDate())%>"></td>
+					<td><input type="text" id="udatee" name="examDate"
+						placeholder="Select Exam Date"
+						value="<%=DataUtility.getDateString(bean.getExamDate())%>"></td>
 					<td style="position: fixed;"><font color="red"> <%=ServletUtility.getErrorMessage("examDate", request)%></font></td>
 				</tr>
 				<tr>
@@ -112,10 +113,10 @@
 
 				<tr>
 					<th align="left">Description<span style="color: red">*</span></th>
-					<td align="center">
-                        <textarea style="width: 170px; resize: none;" name="description" rows="3"
-                            placeholder="Enter Short description"><%=DataUtility.getStringData(bean.getDescription()).trim()%></textarea>
-                    </td>
+					<td align="center"><textarea
+							style="width: 170px; resize: none;" name="description" rows="3"
+							placeholder="Enter Short description"><%=DataUtility.getStringData(bean.getDescription()).trim()%></textarea>
+					</td>
 					<td style="position: fixed;"><font color="red"> <%=ServletUtility.getErrorMessage("description", request)%></font></td>
 				</tr>
 				<tr>
@@ -128,19 +129,21 @@
 						if (bean != null && bean.getId() > 0) {
 					%>
 					<td align="left" colspan="2"><input type="submit"
-						name="operation" value="<%=TimeTableCtl.OP_UPDATE%>"> <input
-						type="submit" name="operation" value="<%=TimeTableCtl.OP_CANCEL%>">
+						name="operation" value="<%=TimetableCtl.OP_UPDATE%>"> <input
+						type="submit" name="operation" value="<%=TimetableCtl.OP_CANCEL%>">
 						<%
 							} else {
-					%>
+						%>
 					<td align="left" colspan="2"><input type="submit"
-						name="operation" value="<%=TimeTableCtl.OP_SAVE%>"> <input
-						type="submit" name="operation" value="<%=TimeTableCtl.OP_RESET%>">
+						name="operation" value="<%=TimetableCtl.OP_SAVE%>"> <input
+						type="submit" name="operation" value="<%=TimetableCtl.OP_RESET%>">
 						<%
 							}
-					%>
+						%>
 			</table>
 		</div>
 	</form>
+	<%@ include file="Footer.jsp"%>
 </body>
 </html>
+ 

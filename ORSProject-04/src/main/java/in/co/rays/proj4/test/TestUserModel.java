@@ -1,6 +1,7 @@
 package in.co.rays.proj4.test;
 
 import java.sql.Timestamp;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ import in.co.rays.proj4.exception.DuplicateRecordException;
 import in.co.rays.proj4.model.UserModel;
 
 public class TestUserModel { 
+	
 	public static UserModel model = new UserModel();
 
 	public static void main(String[] args) {

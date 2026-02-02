@@ -2,8 +2,14 @@ package in.co.rays.proj4.bean;
 
 import java.util.Date;
 
+/**
+ * User JavaBean encapsulates User attributes.
+ * 
+ * @author Amit Chandsarkar
+ *
+ */
 public class UserBean extends BaseBean {
-
+	
 	private String firstName;
 	private String lastName;
 	private String login;
@@ -13,6 +19,7 @@ public class UserBean extends BaseBean {
 	private String mobileNo;
 	private long roleId;
 	private String gender;
+
 
 	public String getFirstName() {
 		return firstName;
@@ -88,14 +95,12 @@ public class UserBean extends BaseBean {
 
 	@Override
 	public String getKey() {
-
-		return "" + id;
+		return id + "";
 	}
 
 	@Override
 	public String getValue() {
-
-		return firstName;
+		return firstName + " " + lastName;
 	}
 
 }

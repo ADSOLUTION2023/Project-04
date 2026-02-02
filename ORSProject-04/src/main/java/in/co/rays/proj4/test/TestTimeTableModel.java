@@ -1,6 +1,7 @@
 package in.co.rays.proj4.test;
 
 import java.sql.Timestamp;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -8,14 +9,14 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
-import in.co.rays.proj4.bean.TimeTableBean;
+import in.co.rays.proj4.bean.TimetableBean;
 import in.co.rays.proj4.exception.ApplicationException;
 import in.co.rays.proj4.exception.DuplicateRecordException;
-import in.co.rays.proj4.model.TimeTableModel;
+import in.co.rays.proj4.model.TimetableModel;
 
 public class TestTimeTableModel {
 
-public static TimeTableModel model = new TimeTableModel();
+public static TimetableModel model = new TimetableModel();
 
 public static void main(String[] args) {
 
@@ -30,10 +31,10 @@ public static void main(String[] args) {
 	public static void testAdd() {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		try {
-			TimeTableBean bean = new TimeTableBean();
+			TimetableBean bean = new TimetableBean();
 			bean.setSemester("First");
 			try {
-				bean.setDate(sdf.parse("2020-12-23"));
+				bean.setExamDate(sdf.parse("2020-12-23"));
 			} catch (ParseException e) {
 			 
 				e.printStackTrace();
@@ -56,10 +57,10 @@ public static void main(String[] args) {
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		try {
-			TimeTableBean bean = new TimeTableBean();
+			TimetableBean bean = new TimetableBean();
 			bean.setSemester("First");
 			try {
-				bean.setDate(sdf.parse("2020-12-23"));
+				bean.setExamDate(sdf.parse("2020-12-23"));
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}
@@ -80,11 +81,11 @@ public static void main(String[] args) {
 	
 public static void testDelete() {
 	try {
-		TimeTableBean bean = new TimeTableBean();
+		TimetableBean bean = new TimetableBean();
 		long pk = 1L;
 		bean.setId(pk);
 		model.delete(bean);
-		TimeTableBean deletedbean = model.findByPk(pk);
+		TimetableBean deletedbean = model.findByPk(pk);
 		if (deletedbean != null) {
 			System.out.println("Test Delete fail");
 		}
@@ -95,7 +96,7 @@ public static void testDelete() {
 
 public static void testfindByPk() {
 	try {
-		TimeTableBean bean = model.findByPk(1L);
+		TimetableBean bean = model.findByPk(1L);
 		if (bean == null) {
 			System.out.println("Test Find By PK fail");
 		}

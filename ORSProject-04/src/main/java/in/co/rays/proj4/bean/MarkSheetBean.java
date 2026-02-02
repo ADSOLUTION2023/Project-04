@@ -1,5 +1,13 @@
 package in.co.rays.proj4.bean;
 
+import java.util.Date;
+
+/**
+ * Marksheet JavaBean encapsulates Marksheet attributes.
+ * 
+ * @author Amit Chandsarkar
+ *
+ */
 public class MarkSheetBean extends BaseBean {
 
 	private String rollNo;
@@ -59,13 +67,11 @@ public class MarkSheetBean extends BaseBean {
 
 	@Override
 	public String getKey() {
-
-		return "" + id;
+		return id + "";
 	}
 
 	@Override
 	public String getValue() {
-
 		return name;
 	}
 

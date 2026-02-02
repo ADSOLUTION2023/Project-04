@@ -9,13 +9,30 @@ import java.util.List;
 
 import in.co.rays.proj4.bean.CourseBean;
 import in.co.rays.proj4.bean.SubjectBean;
-import in.co.rays.proj4.bean.TimeTableBean;
+import in.co.rays.proj4.bean.TimetableBean;
 import in.co.rays.proj4.exception.ApplicationException;
 import in.co.rays.proj4.exception.DataBaseException;
 import in.co.rays.proj4.exception.DuplicateRecordException;
 import in.co.rays.proj4.util.JDBCDataSource;
 
-public class TimeTableModel {
+/**
+* TimetableModel handles all database operations related to the Timetable entity.
+* It provides CRUD operations, search functionality, and validation checks to 
+* prevent duplicate timetable entries. This model interacts with the st_timetable 
+* table in the database.
+* 
+* @author Amit Chandsarkar
+* @version 1.0
+*/
+
+public class TimetableModel {
+
+	 /**
+     * Returns the next primary key for st_timetable.
+     *
+     * @return next PK as Integer
+     * @throws DatabaseException if database access fails
+     */
 	public Integer nextPk() throws DataBaseException {
 		Connection conn = null;
 		int pk = 0;
@@ -36,7 +53,15 @@ public class TimeTableModel {
 		return pk + 1;
 	}
 
-	public long add(TimeTableBean bean) throws ApplicationException, DuplicateRecordException {
+	  /**
+     * Adds a new timetable entry to the database.
+     *
+     * @param bean TimetableBean containing details to insert
+     * @return generated primary key
+     * @throws ApplicationException if unable to add record
+     * @throws DuplicateRecordException if duplicate timetable exists
+     */
+	public long add(TimetableBean bean) throws ApplicationException, DuplicateRecordException {
 		Connection conn = null;
 		int pk = 0;
 
@@ -46,7 +71,7 @@ public class TimeTableModel {
 
 		SubjectModel subjectModel = new SubjectModel();
 		SubjectBean subjectBean = subjectModel.findByPk(bean.getSubjectId());
-		bean.setSubjectName(subjectBean.getName());
+		bean.setSubjectName(subjectBean.getSubjectName());
 
 		try {
 			conn = JDBCDataSource.getConnection();
@@ -57,7 +82,7 @@ public class TimeTableModel {
 			pstmt.setInt(1, pk);
 			pstmt.setString(2, bean.getSemester());
 			pstmt.setString(3, bean.getDescription());
-			pstmt.setDate(4, new java.sql.Date(bean.getDate().getTime()));
+			pstmt.setDate(4, new java.sql.Date(bean.getExamDate().getTime()));
 			pstmt.setString(5, bean.getExamTime());
 			pstmt.setLong(6, bean.getCourseId());
 			pstmt.setString(7, bean.getCourseName());
@@ -84,7 +109,14 @@ public class TimeTableModel {
 		return pk;
 	}
 
-	public void update(TimeTableBean bean) throws ApplicationException, DuplicateRecordException {
+	 /**
+     * Updates an existing timetable entry.
+     *
+     * @param bean TimetableBean containing updated details
+     * @throws ApplicationException if failed to update
+     * @throws DuplicateRecordException if conflicting record exists
+     */
+	public void update(TimetableBean bean) throws ApplicationException, DuplicateRecordException {
 
 		Connection conn = null;
 
@@ -94,7 +126,7 @@ public class TimeTableModel {
 
 		SubjectModel subjectModel = new SubjectModel();
 		SubjectBean subjectBean = subjectModel.findByPk(bean.getSubjectId());
-		bean.setSubjectName(subjectBean.getName());
+		bean.setSubjectName(subjectBean.getSubjectName());
 
 		try {
 			conn = JDBCDataSource.getConnection();
@@ -105,7 +137,7 @@ public class TimeTableModel {
 
 			pstmt.setString(1, bean.getSemester());
 			pstmt.setString(2, bean.getDescription());
-			pstmt.setDate(3, new java.sql.Date(bean.getDate().getTime()));
+			pstmt.setDate(3, new java.sql.Date(bean.getExamDate().getTime()));
 			pstmt.setString(4, bean.getExamTime());
 			pstmt.setLong(5, bean.getCourseId());
 			pstmt.setString(6, bean.getCourseName());
@@ -131,7 +163,13 @@ public class TimeTableModel {
 		}
 	}
 
-	public void delete(TimeTableBean bean) throws ApplicationException {
+	 /**
+     * Deletes a timetable entry.
+     *
+     * @param bean TimetableBean with ID to delete
+     * @throws ApplicationException if delete fails
+     */
+	public void delete(TimetableBean bean) throws ApplicationException {
 		Connection conn = null;
 		try {
 			conn = JDBCDataSource.getConnection();
@@ -154,9 +192,16 @@ public class TimeTableModel {
 		}
 	}
 
-	public TimeTableBean findByPk(long pk) throws ApplicationException {
+	   /**
+     * Finds timetable by its primary key.
+     *
+     * @param pk primary key
+     * @return TimetableBean
+     * @throws ApplicationException if retrieval fails
+     */
+	public TimetableBean findByPk(long pk) throws ApplicationException {
 		StringBuffer sql = new StringBuffer("select * from st_timetable where id = ?");
-		TimeTableBean bean = null;
+		TimetableBean bean = null;
 		Connection conn = null;
 		try {
 			conn = JDBCDataSource.getConnection();
@@ -164,11 +209,11 @@ public class TimeTableModel {
 			pstmt.setLong(1, pk);
 			ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {
-				bean = new TimeTableBean();
+				bean = new TimetableBean();
 				bean.setId(rs.getLong(1));
 				bean.setSemester(rs.getString(2));
 				bean.setDescription(rs.getString(3));
-				bean.setDate(rs.getDate(4));
+				bean.setExamDate(rs.getDate(4));
 				bean.setExamTime(rs.getString(5));
 				bean.setCourseId(rs.getLong(6));
 				bean.setCourseName(rs.getString(7));
@@ -189,9 +234,12 @@ public class TimeTableModel {
 		return bean;
 	}
 
-	public TimeTableBean checkByCourseName(Long courseId, Date examDate) throws ApplicationException {
+	 /**
+     * Checks if timetable exists for given course on a specific exam date.
+     */
+	public TimetableBean checkByCourseName(Long courseId, Date examDate) throws ApplicationException {
 		StringBuffer sql = new StringBuffer("select * from st_timetable where course_id = ? and exam_date = ?");
-		TimeTableBean bean = null;
+		TimetableBean bean = null;
 		Connection conn = null;
 
 		try {
@@ -202,11 +250,11 @@ public class TimeTableModel {
 
 			ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {
-				bean = new TimeTableBean();
+				bean = new TimetableBean();
 				bean.setId(rs.getLong(1));
 				bean.setSemester(rs.getString(2));
 				bean.setDescription(rs.getString(3));
-				bean.setDate(rs.getDate(4));
+				bean.setExamDate(rs.getDate(4));
 				bean.setExamTime(rs.getString(5));
 				bean.setCourseId(rs.getLong(6));
 				bean.setCourseName(rs.getString(7));
@@ -228,10 +276,13 @@ public class TimeTableModel {
 		return bean;
 	}
 
-	public TimeTableBean checkBySubjectName(Long courseId, Long subjectId, Date examDate) throws ApplicationException {
+	  /**
+     * Checks if timetable exists for given subject, course, and exam date.
+     */
+	public TimetableBean checkBySubjectName(Long courseId, Long subjectId, Date examDate) throws ApplicationException {
 		StringBuffer sql = new StringBuffer(
 				"select * from st_timetable where course_id = ? and subject_id = ? and exam_date = ?");
-		TimeTableBean bean = null;
+		TimetableBean bean = null;
 		Connection conn = null;
 
 		try {
@@ -243,11 +294,11 @@ public class TimeTableModel {
 
 			ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {
-				bean = new TimeTableBean();
+				bean = new TimetableBean();
 				bean.setId(rs.getLong(1));
 				bean.setSemester(rs.getString(2));
 				bean.setDescription(rs.getString(3));
-				bean.setDate(rs.getDate(4));
+				bean.setExamDate(rs.getDate(4));
 				bean.setExamTime(rs.getString(5));
 				bean.setCourseId(rs.getLong(6));
 				bean.setCourseName(rs.getString(7));
@@ -269,11 +320,14 @@ public class TimeTableModel {
 		return bean;
 	}
 
-	public TimeTableBean checkBySemester(Long courseId, Long subjectId, String semester, Date examDate)
+	 /**
+     * Checks timetable by semester, course, subject, and exam date.
+     */
+	public TimetableBean checkBySemester(Long courseId, Long subjectId, String semester, Date examDate)
 			throws ApplicationException {
 		StringBuffer sql = new StringBuffer(
 				"select * from st_timetable where course_id = ? and subject_id = ? and semester = ? and exam_date = ?");
-		TimeTableBean bean = null;
+		TimetableBean bean = null;
 		Connection conn = null;
 
 		try {
@@ -286,11 +340,11 @@ public class TimeTableModel {
 
 			ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {
-				bean = new TimeTableBean();
+				bean = new TimetableBean();
 				bean.setId(rs.getLong(1));
 				bean.setSemester(rs.getString(2));
 				bean.setDescription(rs.getString(3));
-				bean.setDate(rs.getDate(4));
+				bean.setExamDate(rs.getDate(4));
 				bean.setExamTime(rs.getString(5));
 				bean.setCourseId(rs.getLong(6));
 				bean.setCourseName(rs.getString(7));
@@ -311,11 +365,14 @@ public class TimeTableModel {
 		return bean;
 	}
 
-	public TimeTableBean checkByExamTime(Long courseId, Long subjectId, String semester, Date examDate, String examTime,
+	/**
+     * Checks timetable by exam time and description.
+     */
+	public TimetableBean checkByExamTime(Long courseId, Long subjectId, String semester, Date examDate, String examTime,
 			String description) throws ApplicationException {
 		StringBuffer sql = new StringBuffer(
 				"select * from st_timetable where course_id = ? and subject_id = ? and semester = ? and exam_date = ? and exam_time = ? and description = ?");
-		TimeTableBean bean = null;
+		TimetableBean bean = null;
 		Connection conn = null;
 
 		try {
@@ -330,11 +387,11 @@ public class TimeTableModel {
 
 			ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {
-				bean = new TimeTableBean();
+				bean = new TimetableBean();
 				bean.setId(rs.getLong(1));
 				bean.setSemester(rs.getString(2));
 				bean.setDescription(rs.getString(3));
-				bean.setDate(rs.getDate(4));
+				bean.setExamDate(rs.getDate(4));
 				bean.setExamTime(rs.getString(5));
 				bean.setCourseId(rs.getLong(6));
 				bean.setCourseName(rs.getString(7));
@@ -355,7 +412,16 @@ public class TimeTableModel {
 		return bean;
 	}
 
-	public List<TimeTableBean> search(TimeTableBean bean, int pageNo, int pageSize) throws ApplicationException {
+	 /**
+     * Searches timetable records based on given parameters.
+     *
+     * @param bean search criteria bean
+     * @param pageNo page number
+     * @param pageSize number of records per page
+     * @return list of matching timetables
+     * @throws ApplicationException if search fails
+     */
+	public List<TimetableBean> search(TimetableBean bean, int pageNo, int pageSize) throws ApplicationException {
 		StringBuffer sql = new StringBuffer("select * from st_timetable where 1=1");
 
 		if (bean != null) {
@@ -380,8 +446,8 @@ public class TimeTableModel {
 			if (bean.getDescription() != null && bean.getDescription().length() > 0) {
 				sql.append(" and description like '" + bean.getDescription() + "%'");
 			}
-			if (bean.getDate() != null && bean.getDate().getDate() > 0) {
-				sql.append(" and exam_date like '" + new java.sql.Date(bean.getDate().getTime()) + "%'");
+			if (bean.getExamDate() != null && bean.getExamDate().getDate() > 0) {
+				sql.append(" and exam_date like '" + new java.sql.Date(bean.getExamDate().getTime()) + "%'");
 			}
 			if (bean.getExamTime() != null && bean.getExamTime().length() > 0) {
 				sql.append(" and exam_time like '" + bean.getExamTime() + "%'");
@@ -393,18 +459,18 @@ public class TimeTableModel {
 			sql.append(" limit " + pageNo + ", " + pageSize);
 		}
 
-		List<TimeTableBean> list = new ArrayList<TimeTableBean>();
+		ArrayList<TimetableBean> list = new ArrayList<TimetableBean>();
 		Connection conn = null;
 		try {
 			conn = JDBCDataSource.getConnection();
 			PreparedStatement pstmt = conn.prepareStatement(sql.toString());
 			ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {
-				bean = new TimeTableBean();
+				bean = new TimetableBean();
 				bean.setId(rs.getLong(1));
 				bean.setSemester(rs.getString(2));
 				bean.setDescription(rs.getString(3));
-				bean.setDate(rs.getDate(4));
+				bean.setExamDate(rs.getDate(4));
 				bean.setExamTime(rs.getString(5));
 				bean.setCourseId(rs.getLong(6));
 				bean.setCourseName(rs.getString(7));
@@ -426,4 +492,3 @@ public class TimeTableModel {
 		return list;
 	}
 }
-

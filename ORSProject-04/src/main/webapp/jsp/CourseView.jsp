@@ -1,13 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-	pageEncoding="ISO-8859-1"%>
+pageEncoding="ISO-8859-1"%>
 
-<%@page
-	import="in.co.rays.proj4.util.*,in.co.rays.proj4.bean.*,in.co.rays.proj4.controller.*"%>
+<%@page import="in.co.rays.proj4.util.*,in.co.rays.proj4.bean.*,in.co.rays.proj4.controller.*"%>
 
 <!DOCTYPE html>
 <html>
 <head>
-<title>Course</title>
+<title>Add Course</title>
 </head>
 
 <body>
@@ -62,28 +61,26 @@
 				<!-- Course Name -->
 				<tr>
 					<th>Course Name :</th>
-					<td><input type="text" name="name"
+					<td><input type="text" name="name" placeholder="Enter Course Name"
 						value="<%=bean != null ? DataUtility.getStringData(bean.getName()) : ""%>">
 					</td>
 					<td><font color="red"><%=ServletUtility.getErrorMessage("name", request)%></font></td>
 				</tr>
-
-				<!-- Description -->
-				<tr>
-					<th>Description :</th>
-					<td><textarea style="width: 170px; resize: none;"
-							name="description" rows="3" placeholder="Enter Short description"><%=DataUtility.getStringData(bean.getDescription()).trim()%></textarea>
-					</td>
-					<td><font color="red"><%=ServletUtility.getErrorMessage("description", request)%></font></td>
-				</tr>
-
 				<!-- Duration -->
 				<tr>
 					<th>Duration :</th>
-					<td><input type="text" name="duration"
+					<td><input type="text" name="duration" placeholder="Enter Duration"
 						value="<%=bean != null ? DataUtility.getStringData(bean.getDuration()) : ""%>">
 					</td>
 					<td><font color="red"><%=ServletUtility.getErrorMessage("duration", request)%></font></td>
+				</tr>
+				<!-- Description -->
+				<tr>
+					<th>Description :</th>
+					<td><input type="text" name="description" placeholder="Enter Description"
+						value="<%=bean != null ? DataUtility.getStringData(bean.getDescription()) : ""%>">
+					</td>
+					<td><font color="red"><%=ServletUtility.getErrorMessage("description", request)%></font></td>
 				</tr>
 
 				<!-- Buttons -->
@@ -91,17 +88,16 @@
 					<td colspan="3" align="center">
 						<%
 							if (bean != null && bean.getId() > 0) {
-						%> <input type="submit"
-						name="operation" value="<%=CourseCtl.OP_UPDATE%>"> <input
-						type="submit" name="operation" value="<%=CourseCtl.OP_CANCEL%>">
-
-						<%
-							} else {
 						%> <input type="submit" name="operation"
-						value="<%=CourseCtl.OP_SAVE%>"> <input type="submit"
-						name="operation" value="<%=CourseCtl.OP_RESET%>"> <%
- 	}
- %>
+						value="<%=CourseCtl.OP_UPDATE%>"> <input type="submit"
+						name="operation" value="<%=CourseCtl.OP_CANCEL%>"> <%
+ 					} else {
+						 %> <input type="submit" name="operation" value="<%=CourseCtl.OP_SAVE%>">
+						<input type="submit" name="operation"
+						value="<%=CourseCtl.OP_RESET%>">
+						 <%
+ 						}
+						 %>
 					</td>
 				</tr>
 

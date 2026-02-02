@@ -15,6 +15,7 @@
 </head>
 <body>
 	<%@include file="Header.jsp"%>
+	<jsp:useBean id="bean" class="in.co.rays.proj4.bean.MarkSheetBean" scope="request"></jsp:useBean>
 	<div align="center">
 		<h1 align="center" style="margin-bottom: -15; color: navy;">MarkSheet
 			List</h1>
@@ -62,45 +63,43 @@
 			</table>
 			<br>
 
-			<table border="1" style="width: 100%; border: groove;">
-				<tr style="background-color: #e1e6f1e3;">
-					<th width="5%"><input type="checkbox" id="selectall" /></th>
-					<th width="5%">S.No</th>
-					<th width="10%">Roll No</th>
-					<th width="25%">Name</th>
-					<th width="10%">Physics</th>
-					<th width="10%">Chemistry</th>
-					<th width="10%">Maths</th>
-					<th width="10%">Total</th>
-					<th width="10%">Percentage (%)</th>
-					<th width="5%">Edit</th>
-				</tr>
+			  <table border="1" style="width: 100%; border: groove;">
+                <tr style="background-color: #e1e6f1e3;">
+                    <th width="5%"><input type="checkbox" id="selectall" /></th>
+                    <th width="5%">S.No</th>
+                    <th width="10%">Roll No.</th>
+                    <th width="10%">Student Id</th>
+                    <th width="50%">Name</th>
+                    <th width="30%">Physics</th>
+                    <th width="30%">Chemistry</th>
+                    <th width="30%">Maths</th>
+                    <th width="5%">Edit</th>
+                </tr>
 
-				<%
-					while (it.hasNext()) {
-							MarkSheetBean bean = it.next();
-				%>
-				<tr>
-					<td style="text-align: center;"><input type="checkbox"
-						class="case" name="ids" value="<%=bean.getId()%>"></td>
-					<td style="text-align: center;"><%=index++%></td>
-					<td style="text-align: center; text-transform: capitalize;"><%=bean.getRollNo()%></td>
-					<td style="text-align: center; text-transform: capitalize;"><%=bean.getStudentId()%></td>
-					<td style="text-align: center; text-transform: capitalize;"><%=bean.getName()%></td>
-					<td style="text-align: center; text-transform: lowercase;"><%=bean.getPhysics()%></td>
-					<td style="text-align: center; text-transform: capitalize;"><%=bean.getChemistry()%></td>
-					<td style="text-align: center; text-transform: capitalize;"><%=bean.getMaths()%></td>
-				</tr>
+                <%
+                    while (it.hasNext()) {
+                        bean = (MarkSheetBean) it.next();
+                %>
+                <tr>
+                    <td style="text-align: center;">
+                        <input type="checkbox" class="case" name="ids" value="<%=bean.getId()%>">
+                    </td>
+                    <td style="text-align: center;"><%=index++%></td>
+                    <td style="text-align: center; text-transform: capitalize;"><%=bean.getRollNo()%></td>
+                     <td style="text-align: center; text-transform: capitalize;"><%=bean.getStudentId()%></td>
+                      <td style="text-align: center; text-transform: capitalize;"><%=bean.getName()%></td>
+                       <td style="text-align: center; text-transform: capitalize;"><%=bean.getPhysics()%></td>
+                        <td style="text-align: center; text-transform: capitalize;"><%=bean.getChemistry()%></td>
+                         <td style="text-align: center; text-transform: capitalize;"><%=bean.getMaths()%></td>
+                    <td style="text-align: center;">
+                        <a href="MarkSheetCtl?id=<%=bean.getId()%>">Edit</a>
+                    </td>
+                </tr>
+                <%
+                    }
+                %>
+            </table>
 
-				<tr>
-					<td style="text-align: center;"><input type="checkbox"
-						class="case" name="ids" value="<%=bean.getId()%>"> <a
-						href="<%=ORSView.MARKSHEET_CTL%>?id=<%=bean.getId()%>">Edit</a></td>
-				</tr>
-				<%
-					}
-				%>
-			</table>
 
 			<table style="width: 100%">
 				<tr>

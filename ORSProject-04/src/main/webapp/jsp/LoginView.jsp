@@ -1,4 +1,3 @@
-
 <%@page import="in.co.rays.proj4.util.DataUtility"%>
 <%@page import="in.co.rays.proj4.util.ServletUtility"%>
 <%@page import="in.co.rays.proj4.controller.LoginCtl"%>
@@ -34,23 +33,28 @@
 			<input type="hidden" name="createdDatetime" value="<%=DataUtility.getTimestamp(bean.getCreatedDatetime())%>">
 			<input type="hidden" name="modifiedDatetime" value="<%=DataUtility.getTimestamp(bean.getModifiedDatetime())%>">
 			<table>
+	<%
+				String uri = (String) request.getAttribute("uri");
+			%>			
 				<tr>
-					<th>Login ID:</th>
+					<th>Login ID:<span style="color: red">*</th>
 					<td><input type="text" name="login" placeholder="Enter Login Id"
 						value="<%=DataUtility.getStringData(bean.getLogin())%>"></td>
-					<td style="position: fixed;"><font color="red"> <%=ServletUtility.getErrorMessage("login", request)%></font></td>
+					<td style="position: fixed;"><font color="red"> 
+					<%=ServletUtility.getErrorMessage("login", request)%></font></td>
 				</tr>
 				<tr>
-					<th>Password:</th>
+					<th>Password:<span style="color: red">*</th>
 					<td><input type="text" name="password" placeholder="Enter Password"
 						value="<%=DataUtility.getStringData(bean.getPassword())%>"></td>
-					<td style="position: fixed;"><font color="red"> <%=ServletUtility.getErrorMessage("password", request)%></font></td>
+					<td style="position: fixed;"><font color="red"> 
+					<%=ServletUtility.getErrorMessage("password", request)%></font></td>
 				</tr>
 				<tr>
 					<td></td>
-					<td><input type="submit" name="operation"
-						value="<%=LoginCtl.OP_SIGN_IN%>"> <input type="submit"
-						name="operation" value="<%=LoginCtl.OP_SIGN_UP%>"></td>
+					<td><input type="submit" name="operation" value="<%=LoginCtl.OP_SIGN_IN%>"> 
+						
+						<input type="submit" name="operation" value="<%=LoginCtl.OP_SIGN_UP%>"></td>
 				</tr>
 				<tr>
 					<th></th>
@@ -59,5 +63,6 @@
 			</table>
 		</div>
 	</form>
+	<%@ include file="Footer.jsp"%>
 </body>
 </html>

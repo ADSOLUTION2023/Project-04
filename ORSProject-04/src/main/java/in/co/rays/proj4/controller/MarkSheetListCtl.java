@@ -1,4 +1,3 @@
- 
 package in.co.rays.proj4.controller;
 
 import java.io.IOException;
@@ -17,132 +16,163 @@ import in.co.rays.proj4.util.DataUtility;
 import in.co.rays.proj4.util.PropertyReader;
 import in.co.rays.proj4.util.ServletUtility;
 
-@WebServlet(name = "MarkSheetListCtl", urlPatterns = { "/MarkSheetListCtl" })
+/**
+* MarksheetListCtl Servlet.
+* <p>
+* This controller handles displaying, searching, and deleting marksheet records.
+* It supports pagination, search, reset, and navigation operations.
+* </p>
+* 
+* Author: Amit Chandsarkar
+* @version 1.0
+*/
+
+@WebServlet(name = "MarkSheetListCtl", urlPatterns = { "/ctl/MarkSheetListCtl" })
 public class MarkSheetListCtl extends BaseCtl {
 
-	@Override
-	protected BaseBean populateBean(HttpServletRequest request) {
+    /**
+     * Populates MarksheetBean from request parameters for search/filtering.
+     *
+     * @param request HttpServletRequest
+     * @return BaseBean containing search criteria
+     */
+    @Override
+    protected BaseBean populateBean(HttpServletRequest request) {
+        MarkSheetBean bean = new MarkSheetBean();
+        bean.setRollNo(DataUtility.getString(request.getParameter("rollNo")));
+        bean.setName(DataUtility.getString(request.getParameter("name")));
+        return bean;
+    }
 
-		MarkSheetBean bean = new MarkSheetBean();
+    /**
+     * Handles HTTP GET requests.
+     * Loads the first page of marksheet list based on search criteria.
+     *
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
+     * @throws ServletException
+     * @throws IOException
+     */
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
 
-		bean.setRollNo(DataUtility.getString(request.getParameter("rollNo")));
-		bean.setName(DataUtility.getString(request.getParameter("name")));
+        int pageNo = 1;
+        int pageSize = DataUtility.getInt(PropertyReader.getValue("page.size"));
 
-		return bean;
-	}
+        MarkSheetBean bean = (MarkSheetBean) populateBean(request);
+        MarkSheetModel model = new MarkSheetModel();
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+        try {
+            List<MarkSheetBean> list = model.search(bean, pageNo, pageSize);
+            List<MarkSheetBean> next = model.search(bean, pageNo + 1, pageSize);
 
-		int pageNo = 1;
-		int pageSize = DataUtility.getInt(PropertyReader.getValue("page.size"));
+            if (list == null || list.isEmpty()) {
+                ServletUtility.setErrorMessage("No record found", request);
+            }
 
-		MarkSheetBean bean = (MarkSheetBean) populateBean(request);
-		MarkSheetModel model = new MarkSheetModel();
+            ServletUtility.setList(list, request);
+            ServletUtility.setPageNo(pageNo, request);
+            ServletUtility.setPageSize(pageSize, request);
+            ServletUtility.setBean(bean, request);
+            request.setAttribute("nextListSize", next.size());
 
-		try {
-			List<MarkSheetBean> list = model.search(bean, pageNo, pageSize);
-			List<MarkSheetBean> next = model.search(bean, pageNo + 1, pageSize);
+            ServletUtility.forward(getView(), request, response);
 
-			if (list == null || list.isEmpty()) {
-				ServletUtility.setErrorMessage("No record found", request);
-			}
+        } catch (ApplicationException e) {
+            e.printStackTrace();
+            ServletUtility.handleException(e, request, response);
+        }
+    }
 
-			ServletUtility.setList(list, request);
-			ServletUtility.setPageNo(pageNo, request);
-			ServletUtility.setPageSize(pageSize, request);
-			ServletUtility.setBean(bean, request);
-			request.setAttribute("nextListSize", next.size());
+    /**
+     * Handles HTTP POST requests.
+     * Supports operations like search, next, previous, new, delete, reset, and back.
+     *
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
+     * @throws ServletException
+     * @throws IOException
+     */
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
 
-			ServletUtility.forward(getView(), request, response);
+        List list = null;
+        List next = null;
 
-		} catch (ApplicationException e) {
-			e.printStackTrace();
-			ServletUtility.handleException(e, request, response);
-			return;
-		}
-	}
+        int pageNo = DataUtility.getInt(request.getParameter("pageNo"));
+        int pageSize = DataUtility.getInt(request.getParameter("pageSize"));
 
-	@Override
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+        pageNo = (pageNo == 0) ? 1 : pageNo;
+        pageSize = (pageSize == 0) ? DataUtility.getInt(PropertyReader.getValue("page.size")) : pageSize;
 
-		List list = null;
-		List next = null;
+        MarkSheetBean bean = (MarkSheetBean) populateBean(request);
+        MarkSheetModel model = new MarkSheetModel();
 
-		int pageNo = DataUtility.getInt(request.getParameter("pageNo"));
-		int pageSize = DataUtility.getInt(request.getParameter("pageSize"));
+        String op = DataUtility.getString(request.getParameter("operation"));
+        String[] ids = request.getParameterValues("ids");
 
-		pageNo = (pageNo == 0) ? 1 : pageNo;
-		pageSize = (pageSize == 0) ? DataUtility.getInt(PropertyReader.getValue("page.size")) : pageSize;
+        try {
 
-		MarkSheetBean bean = (MarkSheetBean) populateBean(request);
-		MarkSheetModel model = new MarkSheetModel();
+            if (OP_SEARCH.equalsIgnoreCase(op) || "Next".equalsIgnoreCase(op) || "Previous".equalsIgnoreCase(op)) {
 
-		String op = DataUtility.getString(request.getParameter("operation"));
-		String[] ids = request.getParameterValues("ids");
+                if (OP_SEARCH.equalsIgnoreCase(op)) {
+                    pageNo = 1;
+                } else if (OP_NEXT.equalsIgnoreCase(op)) {
+                    pageNo++;
+                } else if (OP_PREVIOUS.equalsIgnoreCase(op) && pageNo > 1) {
+                    pageNo--;
+                }
 
-		try {
+            } else if (OP_NEW.equalsIgnoreCase(op)) {
+                ServletUtility.redirect(ORSView.MARKSHEET_CTL, request, response);
+                return;
 
-			if (OP_SEARCH.equalsIgnoreCase(op) || "Next".equalsIgnoreCase(op) || "Previous".equalsIgnoreCase(op)) {
+            } else if (OP_DELETE.equalsIgnoreCase(op)) {
+                pageNo = 1;
+                if (ids != null && ids.length > 0) {
+                    MarkSheetBean deletebean = new MarkSheetBean();
+                    for (String id : ids) {
+                        deletebean.setId(DataUtility.getInt(id));
+                        model.delete(deletebean);
+                        ServletUtility.setSuccessMessage("Marksheet is deleted successfully", request);
+                    }
+                } else {
+                    ServletUtility.setErrorMessage("Select at least one record", request);
+                }
 
-				if (OP_SEARCH.equalsIgnoreCase(op)) {
-					pageNo = 1;
-				} else if (OP_NEXT.equalsIgnoreCase(op)) {
-					pageNo++;
-				} else if (OP_PREVIOUS.equalsIgnoreCase(op) && pageNo > 1) {
-					pageNo--;
-				}
+            } else if (OP_RESET.equalsIgnoreCase(op) || OP_BACK.equalsIgnoreCase(op)) {
+                ServletUtility.redirect(ORSView.MARKSHEET_LIST_CTL, request, response);
+                return;
+            }
 
-			} else if (OP_NEW.equalsIgnoreCase(op)) {
-				ServletUtility.redirect(ORSView.MARKSHEET_CTL, request, response);
-				return;
+            list = model.search(bean, pageNo, pageSize);
+            next = model.search(bean, pageNo + 1, pageSize);
 
-			} else if (OP_DELETE.equalsIgnoreCase(op)) {
-				pageNo = 1;
-				if (ids != null && ids.length > 0) {
-					MarkSheetBean deletebean = new MarkSheetBean();
-					for (String id : ids) {
-						deletebean.setId(DataUtility.getInt(id));
-						model.delete(deletebean);
-						ServletUtility.setSuccessMessage("MarkSheet is deleted successfully", request);
-					}
-				} else {
-					ServletUtility.setErrorMessage("Select at least one record", request);
-				}
+            if (list == null || list.size() == 0) {
+                ServletUtility.setErrorMessage("No record found ", request);
+            }
 
-			} else if (OP_RESET.equalsIgnoreCase(op)) {
-				ServletUtility.redirect(ORSView.MARKSHEET_LIST_CTL, request, response);
-				return;
+            ServletUtility.setList(list, request);
+            ServletUtility.setPageNo(pageNo, request);
+            ServletUtility.setPageSize(pageSize, request);
+            ServletUtility.setBean(bean, request);
+            request.setAttribute("nextListSize", next.size());
 
-			} else if (OP_BACK.equalsIgnoreCase(op)) {
-				ServletUtility.redirect(ORSView.MARKSHEET_LIST_CTL, request, response);
-				return;
-			}
+            ServletUtility.forward(getView(), request, response);
+        } catch (ApplicationException e) {
+            e.printStackTrace();
+            ServletUtility.handleException(e, request, response);
+        }
+    }
 
-			list = model.search(bean, pageNo, pageSize);
-			next = model.search(bean, pageNo + 1, pageSize);
-
-			if (list == null || list.size() == 0) {
-				ServletUtility.setErrorMessage("No record found ", request);
-			}
-
-			ServletUtility.setList(list, request);
-			ServletUtility.setPageNo(pageNo, request);
-			ServletUtility.setPageSize(pageSize, request);
-			ServletUtility.setBean(bean, request);
-			request.setAttribute("nextListSize", next.size());
-
-			ServletUtility.forward(getView(), request, response);
-		} catch (ApplicationException e) {
-			e.printStackTrace();
-			ServletUtility.handleException(e, request, response);
-			return;
-		}
-	}
-
-	@Override
-	protected String getView() {
-		return ORSView.MARKSHEET_LIST_VIEW;
-	}
+    /**
+     * Returns the view for marksheet list.
+     *
+     * @return String view page
+     */
+    @Override
+    protected String getView() {
+        return ORSView.MARKSHEET_LIST_VIEW;
+    }
 }

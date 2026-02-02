@@ -1,10 +1,10 @@
-<%@page import="in.co.rays.proj4.util.DataUtility"%>
-<%@page import="java.util.HashMap"%>
+
 <%@page import="java.util.List"%>
-<%@page import="in.co.rays.proj4.util.ServletUtility"%>
-<%@page import="in.co.rays.proj4.util.HTMLUtility"%>
- 
 <%@page import="in.co.rays.proj4.controller.UserCtl"%>
+<%@page import="java.util.HashMap"%>
+<%@page import="in.co.rays.proj4.util.HTMLUtility"%>
+<%@page import="in.co.rays.proj4.util.DataUtility"%>
+<%@page import="in.co.rays.proj4.util.ServletUtility"%>
 <%@page import="in.co.rays.proj4.controller.ORSView"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
@@ -12,17 +12,21 @@
 <html>
 <head>
 <meta charset="ISO-8859-1">
-<title>Add User</title>
-<link rel="icon" type="image/png"
-	href="<%=ORSView.APP_CONTEXT%>/img/logo.png" sizes="16x16" />
+<title>Insert title here</title>
 </head>
 <body>
+
 	<form action="<%=ORSView.USER_CTL%>" method="post">
 
 		<%@ include file="Header.jsp"%>
 
 		<jsp:useBean id="bean" class="in.co.rays.proj4.bean.UserBean"
 			scope="request"></jsp:useBean>
+
+		<%-- 	<%
+		HashMap<String, String> map = (HashMap<String, String>) request.getAttribute("map");
+		%> --%>
+
 
 		<%
 			List<UserBean> roleList = (List<UserBean>) request.getAttribute("roleList");
@@ -83,7 +87,12 @@
 						value="<%=DataUtility.getStringData(bean.getLogin())%>"></td>
 					<td style="position: fixed;"><font color="red"> <%=ServletUtility.getErrorMessage("login", request)%></font></td>
 				</tr>
-				<tr>
+				<%
+					if (bean != null && bean.getId() > 0) {
+				%>
+				<%
+					} else {
+				%><tr>
 					<th align="left">Password<span style="color: red">*</span></th>
 					<td><input type="password" name="password"
 						placeholder="Enter Password"
@@ -97,10 +106,15 @@
 						value="<%=DataUtility.getStringData(bean.getPassword())%>"></td>
 					<td style="position: fixed;"><font color="red"> <%=ServletUtility.getErrorMessage("confirmPassword", request)%></font></td>
 				</tr>
+				<%
+					}
+				%>
+
 				<tr>
 					<th align="left">Date of Birth<span style="width: 98%"
 						style="color: red">*</span></th>
-					<td><input type="date" name="dob"
+					<td><input type="date" name="dob" id="udate"
+						placeholder="Enter DOB"
 						value="<%=DataUtility.getDateString(bean.getDob())%>"
 						style="width: 98%"></td>
 					<td style="position: fixed;"><font color="red"> <%=ServletUtility.getErrorMessage("dob", request)%></font></td>
@@ -118,10 +132,10 @@
 					</td>
 					<td style="position: fixed;"><font color="red"> <%=ServletUtility.getErrorMessage("gender", request)%></font></td>
 				</tr>
-				<tr>
-					<th align="left">Role<span style="color: red">*</span></th>
-					<td><%=HTMLUtility.getList("roleId", String.valueOf(bean.getRoleId()), roleList)%></td>
-					<td><font color="red"><%=ServletUtility.getErrorMessage("roleId", request)%></font></td>
+
+				<th align="left">Role<span style="color: red">*</span></th>
+				<td><%=HTMLUtility.getList("roleId", String.valueOf(bean.getRoleId()), roleList)%></td>
+				<td style="position: fixed;"><font color="red"> <%=ServletUtility.getErrorMessage("roleId", request)%></font></td>
 				</tr>
 				<tr>
 					<th align="left">Mobile No<span style="color: red">*</span></th>
@@ -152,9 +166,31 @@
 							}
 						%>
 				</tr>
+				<%
+					if (bean != null && bean.getId() > 0) {
+				%><tr>
+					<td><input type="hidden" name="password"
+						placeholder="Enter Password"
+						value="<%=DataUtility.getStringData(bean.getPassword())%>"></td>
+					<td style="position: fixed;"><font color="red"> <%=ServletUtility.getErrorMessage("password", request)%></font></td>
+				</tr>
+				<tr>
+					<td><input type="hidden" name="confirmPassword"
+						placeholder="Enter Confirm Password"
+						value="<%=DataUtility.getStringData(bean.getPassword())%>"></td>
+					<td style="position: fixed;"><font color="red"> <%=ServletUtility.getErrorMessage("confirmPassword", request)%></font></td>
+				</tr>
+				<%
+					} else {
+				%>
+				<%
+					}
+				%>
+
 			</table>
 		</div>
 	</form>
-<%@ include file="Footer.jsp"%>
+
+
 </body>
 </html>

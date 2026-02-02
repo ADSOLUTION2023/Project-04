@@ -1,4 +1,4 @@
-package in.co.rays.proj4.model;
+ package in.co.rays.proj4.model;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,12 +13,30 @@ import in.co.rays.proj4.exception.DataBaseException;
 import in.co.rays.proj4.exception.DuplicateRecordException;
 import in.co.rays.proj4.util.JDBCDataSource;
 
+/**
+ * SubjectModel provides CRUD and search operations for SubjectBean,
+ * interacting with the {@code st_subject} table via JDBC.
+ *
+ * <p>
+ * This class throws project-specific exceptions (ApplicationException,
+ * DatabaseException, DuplicateRecordException) to indicate failure
+ * conditions.
+ * </p>
+ *
+ * @author Amit Chandsarkar
+ * @version 1.0
+ */
 public class SubjectModel {
-	public Integer nextPk() throws DataBaseException {
 
+	/**
+	 * Returns next primary key value for st_subject table.
+	 *
+	 * @return next primary key (Integer)
+	 * @throws DatabaseException if a database access error occurs
+	 */
+	public Integer nextPk() throws DataBaseException {
 		Connection conn = null;
 		int pk = 0;
-
 		try {
 			conn = JDBCDataSource.getConnection();
 			PreparedStatement pstmt = conn.prepareStatement("select max(id) from st_subject");
@@ -36,6 +54,14 @@ public class SubjectModel {
 		return pk + 1;
 	}
 
+	/**
+	 * Adds a new subject record into database.
+	 *
+	 * @param bean SubjectBean containing subject data to add
+	 * @return primary key of newly inserted subject
+	 * @throws ApplicationException     if any SQL exception occurs while adding subject
+	 * @throws DuplicateRecordException if a subject with same name already exists
+	 */
 	public long add(SubjectBean bean) throws ApplicationException, DuplicateRecordException {
 		Connection conn = null;
 		int pk = 0;
@@ -44,7 +70,7 @@ public class SubjectModel {
 		CourseBean courseBean = courseModel.findByPk(bean.getCourseId());
 		bean.setCourseName(courseBean.getName());
 
-		SubjectBean duplicateSubject = findByName(bean.getName());
+		SubjectBean duplicateSubject = findByName(bean.getSubjectName());
 		if (duplicateSubject != null) {
 			throw new DuplicateRecordException("Subject Name already exists");
 		}
@@ -55,7 +81,7 @@ public class SubjectModel {
 			conn.setAutoCommit(false); // Begin transaction
 			PreparedStatement pstmt = conn.prepareStatement("insert into st_subject values(?, ?, ?, ?, ?, ?, ?, ?, ?)");
 			pstmt.setInt(1, pk);
-			pstmt.setString(2, bean.getName());
+			pstmt.setString(2, bean.getSubjectName());
 			pstmt.setLong(3, bean.getCourseId());
 			pstmt.setString(4, bean.getCourseName());
 			pstmt.setString(5, bean.getDescription());
@@ -80,6 +106,12 @@ public class SubjectModel {
 		return pk;
 	}
 
+	/**
+	 * Updates an existing subject record.
+	 *
+	 * @param bean SubjectBean containing updated values (must include id)
+	 * @throws ApplicationException if a SQL error occurs while updating
+	 */
 	public void update(SubjectBean bean) throws ApplicationException, DuplicateRecordException {
 		Connection conn = null;
 		CourseModel courseModel = new CourseModel();
@@ -91,7 +123,7 @@ public class SubjectModel {
 			conn.setAutoCommit(false); // Begin transaction
 			PreparedStatement pstmt = conn.prepareStatement(
 					"update st_subject set name = ?, course_id = ?, course_name = ?, description = ?, created_by = ?, modified_by = ?, created_datetime = ?, modified_datetime = ? where id = ?");
-			pstmt.setString(1, bean.getName());
+			pstmt.setString(1, bean.getSubjectName());
 			pstmt.setLong(2, bean.getCourseId());
 			pstmt.setString(3, bean.getCourseName());
 			pstmt.setString(4, bean.getDescription());
@@ -115,6 +147,12 @@ public class SubjectModel {
 		}
 	}
 
+	/**
+	 * Deletes a subject record from database.
+	 *
+	 * @param bean SubjectBean containing id of subject to delete
+	 * @throws ApplicationException if a SQL error occurs during delete
+	 */
 	public void delete(SubjectBean bean) throws ApplicationException {
 		Connection conn = null;
 		try {
@@ -137,6 +175,13 @@ public class SubjectModel {
 		}
 	}
 
+	/**
+	 * Finds a subject by primary key.
+	 *
+	 * @param pk primary key of subject
+	 * @return SubjectBean if found, otherwise null
+	 * @throws ApplicationException if a SQL error occurs while fetching data
+	 */
 	public SubjectBean findByPk(long pk) throws ApplicationException {
 		StringBuffer sql = new StringBuffer("select * from st_subject where id = ?");
 		SubjectBean bean = null;
@@ -149,7 +194,7 @@ public class SubjectModel {
 			while (rs.next()) {
 				bean = new SubjectBean();
 				bean.setId(rs.getLong(1));
-				bean.setName(rs.getString(2));
+				bean.setSubjectName(rs.getString(2));
 				bean.setCourseId(rs.getLong(3));
 				bean.setCourseName(rs.getString(4));
 				bean.setDescription(rs.getString(5));
@@ -168,6 +213,13 @@ public class SubjectModel {
 		return bean;
 	}
 
+	/**
+	 * Finds a subject by name.
+	 *
+	 * @param name subject name to find
+	 * @return SubjectBean if found, otherwise null
+	 * @throws ApplicationException if a SQL error occurs while fetching data
+	 */
 	public SubjectBean findByName(String name) throws ApplicationException {
 		StringBuffer sql = new StringBuffer("select * from st_subject where name = ?");
 		SubjectBean bean = null;
@@ -180,7 +232,7 @@ public class SubjectModel {
 			while (rs.next()) {
 				bean = new SubjectBean();
 				pstmt.setLong(1, bean.getId());
-				pstmt.setString(2, bean.getName());
+				pstmt.setString(2, bean.getSubjectName());
 				pstmt.setLong(3, bean.getCourseId());
 				pstmt.setString(4, bean.getCourseName());
 				pstmt.setString(5, bean.getDescription());
@@ -199,10 +251,25 @@ public class SubjectModel {
 		return bean;
 	}
 
+	/**
+	 * Returns all subjects.
+	 *
+	 * @return List of SubjectBean
+	 * @throws ApplicationException if a SQL error occurs during retrieval
+	 */
 	public List<SubjectBean> list() throws ApplicationException {
 		return search(null, 0, 0);
 	}
 
+	/**
+	 * Searches subjects based on provided filter bean and supports pagination.
+	 *
+	 * @param bean     SubjectBean filter (null means no filter)
+	 * @param pageNo   page number (1-based). If pageSize &gt; 0, pageNo is used to compute offset.
+	 * @param pageSize number of records per page. If 0, returns all matching rows.
+	 * @return List of SubjectBean matching criteria
+	 * @throws ApplicationException if a SQL error occurs during search
+	 */
 	public List<SubjectBean> search(SubjectBean bean, int pageNo, int pageSize) throws ApplicationException {
 		StringBuffer sql = new StringBuffer("select * from st_subject where 1=1");
 
@@ -210,8 +277,8 @@ public class SubjectModel {
 			if (bean.getId() > 0) {
 				sql.append(" and id = " + bean.getId());
 			}
-			if (bean.getName() != null && bean.getName().length() > 0) {
-				sql.append(" and name like '" + bean.getName() + "%'");
+			if (bean.getSubjectName() != null && bean.getSubjectName().length() > 0) {
+				sql.append(" and name like '" + bean.getSubjectName() + "%'");
 			}
 			if (bean.getCourseId() > 0) {
 				sql.append(" and course_id = " + bean.getCourseId());
@@ -230,7 +297,7 @@ public class SubjectModel {
 			sql.append(" limit " + pageNo + ", " + pageSize);
 		}
 
-		List<SubjectBean> list = new ArrayList<SubjectBean>();
+		ArrayList<SubjectBean> list = new ArrayList<SubjectBean>();
 		Connection conn = null;
 		try {
 			conn = JDBCDataSource.getConnection();
@@ -239,7 +306,7 @@ public class SubjectModel {
 			while (rs.next()) {
 				bean = new SubjectBean();
 				bean.setId(rs.getLong(1));
-				bean.setName(rs.getString(2));
+				bean.setSubjectName(rs.getString(2));
 				bean.setCourseId(rs.getLong(3));
 				bean.setCourseName(rs.getString(4));
 				bean.setDescription(rs.getString(5));
@@ -258,4 +325,5 @@ public class SubjectModel {
 		}
 		return list;
 	}
+	
 }

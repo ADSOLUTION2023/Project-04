@@ -1,6 +1,7 @@
 package in.co.rays.proj4.controller;
 
 import java.io.IOException;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -16,23 +17,35 @@ import in.co.rays.proj4.util.DataValidator;
 import in.co.rays.proj4.util.PropertyReader;
 import in.co.rays.proj4.util.ServletUtility;
 
-@WebServlet(name = "CourseCtl", urlPatterns = { "/CourseCtl" })
+/**
+ * CourseCtl Servlet Controller.
+ * <p>
+ * Handles operations related to adding, updating, and validating Course data.
+ * </p>
+ * 
+ * @author Amit Chandsarkar
+ * @version 1.0
+ */
+
+@WebServlet(name = "CourseCtl", urlPatterns = { "/ctl/CourseCtl" })
 public class CourseCtl extends BaseCtl {
 
+    /**
+     * Validates input fields for Course form.
+     *
+     * @param request the HTTP request object
+     * @return true if all fields are valid, false otherwise
+     */
     @Override
     protected boolean validate(HttpServletRequest request) {
+
         boolean pass = true;
 
         if (DataValidator.isNull(request.getParameter("name"))) {
-            request.setAttribute("name", PropertyReader.getValue("error.require", "Course Name"));
+            request.setAttribute("name", PropertyReader.getValue("error.require", "Name"));
             pass = false;
         } else if (!DataValidator.isName(request.getParameter("name"))) {
-            request.setAttribute("name", "Invalid Course Name");
-            pass = false;
-        }
-
-        if (DataValidator.isNull(request.getParameter("description"))) {
-            request.setAttribute("description", PropertyReader.getValue("error.require", "Description"));
+            request.setAttribute("name", "Invalid Name");
             pass = false;
         }
 
@@ -41,9 +54,20 @@ public class CourseCtl extends BaseCtl {
             pass = false;
         }
 
+        if (DataValidator.isNull(request.getParameter("description"))) {
+            request.setAttribute("description", PropertyReader.getValue("error.require", "Description"));
+            pass = false;
+        }
+
         return pass;
     }
 
+    /**
+     * Populates the CourseBean from request parameters.
+     *
+     * @param request the HTTP request object
+     * @return populated CourseBean
+     */
     @Override
     protected BaseBean populateBean(HttpServletRequest request) {
 
@@ -51,24 +75,29 @@ public class CourseCtl extends BaseCtl {
 
         bean.setId(DataUtility.getLong(request.getParameter("id")));
         bean.setName(DataUtility.getString(request.getParameter("name")));
-        bean.setDescription(DataUtility.getString(request.getParameter("description")));
         bean.setDuration(DataUtility.getString(request.getParameter("duration")));
+        bean.setDescription(DataUtility.getString(request.getParameter("description")));
 
         populateDTO(bean, request);
 
         return bean;
     }
 
+    /**
+     * Handles GET requests for displaying Course form.
+     *
+     * @param request  the HTTP request
+     * @param response the HTTP response
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        String op = DataUtility.getString(request.getParameter("operation"));
         long id = DataUtility.getLong(request.getParameter("id"));
 
         CourseModel model = new CourseModel();
 
-        if (id > 0 || op != null) {
+        if (id > 0) {
             try {
                 CourseBean bean = model.findByPk(id);
                 ServletUtility.setBean(bean, request);
@@ -78,81 +107,64 @@ public class CourseCtl extends BaseCtl {
                 return;
             }
         }
-
         ServletUtility.forward(getView(), request, response);
     }
 
+    /**
+     * Handles POST requests for Course operations like Save, Update, Reset, Cancel.
+     *
+     * @param request  the HTTP request
+     * @param response the HTTP response
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         String op = DataUtility.getString(request.getParameter("operation"));
-
         CourseModel model = new CourseModel();
-        CourseBean bean = (CourseBean) populateBean(request);
+        long id = DataUtility.getLong(request.getParameter("id"));
 
         if (OP_SAVE.equalsIgnoreCase(op)) {
 
-            if (!validate(request)) {
+            CourseBean bean = (CourseBean) populateBean(request);
+            try {
+                long pk = model.add(bean);
                 ServletUtility.setBean(bean, request);
-                ServletUtility.forward(getView(), request, response);
+                ServletUtility.setSuccessMessage("User added successfully", request);
+            } catch (DuplicateRecordException e) {
+                ServletUtility.setBean(bean, request);
+                ServletUtility.setErrorMessage("Course already exists", request);
+            } catch (ApplicationException e) {
+                e.printStackTrace();
                 return;
             }
 
+        } else if (OP_UPDATE.equalsIgnoreCase(op)) {
+
+            CourseBean bean = (CourseBean) populateBean(request);
             try {
-                model.add(bean);
-                ServletUtility.setSuccessMessage("Course added successfully!", request);
+                if (id > 0) {
+                    model.update(bean);
+                }
                 ServletUtility.setBean(bean, request);
+                ServletUtility.setSuccessMessage("Course updated successfully", request);
 
             } catch (DuplicateRecordException e) {
                 ServletUtility.setBean(bean, request);
-                ServletUtility.setErrorMessage("Course already exists!", request);
-
+                ServletUtility.setErrorMessage("Course Already Exist", request);
             } catch (ApplicationException e) {
+                e.printStackTrace();
                 ServletUtility.handleException(e, request, response);
                 return;
             }
-        }
 
-        else if (OP_UPDATE.equalsIgnoreCase(op)) {
+        } else if (OP_CANCEL.equalsIgnoreCase(op)) {
 
-            if (!validate(request)) {
-                ServletUtility.setBean(bean, request);
-                ServletUtility.forward(getView(), request, response);
-                return;
-            }
-
-            try {
-                model.update(bean);
-                ServletUtility.setSuccessMessage("Course updated successfully!", request);
-                ServletUtility.setBean(bean, request);
-
-            } catch (ApplicationException e) {
-                ServletUtility.handleException(e, request, response);
-                return;
-            } catch (DuplicateRecordException e) {
-				e.printStackTrace();
-			}
-        }
-
-        else if (OP_DELETE.equalsIgnoreCase(op)) {
-
-            try {
-                model.delete(bean);
-                ServletUtility.redirect(ORSView.COURSE_LIST_CTL, request, response);
-                return;
-            } catch (ApplicationException e) {
-                ServletUtility.handleException(e, request, response);
-                return;
-            }
-        }
-
-        else if (OP_CANCEL.equalsIgnoreCase(op)) {
             ServletUtility.redirect(ORSView.COURSE_LIST_CTL, request, response);
             return;
-        }
 
-        else if (OP_RESET.equalsIgnoreCase(op)) {
+        } else if (OP_RESET.equalsIgnoreCase(op)) {
+
             ServletUtility.redirect(ORSView.COURSE_CTL, request, response);
             return;
         }
@@ -160,8 +172,14 @@ public class CourseCtl extends BaseCtl {
         ServletUtility.forward(getView(), request, response);
     }
 
+    /**
+     * Returns the view page for Course form.
+     *
+     * @return string path to the Course view JSP
+     */
     @Override
     protected String getView() {
         return ORSView.COURSE_VIEW;
     }
+
 }

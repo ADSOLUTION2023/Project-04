@@ -1,4 +1,5 @@
-<%@page import="in.co.rays.proj4.bean.CourseBean"%>
+<%@page import="in.co.rays.proj4.controller.CollegeCtl"%>
+<%@page import="in.co.rays.proj4.bean.CollegeBean"%>
 <%@page import="in.co.rays.proj4.util.ServletUtility"%>
 <%@page import="in.co.rays.proj4.util.DataUtility"%>
 <%@page import="in.co.rays.proj4.controller.ORSView"%>
@@ -11,28 +12,29 @@
 <head>
 <title>Add College</title>
 
-<link rel="icon" type="image/png"
-    href="<%=ORSView.APP_CONTEXT%>/img/logo.png" sizes="16x16" />
+<link rel="icon" type="image/png" href="<%=ORSView.APP_CONTEXT%>/img/logo.png" sizes="16x16" />
 
 </head>
+
 <body>
 
-<form action="<%=ORSView.COURSE_CTL%>" method="post">
+<form action="<%=ORSView.COLLEGE_CTL%>" method="post">
 
     <%@ include file="Header.jsp"%>
 
-    <jsp:useBean id="bean" class="in.co.rays.proj4.bean.CourseBean"
-        scope="request"></jsp:useBean>
+    <jsp:useBean id="bean" class="in.co.rays.proj4.bean.CollegeBean" scope="request"></jsp:useBean>
 
     <div align="center">
 
         <h1 align="center" style="margin-bottom: -15; color: navy">
+        
             <% if (bean != null && bean.getId() > 0) { %>
                 Update
             <% } else { %>
                 Add
             <% } %>
-            Course
+            
+            College
         </h1>
 
         <div style="height: 15px; margin-bottom: 12px">
@@ -68,8 +70,7 @@
                         value="<%=DataUtility.getStringData(bean.getName())%>">
                 </td>
                 <td style="position: fixed;">
-                    <font color="red">
-                        <%=ServletUtility.getErrorMessage("name", request)%>
+                    <font color="red"><%=ServletUtility.getErrorMessage("name", request)%>
                     </font>
                 </td>
             </tr>
@@ -79,7 +80,7 @@
                 <th align="left">Address<span style="color: red">*</span></th>
                 <td>
                     <input type="text" name="address" rows="3" placeholder="Enter Address "
-                        value="<%=DataUtility.getStringData(bean.getDescription())%>">
+                        value="<%=DataUtility.getStringData(bean.getAddress())%>">
                 </td>
                 <td style="position: fixed;">
                     <font color="red">
@@ -93,7 +94,7 @@
                 <th align="left">State<span style="color: red">*</span></th>
                 <td>
                     <input type="text" name="state" placeholder="Enter State"
-                        value="<%=DataUtility.getStringData(bean.getDuration())%>">
+                        value="<%=DataUtility.getStringData(bean.getState())%>">
                 </td>
                 <td style="position: fixed;">
                     <font color="red">
@@ -106,7 +107,7 @@
                 <th align="left">City<span style="color: red">*</span></th>
                 <td>
                     <input type="text" name="city" placeholder="Enter City"
-                        value="<%=DataUtility.getStringData(bean.getDuration())%>">
+                        value="<%=DataUtility.getStringData(bean.getCity())%>">
                 </td>
                 <td style="position: fixed;">
                     <font color="red">
@@ -116,10 +117,10 @@
             </tr>
              <!-- Phone No. -->
             <tr>
-                <th align="left">State<span style="color: red">*</span></th>
+                <th align="left">Phone No.<span style="color: red">*</span></th>
                 <td>
                     <input type="text" name="phoneNo" placeholder="Enter Phone No."
-                        value="<%=DataUtility.getStringData(bean.getDuration())%>">
+                        value="<%=DataUtility.getStringData(bean.getPhoneNo())%>">
                 </td>
                 <td style="position: fixed;">
                     <font color="red">
@@ -134,13 +135,13 @@
                 <th></th>
                 <% if (bean != null && bean.getId() > 0) { %>
                     <td align="left" colspan="2">
-                        <input type="submit" name="operation" value="<%=CourseCtl.OP_UPDATE%>">
-                        <input type="submit" name="operation" value="<%=CourseCtl.OP_CANCEL%>">
+                        <input type="submit" name="operation" value="<%=CollegeCtl.OP_UPDATE%>">
+                        <input type="submit" name="operation" value="<%=CollegeCtl.OP_CANCEL%>">
                     </td>
                 <% } else { %>
                     <td align="left" colspan="2">
-                        <input type="submit" name="operation" value="<%=CourseCtl.OP_SAVE%>">
-                        <input type="submit" name="operation" value="<%=CourseCtl.OP_RESET%>">
+                        <input type="submit" name="operation" value="<%=CollegeCtl.OP_SAVE%>">
+                        <input type="submit" name="operation" value="<%=CollegeCtl.OP_RESET%>">
                     </td>
                 <% } %>
             </tr>

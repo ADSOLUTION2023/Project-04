@@ -1,24 +1,43 @@
 package in.co.rays.proj4.model;
 
 import java.sql.Connection;
-
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import in.co.rays.proj4.bean.CollegeBean;
-import in.co.rays.proj4.bean.RoleBean;
-import in.co.rays.proj4.bean.UserBean;
 import in.co.rays.proj4.exception.ApplicationException;
 import in.co.rays.proj4.exception.DataBaseException;
 import in.co.rays.proj4.exception.DuplicateRecordException;
 import in.co.rays.proj4.util.JDBCDataSource;
 
+/**
+ * CollegeModel provides CRUD and search operations for {@link CollegeBean}
+ * against the database table {@code st_college}.
+ * <p>
+ * It uses {@link JDBCDataSource} to obtain and close connections and throws
+ * application-specific checked exceptions to signal error conditions.
+ * </p>
+ * 
+ * @author Amit Chandsarkar
+ * @version 1.0
+ */
 public class CollegeModel {
 
+	 private static Logger log = Logger.getLogger(CollegeModel.class);
+	  /**
+     * Returns the next primary key value for the st_college table.
+     *
+     * @return next primary key value
+     * @throws DatabaseException if a database error occurs while retrieving the maximum id
+     */
 	public Integer nextPk() throws DataBaseException {
-
+		
+		 log.debug("CollegeModel nextPk started");
+		 
 		Connection conn = null;
 		int pk = 0;
 
@@ -39,8 +58,22 @@ public class CollegeModel {
 		return pk + 1;
 	}
 
+	  /**
+     * Adds a new College record to the database.
+     * <p>
+     * Before insertion it checks for duplicate college name and throws
+     * {@link DuplicateRecordException} if a record with same name exists.
+     * </p>
+     *
+     * @param bean {@link CollegeBean} containing college data to add
+     * @return the primary key of the newly inserted college
+     * @throws ApplicationException       if a general application/database error occurs
+     * @throws DuplicateRecordException   if a college with same name already exists
+     */
 	public long add(CollegeBean bean) throws ApplicationException, DuplicateRecordException {
-
+		
+		 log.debug("CollegeModel add started");
+		 
 		Connection conn = null;
 		int pk = 0;
 
@@ -76,16 +109,29 @@ public class CollegeModel {
 				ex.printStackTrace();
 				throw new ApplicationException("Exception : add rollback exception " + ex.getMessage());
 			}
-			throw new ApplicationException("Exception : Exception in add User");
-
+			throw new ApplicationException("Exception : Exception in add College");
 		} finally {
 			JDBCDataSource.closeConnection(conn);
 		}
 		return pk;
 	}
 
-	public void update(CollegeBean bean) throws DuplicateRecordException, ApplicationException {
+	/**
+     * Updates an existing College record.
+     * <p>
+     * It checks for duplicate college name (other than the current record) and
+     * throws {@link DuplicateRecordException} if a different record with same
+     * name exists.
+     * </p>
+     *
+     * @param bean {@link CollegeBean} containing updated college data
+     * @throws ApplicationException     if a general application/database error occurs
+     * @throws DuplicateRecordException if another college with same name exists
+     */
+	public void update(CollegeBean bean) throws ApplicationException, DuplicateRecordException {
 
+		 log.debug("CollegeModel update started for ID : " + bean.getId());
+		
 		Connection conn = null;
 
 		CollegeBean beanExist = findByName(bean.getName());
@@ -113,22 +159,28 @@ public class CollegeModel {
 			conn.commit();
 			pstmt.close();
 		} catch (Exception e) {
-			e.printStackTrace();
 			try {
 				conn.rollback();
 			} catch (Exception ex) {
 				throw new ApplicationException("Exception : Delete rollback exception " + ex.getMessage());
 			}
-			throw new ApplicationException("Exception in updating User ");
+			throw new ApplicationException("Exception in updating College ");
 		} finally {
 			JDBCDataSource.closeConnection(conn);
 		}
 	}
 
+	/**
+     * Deletes a College record.
+     *
+     * @param bean {@link CollegeBean} whose id identifies the college to delete
+     * @throws ApplicationException if a general application/database error occurs
+     */
 	public void delete(CollegeBean bean) throws ApplicationException {
-
+		
+		log.debug("CollegeModel delete started for ID : " + bean.getId());
+		
 		Connection conn = null;
-
 		try {
 			conn = JDBCDataSource.getConnection();
 			conn.setAutoCommit(false);
@@ -143,18 +195,27 @@ public class CollegeModel {
 			} catch (Exception ex) {
 				throw new ApplicationException("Exception : Delete rollback exception " + ex.getMessage());
 			}
-			throw new ApplicationException("Exception : Exception in delete User");
+			throw new ApplicationException("Exception : Exception in delete college");
 		} finally {
 			JDBCDataSource.closeConnection(conn);
 		}
 	}
 
+	  /**
+     * Finds a College record by primary key.
+     *
+     * @param pk primary key (id) of the college
+     * @return {@link CollegeBean} if found; {@code null} otherwise
+     * @throws ApplicationException if a general application/database error occurs
+     */
 	public CollegeBean findByPk(long pk) throws ApplicationException {
+		
+		 log.debug("CollegeModel findByPk started, PK = " + pk);
+
+		StringBuffer sql = new StringBuffer("select * from st_college where id = ?");
 
 		CollegeBean bean = null;
 		Connection conn = null;
-
-		StringBuffer sql = new StringBuffer("select * from st_College where id = ?");
 
 		try {
 			conn = JDBCDataSource.getConnection();
@@ -177,15 +238,23 @@ public class CollegeModel {
 			rs.close();
 			pstmt.close();
 		} catch (Exception e) {
-			e.printStackTrace();
 			throw new ApplicationException("Exception : Exception in getting College by pk");
 		} finally {
 			JDBCDataSource.closeConnection(conn);
 		}
 		return bean;
 	}
-
+	
+	  /**
+     * Finds a College record by its name.
+     *
+     * @param name name of the college
+     * @return {@link CollegeBean} if found; {@code null} otherwise
+     * @throws ApplicationException if a general application/database error occurs
+     */
 	public CollegeBean findByName(String name) throws ApplicationException {
+		
+		log.debug("CollegeModel findByName started, Name = " + name);
 
 		StringBuffer sql = new StringBuffer("select * from st_college where name = ?");
 
@@ -213,24 +282,69 @@ public class CollegeModel {
 			rs.close();
 			pstmt.close();
 		} catch (Exception e) {
-			e.printStackTrace();
-			throw new ApplicationException("Exception : Exception in getting User by Name");
+			throw new ApplicationException("Exception : Exception in getting College by Name");
 		} finally {
 			JDBCDataSource.closeConnection(conn);
 		}
 		return bean;
 	}
 
+
+    /**
+     * Returns a list of all colleges. This is a convenience wrapper around
+     * {@link #search(CollegeBean, int, int)} with no filter and no pagination.
+     *
+     * @return list of all {@link CollegeBean}
+     * @throws ApplicationException if a general application/database error occurs
+     */
 	public List<CollegeBean> list() throws ApplicationException {
 		return search(null, 0, 0);
 	}
-
+	
+	  /**
+     * Searches for colleges matching the criteria provided in {@code bean}.
+     * If {@code pageSize} &gt; 0, results are paginated.
+     *
+     * @param bean     filter criteria; if {@code null} returns all records
+     * @param pageNo   page number (1-based) when paginating; ignored if pageSize is 0
+     * @param pageSize number of records per page; pass 0 to disable pagination
+     * @return list of matching {@link CollegeBean}
+     * @throws ApplicationException if a general application/database error occurs
+     */
 	public List<CollegeBean> search(CollegeBean bean, int pageNo, int pageSize) throws ApplicationException {
+		
+		log.debug("CollegeModel search started");
 
+		StringBuffer sql = new StringBuffer("select * from st_college where 1 = 1");
+
+		if (bean != null) {
+			if (bean.getId() > 0) {
+				sql.append(" and id = " + bean.getId());
+			}
+			if (bean.getName() != null && bean.getName().length() > 0) {
+				sql.append(" and name like '" + bean.getName() + "%'");
+			}
+			if (bean.getAddress() != null && bean.getAddress().length() > 0) {
+				sql.append(" and address like '" + bean.getAddress() + "%'");
+			}
+			if (bean.getState() != null && bean.getState().length() > 0) {
+				sql.append(" and state like '" + bean.getState() + "%'");
+			}
+			if (bean.getCity() != null && bean.getCity().length() > 0) {
+				sql.append(" and city like '" + bean.getCity() + "%'");
+			}
+			if (bean.getPhoneNo() != null && bean.getPhoneNo().length() > 0) {
+				sql.append(" and phone_no = " + bean.getPhoneNo());
+			}
+		}
+
+		if (pageSize > 0) {
+			pageNo = (pageNo - 1) * pageSize;
+			sql.append(" limit " + pageNo + ", " + pageSize);
+		}
+
+		ArrayList<CollegeBean> list = new ArrayList<CollegeBean>();
 		Connection conn = null;
-		List<CollegeBean> list = new ArrayList<CollegeBean>();
-
-		StringBuffer sql = new StringBuffer("select * from st_college where 1=1");
 
 		try {
 			conn = JDBCDataSource.getConnection();
@@ -253,12 +367,10 @@ public class CollegeModel {
 			rs.close();
 			pstmt.close();
 		} catch (Exception e) {
-			e.printStackTrace();
-			throw new ApplicationException("Exception : Exception in search user");
+			throw new ApplicationException("Exception : Exception in search college");
 		} finally {
 			JDBCDataSource.closeConnection(conn);
 		}
 		return list;
 	}
-
 }

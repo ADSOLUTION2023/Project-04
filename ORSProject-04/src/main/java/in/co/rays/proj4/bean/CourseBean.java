@@ -1,36 +1,49 @@
-package in.co.rays.proj4.bean;
+ package in.co.rays.proj4.bean;
 
-public class CourseBean extends BaseBean{
-	
+/**
+ * Course JavaBean encapsulates Course attributes.
+ * 
+ * @author Amit Chandsarkar
+ *
+ */
+public class CourseBean extends BaseBean {
+
 	private String name;
 	private String duration;
 	private String description;
-	
+
 	public String getName() {
 		return name;
 	}
+
 	public void setName(String name) {
 		this.name = name;
 	}
+
 	public String getDuration() {
 		return duration;
 	}
+
 	public void setDuration(String duration) {
 		this.duration = duration;
 	}
+
 	public String getDescription() {
 		return description;
 	}
+
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	@Override
-	public String getValue() {
-		return ""+id;
-	}
+
 	@Override
 	public String getKey() {
+		return id + "";
+	}
+
+	@Override
+	public String getValue() {
 		return name;
 	}
-	
+
 }

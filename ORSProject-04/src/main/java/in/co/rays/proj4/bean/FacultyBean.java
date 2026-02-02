@@ -1,7 +1,13 @@
-package in.co.rays.proj4.bean;
+ package in.co.rays.proj4.bean;
 
 import java.util.Date;
 
+/**
+ * Faculty JavaBean encapsulates Faculty attributes.
+ * 
+ * @author Amit Chandsarkar
+ *
+ */
 public class FacultyBean extends BaseBean {
 
 	private String firstName;
@@ -115,14 +121,14 @@ public class FacultyBean extends BaseBean {
 
 	@Override
 	public String getKey() {
-
-		return "" + id;
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
 	public String getValue() {
-
-		return firstName + " " + lastName;
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

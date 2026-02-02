@@ -1,7 +1,13 @@
 package in.co.rays.proj4.bean;
 
+/**
+ * Role JavaBean encapsulates Role attributes.
+ * 
+ * @author Amit Chanddsarkar
+ *
+ */
 public class RoleBean extends BaseBean {
-
+	
 	public static final int ADMIN = 1;
 	public static final int STUDENT = 2;
 	public static final int COLLEGE = 3;
@@ -29,11 +35,12 @@ public class RoleBean extends BaseBean {
 
 	@Override
 	public String getKey() {
-		return "" + id;
+		return id + "";
 	}
 
 	@Override
 	public String getValue() {
 		return name;
 	}
+
 }

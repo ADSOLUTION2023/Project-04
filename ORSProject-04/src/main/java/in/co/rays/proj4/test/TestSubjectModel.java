@@ -28,7 +28,7 @@ public static SubjectModel model = new SubjectModel();
 	public static void testAdd() {
 		try {
 			SubjectBean bean = new SubjectBean();
-			bean.setName("hjjk");
+			bean.setSubjectName("hjjk");
 			bean.setCourseId(001);
 			bean.setDescription("admin");
 			bean.setCreatedBy("admin");
@@ -45,7 +45,7 @@ public static SubjectModel model = new SubjectModel();
 	public static void testUpdate() {
 		try {
 			SubjectBean bean = model.findByPk(1L);
-			bean.setName("Amit");
+			bean.setSubjectName("Amit");
 			bean.setDescription("Amit");
 			model.update(bean);
 			System.out.println("Test Update");
@@ -78,7 +78,7 @@ public static void testfindByPk() {
 			System.out.println("Test Find By PK fail");
 		}
 		System.out.println(bean.getId());
-		System.out.println(bean.getName());
+		System.out.println(bean.getSubjectName());
 		System.out.println(bean.getDescription());
 	} catch (ApplicationException e) {
 		e.printStackTrace();
@@ -92,7 +92,7 @@ public static void testFindByName() {
 			System.out.println("Test Find By Name fail");
 		}
 		System.out.println(bean.getId());
-		System.out.println(bean.getName());
+		System.out.println(bean.getSubjectName());
 		System.out.println(bean.getDescription());
 	} catch (ApplicationException e) {
 		e.printStackTrace();
@@ -102,7 +102,7 @@ public static void testSearch() {
 	try {
 		SubjectBean bean = new SubjectBean();
 		List list = new ArrayList();
-		bean.setName("student");
+		bean.setSubjectName("student");
 		list = model.search(bean, 0, 0);
 		if (list.size() < 0) {
 			System.out.println("Test Serach fail");
@@ -111,7 +111,7 @@ public static void testSearch() {
 		while (it.hasNext()) {
 			bean = (SubjectBean) it.next();
 			System.out.println(bean.getId());
-			System.out.println(bean.getName());
+			System.out.println(bean.getSubjectName());
 			System.out.println(bean.getDescription());
 		}
 	} catch (ApplicationException e) {

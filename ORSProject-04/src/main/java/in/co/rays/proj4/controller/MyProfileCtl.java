@@ -1,4 +1,3 @@
- 
 package in.co.rays.proj4.controller;
 
 import java.io.IOException;
@@ -19,150 +18,186 @@ import in.co.rays.proj4.util.DataValidator;
 import in.co.rays.proj4.util.PropertyReader;
 import in.co.rays.proj4.util.ServletUtility;
 
-@WebServlet(name = "MyProfileCtl", urlPatterns = {"/MyProfileCtl"})
+/**
+ * MyProfileCtl Servlet.
+ * <p>
+ * This controller handles the functionality of viewing and updating
+ * the user's profile. It also supports redirecting to the change password page.
+ * </p>
+ * 
+ * Author: Amit Chandsarkar
+ * @version 1.0
+ */
+
+@WebServlet(name = "MyProfileCtl", urlPatterns = { "/ctl/MyProfileCtl" })
 public class MyProfileCtl extends BaseCtl {
 
-	public static final String OP_CHANGE_MY_PASSWORD = "Change Password";
+    public static final String OP_CHANGE_MY_PASSWORD = "Change Password";
 
-	@Override
-	protected boolean validate(HttpServletRequest request) {
+    /**
+     * Validates the user profile form data.
+     *
+     * @param request HttpServletRequest
+     * @return boolean true if input is valid, false otherwise
+     */
+    @Override
+    protected boolean validate(HttpServletRequest request) {
 
-		boolean pass = true;
+        boolean pass = true;
+        String op = DataUtility.getString(request.getParameter("operation"));
 
-		String op = DataUtility.getString(request.getParameter("operation"));
+        if (OP_CHANGE_MY_PASSWORD.equalsIgnoreCase(op) || op == null) {
+            return pass;
+        }
 
-		if (OP_CHANGE_MY_PASSWORD.equalsIgnoreCase(op) || op == null) {
-			return pass;
-		}
+        if (DataValidator.isNull(request.getParameter("firstName"))) {
+            request.setAttribute("firstName", PropertyReader.getValue("error.require", "First Name"));
+            pass = false;
+        } else if (!DataValidator.isName(request.getParameter("firstName"))) {
+            request.setAttribute("firstName", "Invalid First Name");
+            pass = false;
+        }
 
-		if (DataValidator.isNull(request.getParameter("firstName"))) {
-			request.setAttribute("firstName", PropertyReader.getValue("error.require", "First Name"));
-			pass = false;
-		} else if (!DataValidator.isName(request.getParameter("firstName"))) {
-			request.setAttribute("firstName", "Invalid First Name");
-			pass = false;
-		}
+        if (DataValidator.isNull(request.getParameter("lastName"))) {
+            request.setAttribute("lastName", PropertyReader.getValue("error.require", "Last Name"));
+            pass = false;
+        } else if (!DataValidator.isName(request.getParameter("lastName"))) {
+            request.setAttribute("lastName", "Invalid Last Name");
+            pass = false;
+        }
 
-		if (DataValidator.isNull(request.getParameter("lastName"))) {
-			request.setAttribute("lastName", PropertyReader.getValue("error.require", "Last Name"));
-			pass = false;
-		} else if (!DataValidator.isName(request.getParameter("lastName"))) {
-			request.setAttribute("lastName", "Invalid Last Name");
-			pass = false;
-		}
+        if (DataValidator.isNull(request.getParameter("gender"))) {
+            request.setAttribute("gender", PropertyReader.getValue("error.require", "Gender"));
+            pass = false;
+        }
 
-		if (DataValidator.isNull(request.getParameter("gender"))) {
-			request.setAttribute("gender", PropertyReader.getValue("error.require", "Gender"));
-			pass = false;
-		}
+        if (DataValidator.isNull(request.getParameter("mobileNo"))) {
+            request.setAttribute("mobileNo", PropertyReader.getValue("error.require", "MobileNo"));
+            pass = false;
+        } else if (!DataValidator.isPhoneLength(request.getParameter("mobileNo"))) {
+            request.setAttribute("mobileNo", "Mobile No must have 10 digits");
+            pass = false;
+        } else if (!DataValidator.isPhoneNo(request.getParameter("mobileNo"))) {
+            request.setAttribute("mobileNo", "Invalid Mobile No");
+            pass = false;
+        }
 
-		if (DataValidator.isNull(request.getParameter("mobileNo"))) {
-			request.setAttribute("mobileNo", PropertyReader.getValue("error.require", "MobileNo"));
-			pass = false;
-		} else if (!DataValidator.isPhoneLength(request.getParameter("mobileNo"))) {
-			request.setAttribute("mobileNo", "Mobile No must have 10 digits");
-			pass = false;
-		} else if (!DataValidator.isPhoneNo(request.getParameter("mobileNo"))) {
-			request.setAttribute("mobileNo", "Invalid Mobile No");
-			pass = false;
-		}
+        if (DataValidator.isNull(request.getParameter("dob"))) {
+            request.setAttribute("dob", PropertyReader.getValue("error.require", "Date Of Birth"));
+            pass = false;
+        }
 
-		if (DataValidator.isNull(request.getParameter("dob"))) {
-			request.setAttribute("dob", PropertyReader.getValue("error.require", "Date Of Birth"));
-			pass = false;
-		}
+        return pass;
+    }
 
-		return pass;
-	}
+    /**
+     * Populates UserBean from HTTP request parameters.
+     *
+     * @param request HttpServletRequest
+     * @return BaseBean populated with user profile data
+     */
+    @Override
+    protected BaseBean populateBean(HttpServletRequest request) {
+        UserBean bean = new UserBean();
 
-	@Override
-	protected BaseBean populateBean(HttpServletRequest request) {
+        bean.setId(DataUtility.getLong(request.getParameter("id")));
+        bean.setLogin(DataUtility.getString(request.getParameter("login")));
+        bean.setFirstName(DataUtility.getString(request.getParameter("firstName")));
+        bean.setLastName(DataUtility.getString(request.getParameter("lastName")));
+        bean.setMobileNo(DataUtility.getString(request.getParameter("mobileNo")));
+        bean.setGender(DataUtility.getString(request.getParameter("gender")));
+        bean.setDob(DataUtility.getDate(request.getParameter("dob")));
 
-		UserBean bean = new UserBean();
+        populateDTO(bean, request);
+        return bean;
+    }
 
-		bean.setId(DataUtility.getLong(request.getParameter("id")));
+    /**
+     * Handles HTTP GET requests.
+     * Loads the current user's profile for display.
+     *
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
+     * @throws ServletException
+     * @throws IOException
+     */
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
 
-		bean.setLogin(DataUtility.getString(request.getParameter("login")));
+        HttpSession session = request.getSession(true);
+        UserBean user = (UserBean) session.getAttribute("user");
+        long id = user.getId();
 
-		bean.setFirstName(DataUtility.getString(request.getParameter("firstName")));
+        UserModel model = new UserModel();
 
-		bean.setLastName(DataUtility.getString(request.getParameter("lastName")));
+        if (id > 0) {
+            try {
+                UserBean bean = model.findByPk(id);
+                ServletUtility.setBean(bean, request);
+            } catch (ApplicationException e) {
+                e.printStackTrace();
+                ServletUtility.handleException(e, request, response);
+                return;
+            }
+        }
+        ServletUtility.forward(getView(), request, response);
+    }
 
-		bean.setMobileNo(DataUtility.getString(request.getParameter("mobileNo")));
+    /**
+     * Handles HTTP POST requests.
+     * Updates the user profile or redirects to the change password page.
+     *
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
+     * @throws ServletException
+     * @throws IOException
+     */
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
 
-		bean.setGender(DataUtility.getString(request.getParameter("gender")));
+        HttpSession session = request.getSession(true);
+        UserBean user = (UserBean) session.getAttribute("user");
+        long id = user.getId();
+        String op = DataUtility.getString(request.getParameter("operation"));
+        UserModel model = new UserModel();
 
-		bean.setDob(DataUtility.getDate(request.getParameter("dob")));
+        if (OP_SAVE.equalsIgnoreCase(op)) {
+            UserBean bean = (UserBean) populateBean(request);
+            try {
+                if (id > 0) {
+                    user.setFirstName(bean.getFirstName());
+                    user.setLastName(bean.getLastName());
+                    user.setGender(bean.getGender());
+                    user.setMobileNo(bean.getMobileNo());
+                    user.setDob(bean.getDob());
+                    model.update(user);
+                }
+                ServletUtility.setBean(bean, request);
+                ServletUtility.setSuccessMessage("Profile has been updated Successfully. ", request);
+            } catch (DuplicateRecordException e) {
+                ServletUtility.setBean(bean, request);
+                ServletUtility.setErrorMessage("Login id already exists", request);
+            } catch (ApplicationException e) {
+                e.printStackTrace();
+                ServletUtility.handleException(e, request, response);
+                return;
+            }
+        } else if (OP_CHANGE_MY_PASSWORD.equalsIgnoreCase(op)) {
+            ServletUtility.redirect(ORSView.CHANGE_PASSWORD_CTL, request, response);
+            return;
+        }
+        ServletUtility.forward(getView(), request, response);
+    }
 
-		populateDTO(bean, request);
-
-		return bean;
-	}
-
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-
-		HttpSession session = request.getSession(true);
-		UserBean user = (UserBean) session.getAttribute("user");
-		long id = user.getId();
-
-		UserModel model = new UserModel();
-
-		if (id > 0) {
-			try {
-				UserBean bean = model.findByPk(id);
-				ServletUtility.setBean(bean, request);
-			} catch (ApplicationException e) {
-				e.printStackTrace();
-				ServletUtility.handleException(e, request, response);
-				return;
-			}
-		}
-		ServletUtility.forward(getView(), request, response);
-	}
-
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-
-		HttpSession session = request.getSession(true);
-
-		UserBean user = (UserBean) session.getAttribute("user");
-		long id = user.getId();
-
-		String op = DataUtility.getString(request.getParameter("operation"));
-
-		UserModel model = new UserModel();
-
-		if (OP_SAVE.equalsIgnoreCase(op)) {
-			UserBean bean = (UserBean) populateBean(request);
-			try {
-				if (id > 0) {
-					user.setFirstName(bean.getFirstName());
-					user.setLastName(bean.getLastName());
-					user.setGender(bean.getGender());
-					user.setMobileNo(bean.getMobileNo());
-					user.setDob(bean.getDob());
-					model.update(user);
-				}
-				ServletUtility.setBean(bean, request);
-				ServletUtility.setSuccessMessage("Profile has been updated Successfully. ", request);
-			} catch (DuplicateRecordException e) {
-				ServletUtility.setBean(bean, request);
-				ServletUtility.setErrorMessage("Login id already exists", request);
-			} catch (ApplicationException e) {
-				e.printStackTrace();
-				ServletUtility.handleException(e, request, response);
-				return;
-			}
-		} else if (OP_CHANGE_MY_PASSWORD.equalsIgnoreCase(op)) {
-			ServletUtility.redirect(ORSView.CHANGE_PASSWORD_CTL, request, response);
-			return;
-		}
-		ServletUtility.forward(getView(), request, response);
-	}
-
-	@Override
-	protected String getView() {
-		return ORSView.MY_PROFILE_VIEW;
-	}
+    /**
+     * Returns the view for the user profile page.
+     *
+     * @return String view page
+     */
+    @Override
+    protected String getView() {
+        return ORSView.MY_PROFILE_VIEW;
+    }
 }

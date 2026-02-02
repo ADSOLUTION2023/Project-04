@@ -1,5 +1,11 @@
 package in.co.rays.proj4.bean;
 
+/**
+ * College JavaBean encapsulates College attributes.
+ * @author Amit Chandsarkar
+ *
+ */
+
 public class CollegeBean extends BaseBean {
 
 	private String name;
@@ -50,11 +56,12 @@ public class CollegeBean extends BaseBean {
 
 	@Override
 	public String getKey() {
-		return "" + id;
+		return id + "";
 	}
 
 	@Override
 	public String getValue() {
 		return name;
 	}
+
 }

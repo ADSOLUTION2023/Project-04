@@ -1,12 +1,12 @@
+<%@page import="in.co.rays.proj4.controller.MarkSheetCtl"%>
 <%@page import="in.co.rays.proj4.controller.ORSView"%>
-<%@page import="in.co.rays.proj4.controller.MarksheetCtl"%>
 <%@page import="java.util.List"%>
 <%@page import="in.co.rays.proj4.util.HTMLUtility"%>
 <%@page import="in.co.rays.proj4.util.DataUtility"%>
 <%@page import="in.co.rays.proj4.util.ServletUtility"%>
 <html>
 <head>
-    <title>Add Marksheet</title>
+    <title>Add MarkSheet</title>
     <link rel="icon" type="image/png" href="<%=ORSView.APP_CONTEXT%>/img/logo.png" sizes="16x16"/>
 </head>
 <body>
@@ -28,7 +28,7 @@
                 %>Add<%
                     }
                 %>
-                Marksheet
+                MarkSheet
             </h1>
 
             <div style="height: 15px; margin-bottom: 12px">
@@ -105,15 +105,15 @@
                         if (bean != null && bean.getId() > 0) {
                     %>
                     <td align="left" colspan="2">
-                        <input type="submit" name="operation" value="<%=MarksheetCtl.OP_UPDATE%>">
-                        <input type="submit" name="operation" value="<%=MarksheetCtl.OP_CANCEL%>">
+                        <input type="submit" name="operation" value="<%=MarkSheetCtl.OP_UPDATE%>">
+                        <input type="submit" name="operation" value="<%=MarkSheetCtl.OP_CANCEL%>">
                     </td>
                     <%
                         } else {
                     %>
                     <td align="left" colspan="2">
-                        <input type="submit" name="operation" value="<%=MarksheetCtl.OP_SAVE%>">
-                        <input type="submit" name="operation" value="<%=MarksheetCtl.OP_RESET%>">
+                        <input type="submit" name="operation" value="<%=MarkSheetCtl.OP_SAVE%>">
+                        <input type="submit" name="operation" value="<%=MarkSheetCtl.OP_RESET%>">
                     </td>
                     <%
                         }

@@ -1,7 +1,7 @@
 package in.co.rays.proj4.util;
 
 import java.io.IOException;
-
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -117,6 +117,21 @@ public class ServletUtility {
 		request.setAttribute("exception", e);
 		//response.sendRedirect(ORSView.ERROR_CTL);
 	}
+	public static void handleExceptionDB(String page, HttpServletRequest request, HttpServletResponse response)
+            throws IOException, ServletException {
+        setErrorMessage("DATABASE SERVER DOWN....!!", request);
+        forward(page, request, response);
+    }
+    
+    public static void handleExceptionDBList(String page, BaseBean bean, int pageNo, int pageSize, HttpServletRequest request, HttpServletResponse response)
+            throws IOException, ServletException {
+        setErrorMessage("DATABASE SERVER DOWN UNABLE TO LOAD LIST....!!", request);
+        setList(new ArrayList<>(), request);
+        setBean(bean, request);
+        request.setAttribute("pageNo", pageNo);
+		request.setAttribute("pageSize", pageSize);
+		request.setAttribute("nextListSize", 0);
+        forward(page, request, response);
 }
-
+}
 

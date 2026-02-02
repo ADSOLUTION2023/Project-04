@@ -3,14 +3,8 @@
  "http://java.sun.com/dtd/web-app_2_3.dtd" >
 
 <web-app>
-  <display-name>Archetype Created Web Application</display-name>
-  <servlet>
-    <servlet-name>ErrorCtl</servlet-name>
-    <servlet-class>in.co.rays.proj4.controller.ErrorCtl</servlet-class>
-</servlet>
-
-<servlet-mapping>
-    <servlet-name>ErrorCtl</servlet-name>
-    <url-pattern>/ErrorCtl</url-pattern>
-</servlet-mapping>
-</web-app>
+<!-- Session Configuration -->
+    <session-config>
+        <session-timeout>30</session-timeout>
+    </session-config>
+    </web-app>

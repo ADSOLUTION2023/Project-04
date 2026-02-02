@@ -2,6 +2,12 @@ package in.co.rays.proj4.bean;
 
 import java.util.Date;
 
+/**
+ * Student JavaBean encapsulates Student attributes.
+ * 
+ * @author Amit Chandsarkar
+ *
+ */
 public class StudentBean extends BaseBean {
 
 	private String firstName;
@@ -79,14 +85,12 @@ public class StudentBean extends BaseBean {
 
 	@Override
 	public String getKey() {
-
-		return "" + id;
+		return id + "";
 	}
 
 	@Override
 	public String getValue() {
-
-		return firstName + "" + lastName;
+		return firstName + " " + lastName;
 	}
 
 }

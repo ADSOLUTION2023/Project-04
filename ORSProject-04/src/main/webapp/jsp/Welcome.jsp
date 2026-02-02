@@ -5,7 +5,7 @@
 <head>
 <title>Welcome to ORS</title>
 <link rel="icon" type="image/png"
-	href="<%=ORSView.APP_CONTEXT%>"/img/logo.png" sizes="16x16" />
+          href="<%= ORSView.APP_CONTEXT %>/img/logo.png" sizes="16x16" />
 </head>
 <body>
     <%@ include file="/jsp/Header.jsp" %>

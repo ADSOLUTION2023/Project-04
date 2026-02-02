@@ -2,7 +2,6 @@ package in.co.rays.proj4.util;
 
 import java.util.Properties;
 import java.util.ResourceBundle;
-
 import javax.mail.Authenticator;
 import javax.mail.Message;
 import javax.mail.PasswordAuthentication;

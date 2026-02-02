@@ -18,7 +18,7 @@
 </body>
 </html>
 <br>
-	<div align="center">
+	<div  align="center">
 	<img src="img/customLogo.jpg" align="middle" width="318" height="127"
 		border="0">
 </div>
@@ -26,8 +26,8 @@
 <br>
 
 	<h1 align="center">
-	<font size="10px" color="red"> <a
-		href="<%=ORSView.WELCOME_CTL%>">Online Result System</a></font>
+	<font size="10px" color="red"> 
+	<a href="<%=ORSView.WELCOME_CTL%>">Online Result System</a></font>
 </h1>
 </html>
-`
+

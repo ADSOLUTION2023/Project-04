@@ -8,6 +8,7 @@ import java.util.List;
 
 import in.co.rays.proj4.bean.RoleBean;
 import in.co.rays.proj4.exception.ApplicationException;
+import in.co.rays.proj4.exception.DataBaseException;
 import in.co.rays.proj4.exception.DuplicateRecordException;
 import in.co.rays.proj4.model.RoleModel;
 
@@ -17,10 +18,10 @@ public static RoleModel model = new RoleModel();
 
 	public static void main(String[] args) {
 
-		testAdd();
+		//testAdd();
 		//testUpdate();
 		//testDelete(); 
-		//testfindByPk();
+	testfindByPk();
 		//testFindByName();
 		//testSearch(); 
 	}
@@ -34,7 +35,11 @@ public static RoleModel model = new RoleModel();
 			bean.setModifiedBy("admin");
 			bean.setCreatedDatetime(new Timestamp(new Date().getTime()));
 			bean.setModifiedDatetime(new Timestamp(new Date().getTime()));
-			long pk = model.add(bean);
+			try {
+				long pk = model.add(bean);
+			} catch (DataBaseException e) {
+				e.printStackTrace();
+			}
 			System.out.println("Test add");
 
 		} catch (ApplicationException | DuplicateRecordException e) {
@@ -72,7 +77,7 @@ public static void testDelete() {
 
 public static void testfindByPk() {
 	try {
-		RoleBean bean = model.findByPk(1L);
+		RoleBean bean = model.findByPk(1);
 		if (bean == null) {
 			System.out.println("Test Find By PK fail");
 		}

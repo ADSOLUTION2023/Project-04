@@ -76,7 +76,7 @@
 					<th align="left">Subject Name<span style="color: red">*</span></th>
 					<td><input type="text" name="name"
 						placeholder="Enter Subject Name"
-						value="<%=DataUtility.getStringData(bean.getName())%>"></td>
+						value="<%=DataUtility.getStringData(bean.getSubjectName())%>"></td>
 					<td style="position: fixed;"><font color="red"> <%=ServletUtility.getErrorMessage("name", request)%>
 					</font></td>
 				</tr>
